@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import MarketInfo from '@/components/MarketInfo'
 import TakeHomePayCalculator from '@/components/TakeHomePayCalculator'
 import Link from 'next/link'

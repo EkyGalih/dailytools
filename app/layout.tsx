@@ -17,12 +17,18 @@ export default function RootLayout({
               href="/"
               className="text-lg font-semibold tracking-tight"
             >
-              Kalkulator.id
+              My Tools
             </Link>
 
             {/* NAV */}
             <nav className="flex items-center gap-6 text-sm font-medium">
               {/* DROPDOWN */}
+              <Link
+                href="/"
+                className="hover:text-black text-gray-600"
+              >
+                Beranda
+              </Link>
               <div className="relative group">
                 <button
                   className="text-gray-600 hover:text-black cursor-pointer flex items-center gap-1"
@@ -180,7 +186,7 @@ export default function RootLayout({
         {/* FOOTER */}
         <footer className="border-t bg-white mt-12">
           <div className="max-w-5xl mx-auto px-4 py-6 text-sm text-gray-500 flex flex-col md:flex-row gap-4 justify-between">
-            <p>© {new Date().getFullYear()} Kalkulator.id</p>
+            <p>© {new Date().getFullYear()} My Tools</p>
 
             <div className="flex gap-4">
               <Link href="/about" className="hover:text-black">

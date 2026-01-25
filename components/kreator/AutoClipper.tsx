@@ -218,7 +218,14 @@ export default function AutoClipper() {
                 }
 
                 const data = await ffmpeg.readFile(outName)
-                const blob = new Blob([data], { type: 'video/mp4' })
+
+                // convert Uint8Array → ArrayBuffer
+                const buffer = data.buffer.slice(
+                    data.byteOffset,
+                    data.byteOffset + data.byteLength
+                )
+
+                const blob = new Blob([buffer], { type: 'video/mp4' })
                 const url = URL.createObjectURL(blob)
 
                 outClips.push({

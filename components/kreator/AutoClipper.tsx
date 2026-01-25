@@ -219,18 +219,21 @@ export default function AutoClipper() {
 
                 const data = await ffmpeg.readFile(outName)
 
-                // 🔒 pastikan Uint8Array (untuk TypeScript)
-                const uint8 =
-                    typeof data === 'string'
-                        ? new TextEncoder().encode(data)
-                        : data
+                // 1. Normalisasi data menjadi Uint8Array mentah
+                let rawUint8: Uint8Array
+                if (typeof data === 'string') {
+                    rawUint8 = new TextEncoder().encode(data)
+                } else {
+                    rawUint8 = data
+                }
 
-                const buffer = uint8.buffer.slice(
-                    uint8.byteOffset,
-                    uint8.byteOffset + uint8.byteLength
-                )
+                // 2. FIX: Buat SALINAN ke Uint8Array standar baru.
+                // Ini memaksa penggunaan ArrayBuffer standar, bukan SharedArrayBuffer.
+                // Konstruktor `new Uint8Array(typedArray)` melakukan penyalinan ini.
+                const standardUint8 = new Uint8Array(rawUint8);
 
-                const blob = new Blob([buffer], { type: 'video/mp4' })
+                // 3. Sekarang standardUint8 aman untuk dimasukkan ke Blob
+                const blob = new Blob([standardUint8], { type: 'video/mp4' })
                 const url = URL.createObjectURL(blob)
 
                 outClips.push({

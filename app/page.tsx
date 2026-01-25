@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <section className="space-y-24">
       {/* HERO */}
-      <header className="rounded-3xl bg-gradient-to-br from-black to-sky-90 text-white px-6 py-20 text-center">
+      <header className="rounded-3xl bg-gradient-to-br from-black to-sky-900 text-white px-6 py-20 text-center">
         <h1 className="text-4xl md:text-5xl font-bold">
           My Tools
         </h1>

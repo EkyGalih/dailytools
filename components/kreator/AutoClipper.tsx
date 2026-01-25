@@ -219,10 +219,15 @@ export default function AutoClipper() {
 
                 const data = await ffmpeg.readFile(outName)
 
-                // convert Uint8Array → ArrayBuffer
-                const buffer = data.buffer.slice(
-                    data.byteOffset,
-                    data.byteOffset + data.byteLength
+                // 🔒 pastikan Uint8Array (untuk TypeScript)
+                const uint8 =
+                    typeof data === 'string'
+                        ? new TextEncoder().encode(data)
+                        : data
+
+                const buffer = uint8.buffer.slice(
+                    uint8.byteOffset,
+                    uint8.byteOffset + uint8.byteLength
                 )
 
                 const blob = new Blob([buffer], { type: 'video/mp4' })

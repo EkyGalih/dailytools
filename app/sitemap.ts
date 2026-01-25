@@ -86,5 +86,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/kreator/hashtag`, changeFrequency: 'monthly', lastModified: now },
     { url: `${baseUrl}/kreator/caption`, changeFrequency: 'monthly', lastModified: now },
     { url: `${baseUrl}/kreator/video-size`, changeFrequency: 'monthly', lastModified: now },
+    { url: `${baseUrl}/kreator/auto-clipper`, changeFrequency: 'monthly', lastModified: now },
   ]
 }

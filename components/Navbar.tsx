@@ -60,10 +60,11 @@ export default function Navbar() {
             open={open === 'Kreator'}
             onToggle={() => toggle('Kreator')}
           >
-            <NavItem href="/kreator/youtube-income" label="Penghasilan YouTube" />
+            <NavItem href="/kreator/calculate-income" label="Penghasilan Sosial Media" />
             <NavItem href="/kreator/hashtag" label="Generator Hashtag" />
             <NavItem href="/kreator/caption" label="Generator Caption" />
             <NavItem href="/kreator/video-size" label="Estimasi Ukuran Video" />
+            <NavItem href="/kreator/auto-clipper" label="Auto Clipper Video" />
           </DropdownMenu>
 
           {/* KALKULATOR */}

@@ -3,9 +3,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-    title: 'Generator Caption Instagram & TikTok Gratis',
+    title: 'Generator Caption Konten Kreator (Instagram, TikTok, Facebook)',
     description:
-        'Generator caption Instagram dan TikTok untuk konten kreator. Buat caption menarik dengan gaya santai, profesional, edukatif, atau jualan secara gratis.',
+        'Generator caption untuk konten kreator Instagram, TikTok, Facebook Reels, dan YouTube Shorts. Buat caption menarik dengan berbagai gaya dan CTA secara gratis.',
 }
 
 export default function CaptionPage() {
@@ -14,12 +14,13 @@ export default function CaptionPage() {
             {/* HEADER */}
             <header className="max-w-3xl">
                 <h1 className="text-3xl font-bold tracking-tight">
-                    Generator Caption Instagram & TikTok
+                    Generator Caption Konten Kreator
                 </h1>
                 <p className="mt-3 text-gray-600">
-                    Buat caption secara instan untuk Instagram Reels, TikTok, dan konten
-                    jualan. Pilih gaya penulisan, panjang caption, CTA, dan emoji sesuai
-                    kebutuhan kontenmu.
+                    Buat caption otomatis untuk{' '}
+                    <strong>Instagram Reels</strong>, <strong>TikTok</strong>,{' '}
+                    <strong>Facebook Reels</strong>, dan <strong>YouTube Shorts</strong>.
+                    Pilih platform, gaya bahasa, CTA, dan emoji sesuai kebutuhan kontenmu.
                 </p>
             </header>
 
@@ -29,41 +30,37 @@ export default function CaptionPage() {
             </div>
 
             {/* INTERNAL LINK */}
-            <div className="text-sm text-gray-600">
-                <p>
-                    Butuh optimasi konten lainnya? Coba{' '}
-                    <Link href="/kreator/hashtag" className="underline text-black">
-                        generator hashtag
-                    </Link>{' '}
-                    atau{' '}
-                    <Link href="/kreator/youtube-income" className="underline text-black">
-                        kalkulator penghasilan YouTube
-                    </Link>
-                    .
-                </p>
-            </div>
+            <p className="text-sm text-gray-600">
+                Optimalkan jangkauan konten dengan{' '}
+                <Link href="/kreator/hashtag" className="underline text-black">
+                    generator hashtag
+                </Link>{' '}
+                atau hitung potensi cuan pakai{' '}
+                <Link href="/kreator/creator-income" className="underline text-black">
+                    kalkulator penghasilan kreator
+                </Link>.
+            </p>
 
             {/* SEO CONTENT */}
             <section className="max-w-3xl text-sm text-gray-700 space-y-4">
                 <h2 className="text-lg font-semibold text-gray-900">
-                    Cara Membuat Caption yang Menarik
+                    Kenapa Caption Penting untuk Konten Kreator?
                 </h2>
 
                 <p>
-                    Caption berperan penting dalam meningkatkan engagement konten di
-                    Instagram dan TikTok. Caption yang jelas, relevan, dan memiliki call
-                    to action (CTA) yang tepat dapat mendorong audiens untuk berinteraksi
-                    melalui like, komentar, atau share.
+                    Caption membantu algoritma platform memahami konteks konten sekaligus
+                    mendorong audiens untuk berinteraksi. Caption yang baik biasanya memiliki
+                    <strong> hook awal</strong>, isi yang relevan, dan
+                    <strong> call to action (CTA)</strong>.
                 </p>
 
                 <p>
-                    Generator caption ini dirancang untuk membantu konten kreator
-                    menghasilkan ide caption dengan cepat, baik untuk konten hiburan,
-                    edukasi, personal branding, maupun promosi produk.
+                    Generator caption ini dirancang untuk kreator Indonesia agar bisa
+                    menghasilkan caption cepat, variatif, dan siap pakai tanpa perlu AI berbayar.
                 </p>
             </section>
 
-            {/* FAQ CONTENT */}
+            {/* FAQ */}
             <section className="max-w-3xl text-sm text-gray-700 space-y-4">
                 <h2 className="text-lg font-semibold text-gray-900">
                     Pertanyaan yang Sering Diajukan
@@ -71,21 +68,20 @@ export default function CaptionPage() {
 
                 <div>
                     <h3 className="font-medium">
-                        Apakah caption ini cocok untuk Instagram dan TikTok?
+                        Apakah caption bisa langsung dipakai?
                     </h3>
                     <p className="text-gray-600">
-                        Ya. Caption dapat digunakan untuk Instagram Reels, TikTok, maupun
-                        postingan feed dengan penyesuaian gaya dan panjang.
+                        Bisa. Namun disarankan menyesuaikan sedikit dengan gaya personal atau brand.
                     </p>
                 </div>
 
                 <div>
                     <h3 className="font-medium">
-                        Apakah caption bisa langsung dipakai?
+                        Apakah cocok untuk semua platform?
                     </h3>
                     <p className="text-gray-600">
-                        Bisa. Namun disarankan untuk menyesuaikan sedikit dengan karakter
-                        brand atau gaya personal agar lebih natural.
+                        Ya. Caption disesuaikan dengan karakter Instagram, TikTok, Facebook Reels,
+                        dan YouTube Shorts.
                     </p>
                 </div>
 
@@ -94,68 +90,23 @@ export default function CaptionPage() {
                         Apakah generator caption ini gratis?
                     </h3>
                     <p className="text-gray-600">
-                        Ya. Generator caption di My Tools dapat digunakan gratis tanpa
-                        registrasi.
+                        Ya. Semua tools MyTools bisa digunakan gratis tanpa login.
                     </p>
                 </div>
             </section>
 
-            {/* SCHEMA: WEB APP */}
+            {/* SCHEMA */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
                         '@type': 'WebApplication',
-                        name: 'Generator Caption Instagram & TikTok',
+                        name: 'Generator Caption Konten Kreator',
                         applicationCategory: 'SocialMediaApplication',
                         operatingSystem: 'All',
-                        offers: {
-                            '@type': 'Offer',
-                            price: '0',
-                            priceCurrency: 'IDR',
-                        },
+                        offers: { '@type': 'Offer', price: '0', priceCurrency: 'IDR' },
                         url: 'https://mytools.web.id/kreator/caption',
-                    }),
-                }}
-            />
-
-            {/* SCHEMA: FAQ */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        '@context': 'https://schema.org',
-                        '@type': 'FAQPage',
-                        mainEntity: [
-                            {
-                                '@type': 'Question',
-                                name: 'Apakah caption ini cocok untuk Instagram dan TikTok?',
-                                acceptedAnswer: {
-                                    '@type': 'Answer',
-                                    text:
-                                        'Ya. Caption dapat digunakan untuk Instagram Reels, TikTok, maupun postingan feed.',
-                                },
-                            },
-                            {
-                                '@type': 'Question',
-                                name: 'Apakah caption bisa langsung dipakai?',
-                                acceptedAnswer: {
-                                    '@type': 'Answer',
-                                    text:
-                                        'Bisa. Namun sebaiknya disesuaikan dengan karakter brand atau gaya personal.',
-                                },
-                            },
-                            {
-                                '@type': 'Question',
-                                name: 'Apakah generator caption ini gratis?',
-                                acceptedAnswer: {
-                                    '@type': 'Answer',
-                                    text:
-                                        'Ya. Generator caption My Tools dapat digunakan gratis tanpa registrasi.',
-                                },
-                            },
-                        ],
                     }),
                 }}
             />

@@ -35,7 +35,12 @@ export default function VideoSizePage() {
                 <Link href="/kompress/gambar" className="underline text-black">
                     kompres gambar
                 </Link>{' '}
-                atau tools lainnya di My Tools.
+                atau
+                <Link href="/kreator/auto-clipper" className="underline text-black">
+                    {' '}
+                    auto clipper video
+                </Link>
+                .
             </p>
 
             {/* ================= SEO CONTENT ================= */}

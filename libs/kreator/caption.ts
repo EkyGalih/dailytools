@@ -1,107 +1,115 @@
-type Tone = 'santai' | 'profesional' | 'jualan' | 'edukatif'
-type Cta = 'follow' | 'komen' | 'save' | 'share' | 'dm'
+export type Platform = 'instagram' | 'tiktok' | 'facebook' | 'youtube'
+export type Tone = 'santai' | 'profesional' | 'edukatif' | 'jualan'
+export type Cta = 'follow' | 'komen' | 'save' | 'share' | 'dm'
 
 /* ================= CTA ================= */
 
 const CTA_TEXT: Record<Cta, string[]> = {
     follow: [
-        'Follow untuk konten lainnya ya.',
+        'Follow untuk konten selanjutnya.',
         'Ikuti akun ini biar nggak ketinggalan.',
         'Follow kalau kamu suka konten praktis kayak gini.',
+        'Stay tuned, bakal ada lanjutan.',
     ],
     komen: [
         'Tulis pendapat kamu di kolom komentar 👇',
-        'Menurut kamu gimana? Komentar ya.',
+        'Menurut kamu gimana?',
         'Pernah ngalamin juga? Share di komentar.',
+        'Komentar versi kamu di bawah ya.',
     ],
     save: [
         'Save dulu biar nggak lupa.',
         'Simpan postingan ini sebagai referensi.',
         'Bookmark sekarang, pakai nanti.',
+        'Save biar bisa dibuka lagi kapan aja.',
     ],
     share: [
         'Share ke teman kamu yang butuh ini.',
         'Bagikan ke orang terdekatmu.',
         'Forward ke grup yang relevan.',
+        'Share kalau ini ngebantu.',
     ],
     dm: [
         'Kalau mau tanya, DM aja ya.',
         'DM terbuka buat diskusi.',
         'Butuh bantuan? Langsung DM.',
+        'Konsultasi? DM sekarang.',
     ],
 }
-
-/* ================= EMOJI ================= */
-
-const EMOJIS = ['✨', '🔥', '💡', '📌', '✅', '⚡', '🎯']
-
-function maybeEmoji(enabled: boolean) {
-    if (!enabled) return ''
-    return EMOJIS[Math.floor(Math.random() * EMOJIS.length)]
-}
-
-/* ================= TRANSITION ================= */
-
-const TRANSITION = [
-    'Singkatnya begini:',
-    'Intinya:',
-    'Yang perlu kamu ingat:',
-    'Kenapa ini penting?',
-    'Masalah yang sering kejadian:',
-]
 
 /* ================= HOOK ================= */
 
 const HOOKS: Record<Tone, (topic: string) => string[]> = {
-    santai: (topic) => [
-        `Ngomongin ${topic} yuk.`,
-        `Jujur ya, ${topic} sering diremehin.`,
-        `Kalau kamu lagi mikir soal ${topic}, ini buat kamu.`,
-        `Banyak yang nanya soal ${topic}.`,
-        `Ngaku deh, ${topic} kadang bikin bingung 😅`,
+    santai: (t) => [
+        `Ngomongin ${t} yuk.`,
+        `Jujur ya, ${t} sering diremehin.`,
+        `Kalau kamu lagi mikir soal ${t}, ini buat kamu.`,
+        `Banyak yang nanya soal ${t}.`,
+        `Ngaku deh, ${t} kadang bikin bingung 😅`,
+        `Stop scroll dulu, ini penting soal ${t}.`,
+        `Gue baru sadar soal ${t}.`,
     ],
-    profesional: (topic) => [
-        `Ringkasan praktis tentang ${topic}.`,
-        `Catatan penting terkait ${topic}.`,
-        `Insight singkat yang bisa kamu terapkan soal ${topic}.`,
-        `Framework sederhana untuk ${topic}.`,
+
+    profesional: (t) => [
+        `Ringkasan praktis tentang ${t}.`,
+        `Insight penting terkait ${t}.`,
+        `Catatan singkat yang bisa langsung diterapkan.`,
+        `Framework sederhana untuk ${t}.`,
+        `Beberapa poin penting terkait ${t}.`,
+        `Pendekatan sistematis untuk ${t}.`,
     ],
-    edukatif: (topic) => [
-        `Tahukah kamu tentang ${topic}?`,
-        `Panduan singkat: ${topic}.`,
-        `Hal yang sering salah kaprah tentang ${topic}.`,
-        `Mari pahami ${topic} secara sederhana.`,
+
+    edukatif: (t) => [
+        `Tahukah kamu tentang ${t}?`,
+        `Panduan singkat: ${t}.`,
+        `Hal yang sering salah kaprah tentang ${t}.`,
+        `Mari pahami ${t} dengan cara sederhana.`,
+        `Dasar penting yang perlu kamu tahu soal ${t}.`,
+        `Penjelasan singkat tentang ${t}.`,
     ],
-    jualan: (topic) => [
-        `Masih stuck di ${topic}?`,
-        `Kalau mau hasil lebih baik soal ${topic}, simak ini.`,
-        `${topic} bisa lebih efektif kalau caranya tepat.`,
-        `Ini solusi praktis buat ${topic}.`,
+
+    jualan: (t) => [
+        `Masih stuck di ${t}?`,
+        `Kalau mau hasil lebih baik soal ${t}, simak ini.`,
+        `${t} bisa lebih efektif kalau caranya tepat.`,
+        `Ini solusi praktis buat ${t}.`,
+        `Banyak yang gagal di ${t} karena ini.`,
+        `Kalau kamu serius soal ${t}, ini wajib tahu.`,
     ],
 }
 
 /* ================= BODY ================= */
 
-const BODIES: Record<Tone, (topic: string) => string[]> = {
-    santai: (topic) => [
-        `Mulai dari hal kecil.\nKonsisten.\nEvaluasi pelan-pelan.`,
-        `Nggak perlu ribet.\nYang penting jalan dulu.`,
-        `Sedikit tapi rutin jauh lebih kepake daripada sempurna tapi nggak mulai.`,
+const BODIES: Record<Tone, string[]> = {
+    santai: [
+        `Mulai dari hal kecil.\nNggak perlu sempurna.\nYang penting konsisten.`,
+        `Sering kejadian:\n• Kebanyakan mikir\n• Takut salah\n• Akhirnya nggak mulai`,
+        `Pelan-pelan asal jalan.\nLebih baik progress kecil daripada diam.`,
+        `Yang penting paham dasarnya dulu.\nSisanya bisa nyusul.`,
     ],
-    profesional: (topic) => [
-        `1) Tentukan tujuan\n2) Tetapkan metrik\n3) Eksekusi\n4) Evaluasi`,
+
+    profesional: [
+        `1) Tentukan tujuan\n2) Susun strategi\n3) Eksekusi\n4) Evaluasi`,
         `Gunakan pendekatan bertahap agar hasil terukur.`,
-        `Fokus pada dampak terbesar lebih dulu.`,
+        `Fokus pada variabel dengan dampak terbesar.`,
+        `Lakukan review berkala untuk optimasi.`,
+        `Dokumentasikan proses supaya bisa direplikasi.`,
     ],
-    edukatif: (topic) => [
-        `• Definisi\n• Contoh\n• Cara penerapan`,
+
+    edukatif: [
+        `• Pengertian\n• Contoh penerapan\n• Kesalahan umum`,
         `Konsepnya sederhana, tinggal diterapkan secara konsisten.`,
-        `Kesalahan umum biasanya ada di langkah awal.`,
+        `Masalah sering muncul karena salah di langkah awal.`,
+        `Pahami dulu logikanya sebelum praktek.`,
+        `Ini dasar yang sering dilewatkan pemula.`,
     ],
-    jualan: (topic) => [
+
+    jualan: [
         `Solusi ini dirancang supaya mudah diterapkan.`,
         `Cocok buat kamu yang pengen hasil tanpa ribet.`,
         `Sudah banyak yang pakai pendekatan ini.`,
+        `Lebih hemat waktu dan tenaga.`,
+        `Bisa langsung dipraktikkan mulai hari ini.`,
     ],
 }
 
@@ -111,20 +119,11 @@ function pick<T>(arr: T[]) {
     return arr[Math.floor(Math.random() * arr.length)]
 }
 
-function decorate(text: string, emoji: boolean) {
-    if (!emoji) return text
-    const lines = text.split('\n')
-    return lines
-        .map((l, i) =>
-            i === 0 ? `${maybeEmoji(true)} ${l}` : l
-        )
-        .join('\n')
-}
-
 /* ================= BUILDER ================= */
 
 export function buildCaptions(opts: {
     topic: string
+    platform: Platform
     tone: Tone
     cta: Cta
     emoji: boolean
@@ -133,28 +132,22 @@ export function buildCaptions(opts: {
     const topic = (opts.topic || '').trim()
     if (!topic) return []
 
-    const n = Math.max(3, Math.min(12, opts.count))
+    const n = Math.max(3, Math.min(opts.count, 12))
     const hooks = HOOKS[opts.tone](topic)
-    const bodies = BODIES[opts.tone](topic)
+    const bodies = BODIES[opts.tone]
     const ctas = CTA_TEXT[opts.cta]
 
-    const list: string[] = []
+    const result: string[] = []
 
     for (let i = 0; i < n; i++) {
-        const hook = pick(hooks)
-        const body = pick(bodies)
-        const transition = pick(TRANSITION)
-        const cta = pick(ctas)
+        const caption = `${pick(hooks)}
 
-        const text = `${hook}
+${pick(bodies)}
 
-${transition}
-${body}
+${pick(ctas)}`
 
-${cta}`
-
-        list.push(decorate(text, opts.emoji))
+        result.push(caption)
     }
 
-    return list
+    return result
 }

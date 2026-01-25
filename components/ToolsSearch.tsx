@@ -101,7 +101,7 @@ const tools: Tool[] = [
   {
     title: 'Kalkulator Penghasilan YouTube',
     desc: 'Estimasi pendapatan YouTube dari views & RPM.',
-    href: '/kreator/youtube-income',
+    href: '/kreator/calculate-income',
     emoji: '▶️',
     tag: 'Kreator',
     category: 'kreator',
@@ -130,6 +130,14 @@ const tools: Tool[] = [
     tag: 'Kreator',
     category: 'kreator',
   },
+  {
+    title: 'Auto Clipper Video',
+    desc: 'Upload video panjang → otomatis jadi banyak klip, bisa download satu atau semua.',
+    href: '/kreator/auto-clipper',
+    emoji: '✂️',
+    tag: 'Kreator',
+    category: 'kreator',
+  }
 ]
 
 export default function ToolGrid() {

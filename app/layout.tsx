@@ -11,6 +11,19 @@ export const metadata: Metadata = {
   },
   description:
     'Kumpulan tools online gratis: kalkulator THR, zakat, PPh 21, simulasi KPR, kompres PDF & gambar.',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
+    other: [
+      {
+        rel: 'icon',
+        url: '/logo.png',
+        sizes: '512x512',
+        type: 'image/png',
+      },
+    ],
+  },
 }
 
 export default function RootLayout({

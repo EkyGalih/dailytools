@@ -111,6 +111,27 @@ export default function Home() {
           </p>
         </section>
       </section>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'My Tools',
+              url: 'https://mytools.web.id',
+              description:
+                'Kumpulan kalkulator dan tools online gratis untuk kebutuhan finansial dan teknis.',
+            },
+            {
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'My Tools',
+              url: 'https://mytools.web.id',
+            },
+          ]),
+        }}
+      />
     </section>
   )
 }

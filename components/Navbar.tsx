@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
 
 export default function Navbar() {
   const [open, setOpen] = useState<string | null>(null)
@@ -35,10 +36,17 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-white border-b">
       <div
         ref={ref}
-        className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between"
+        className="max-w-5xl mx-auto px-2 py-1 flex items-center justify-between"
       >
-        <Link href="/" className="text-lg font-semibold">
-          My Tools
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo-with-text.png"
+            alt="My Tools – Kalkulator & Tools Online Gratis"
+            width={200}
+            height={60}
+            className="h-25 w-auto"
+            priority
+          />
         </Link>
 
         <nav className="flex items-center gap-6 text-sm font-medium">

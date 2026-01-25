@@ -2,6 +2,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
+import GoogleAnalytics from '@/components/GoogleAnalytics'
+import GAListener from '@/components/GAListener'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://mytools.web.id'),
@@ -48,6 +50,8 @@ export default function RootLayout({
             </Link>
           </div>
         </footer>
+        <GoogleAnalytics />
+        <GAListener />
       </body>
     </html>
   )

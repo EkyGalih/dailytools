@@ -1,132 +1,82 @@
 'use client'
 
-import { useGoldPrice } from '@/libs/useGoldPrice'
-import { useFxRates } from '@/libs/useFxRates'
 import { formatRupiah } from '@/libs/format'
+import { useExchangeRates } from '@/libs/useFxRates'
 
 export default function MarketInfo() {
-    const {
-        price,
-        changePercent: goldChangePercent,
-        loading: goldLoading,
-    } = useGoldPrice()
+  const { rates, loading: fxLoading } = useExchangeRates()
 
-    const {
-        rates,
-        loading: fxLoading,
-    } = useFxRates()
+  return (
+    <aside className="border rounded-2xl p-5 bg-white shadow-sm space-y-6">
+      {/* ================= FX ================= */}
+      <div>
+        <p className="text-xs text-gray-500 mb-3">
+          Nilai Tukar Mata Uang ke Rupiah
+        </p>
 
-    const goldIsUp =
-        typeof goldChangePercent === 'number' &&
-        goldChangePercent > 0
+        <ul className="space-y-2 text-sm">
+          {fxLoading && (
+            <li className="text-gray-500">
+              Memuat kurs…
+            </li>
+          )}
 
-    const goldIsDown =
-        typeof goldChangePercent === 'number' &&
-        goldChangePercent < 0
-    return (
-        <aside className="border rounded-2xl p-5 bg-white shadow-sm space-y-5">
-            <h3 className="font-semibold text-lg">
-                Trend Pasar Hari Ini
-            </h3>
+          {!fxLoading &&
+            rates.map((item) => {
+              const change =
+                typeof item.changePercent === 'number'
+                  ? item.changePercent
+                  : null
 
-            {/* ================= GOLD ================= */}
-            <ul className="space-y-3 text-sm">
-                <li className="flex justify-between items-center">
-                    <span className="text-gray-600">
-                        Emas (gram)
+              const isUp = change !== null && change > 0
+              const isDown = change !== null && change < 0
+
+              return (
+                <li
+                  key={item.code}
+                  className="flex justify-between items-center"
+                >
+                  <span className="text-gray-600">
+                    1 {item.code}
+                  </span>
+
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">
+                      {formatRupiah(item.rate)}
                     </span>
 
-                    <div className="flex items-center gap-2">
-                        <span className="font-medium">
-                            {goldLoading && 'Memuat...'}
-                            {!goldLoading && price !== null &&
-                                formatRupiah(price)}
-                            {!goldLoading && price === null && '-'}
-                        </span>
-
-                        {!goldLoading &&
-                            typeof goldChangePercent === 'number' && (
-                                <span
-                                    className={`text-xs font-medium ${goldIsUp
-                                            ? 'text-green-600'
-                                            : goldIsDown
-                                                ? 'text-red-600'
-                                                : 'text-gray-500'
-                                        }`}
-                                >
-                                    {goldIsUp && '+'}
-                                    {goldChangePercent.toFixed(2)}%
-                                </span>
-                            )}
-                    </div>
+                    {change !== null && (
+                      <span
+                        className={`text-xs font-medium ${
+                          isUp
+                            ? 'text-green-600'
+                            : isDown
+                            ? 'text-red-600'
+                            : 'text-gray-500'
+                        }`}
+                      >
+                        {isUp && '▲'}
+                        {isDown && '▼'}
+                        {Math.abs(change).toFixed(2)}%
+                      </span>
+                    )}
+                  </div>
                 </li>
-            </ul>
+              )
+            })}
 
-            {/* ================= FX ================= */}
-            <div>
-                <p className="text-xs text-gray-500 mb-2">
-                    Nilai Tukar Rupiah
-                </p>
+          {!fxLoading && rates.length === 0 && (
+            <li className="text-gray-500">
+              Data kurs tidak tersedia
+            </li>
+          )}
+        </ul>
+      </div>
 
-                <ul className="space-y-2 text-sm">
-                    {fxLoading && (
-                        <li className="text-gray-500">
-                            Memuat kurs...
-                        </li>
-                    )}
-
-                    {!fxLoading &&
-                        rates.map((item) => {
-                            const change =
-                                typeof item.changePercent === 'number'
-                                    ? item.changePercent
-                                    : 0
-
-                            const isUp = change > 0
-                            const isDown = change < 0
-
-                            return (
-                                <li
-                                    key={item.code}
-                                    className="flex justify-between items-center"
-                                >
-                                    <span className="text-gray-600">
-                                        1 {item.code}
-                                    </span>
-
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-medium">
-                                            {formatRupiah(item.rate)}
-                                        </span>
-
-                                        <span
-                                            className={`text-xs font-medium ${isUp
-                                                    ? 'text-green-600'
-                                                    : isDown
-                                                        ? 'text-red-600'
-                                                        : 'text-gray-500'
-                                                }`}
-                                        >
-                                            {isUp && '+'}
-                                            {change.toFixed(2)}%
-                                        </span>
-                                    </div>
-                                </li>
-                            )
-                        })}
-
-                    {!fxLoading && rates.length === 0 && (
-                        <li className="text-gray-500">
-                            Data kurs tidak tersedia
-                        </li>
-                    )}
-                </ul>
-            </div>
-
-            <p className="text-xs text-gray-500">
-                Data bersifat indikatif dan dapat berbeda antar
-                penyedia.
-            </p>
-        </aside>
-    )
+      <p className="text-xs text-gray-500">
+        Data bersifat indikatif (harian) dan bukan untuk
+        keperluan trading.
+      </p>
+    </aside>
+  )
 }

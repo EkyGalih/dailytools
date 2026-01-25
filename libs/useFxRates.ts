@@ -2,72 +2,49 @@
 
 import { useEffect, useState } from 'react'
 
-type FxRate = {
-    code: string
-    rate: number
-    changePercent: number
+type RateItem = {
+  code: string
+  rate: number
+  updatedAt: string
 }
 
-const CURRENCIES = ['USD', 'SGD', 'AUD', 'EUR', 'GBP', 'JPY']
+const BASE_CURRENCIES = ['USD', 'SGD', 'AUD', 'JPY', 'EUR']
 
-function getYesterday() {
-    const d = new Date()
-    d.setDate(d.getDate() - 1)
-    return d.toISOString().split('T')[0]
-}
+export function useExchangeRates() {
+  const [rates, setRates] = useState<RateItem[]>([])
+  const [loading, setLoading] = useState(true)
 
-export function useFxRates() {
-    const [rates, setRates] = useState<FxRate[]>([])
-    const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    async function fetchRates() {
+      try {
+        const results: RateItem[] = []
 
-    useEffect(() => {
-        async function fetchRates() {
-            try {
-                const yesterday = getYesterday()
+        for (const base of BASE_CURRENCIES) {
+          const res = await fetch(
+            `https://hexarate.paikama.co/api/rates/${base}/IDR/latest`
+          )
 
-                const results = await Promise.all(
-                    CURRENCIES.map(async (currency) => {
-                        // hari ini
-                        const todayRes = await fetch(
-                            `https://api.frankfurter.app/latest?from=${currency}&to=IDR`
-                        )
-                        const todayData = await todayRes.json()
+          if (!res.ok) continue
 
-                        // kemarin
-                        const yesterdayRes = await fetch(
-                            `https://api.frankfurter.app/${yesterday}?from=${currency}&to=IDR`
-                        )
-                        const yesterdayData =
-                            await yesterdayRes.json()
+          const json = await res.json()
 
-                        const todayRate = todayData.rates.IDR
-                        const yesterdayRate =
-                            yesterdayData.rates.IDR
-
-                        const changePercent =
-                            ((todayRate - yesterdayRate) /
-                                yesterdayRate) *
-                            100
-
-                        return {
-                            code: currency,
-                            rate: todayRate,
-                            changePercent,
-                        }
-                    })
-                )
-
-                setRates(results)
-            } catch (err) {
-                console.error('FX error:', err)
-                setRates([])
-            } finally {
-                setLoading(false)
-            }
+          results.push({
+            code: base,
+            rate: json.data.mid,
+            updatedAt: json.data.timestamp,
+          })
         }
 
-        fetchRates()
-    }, [])
+        setRates(results)
+      } catch (err) {
+        console.error('FX rate error:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-    return { rates, loading }
+    fetchRates()
+  }, [])
+
+  return { rates, loading }
 }

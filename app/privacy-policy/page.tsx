@@ -1,8 +1,16 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Kebijakan Privasi – MyTools',
+  description:
+    'Kebijakan privasi MyTools menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pengguna.',
+}
+
 export default function PrivacyPolicyPage() {
   return (
     <section className="space-y-12">
       {/* HEADER */}
-      <div className="max-w-3xl">
+      <header className="max-w-3xl">
         <h1 className="text-3xl font-bold tracking-tight">
           Kebijakan Privasi
         </h1>
@@ -12,11 +20,10 @@ export default function PrivacyPolicyPage() {
           mengumpulkan, menggunakan, dan melindungi informasi
           pengguna saat mengakses situs kami.
         </p>
-      </div>
+      </header>
 
       {/* CONTENT */}
       <div className="max-w-3xl space-y-8 text-gray-700">
-        {/* INFORMASI */}
         <section>
           <h2 className="text-lg font-semibold mb-2">
             Informasi yang Kami Kumpulkan
@@ -35,14 +42,10 @@ export default function PrivacyPolicyPage() {
           </p>
         </section>
 
-        {/* PENGGUNAAN */}
         <section>
           <h2 className="text-lg font-semibold mb-2">
             Penggunaan Informasi
           </h2>
-          <p>
-            Informasi non-pribadi digunakan untuk:
-          </p>
           <ul className="list-disc pl-5 mt-2 space-y-1 text-sm">
             <li>Menganalisis penggunaan situs dan performa layanan</li>
             <li>Meningkatkan kualitas dan pengalaman pengguna</li>
@@ -50,7 +53,6 @@ export default function PrivacyPolicyPage() {
           </ul>
         </section>
 
-        {/* COOKIE */}
         <section>
           <h2 className="text-lg font-semibold mb-2">
             Cookie dan Teknologi Pelacakan
@@ -69,73 +71,79 @@ export default function PrivacyPolicyPage() {
           </p>
         </section>
 
-        {/* IKLAN */}
         <section>
           <h2 className="text-lg font-semibold mb-2">
             Iklan Pihak Ketiga (Google AdSense)
           </h2>
           <p>
             MyTools menampilkan iklan dari pihak ketiga seperti
-            Google AdSense. Google menggunakan cookie DART untuk
-            menayangkan iklan kepada pengguna berdasarkan kunjungan
-            mereka ke situs ini dan situs lainnya di internet.
+            Google AdSense. Google menggunakan cookie untuk
+            menayangkan iklan berdasarkan kunjungan pengguna.
           </p>
           <p className="mt-2">
-            Pengguna dapat memilih untuk menonaktifkan penggunaan
-            cookie iklan Google dengan mengunjungi halaman
+            Pengguna dapat menonaktifkan iklan yang dipersonalisasi
+            melalui halaman{' '}
             <a
               href="https://policies.google.com/technologies/ads"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline ml-1"
+              className="underline"
             >
               Kebijakan Iklan Google
             </a>.
           </p>
-          <p className="mt-2">
-            MyTools tidak memiliki akses atau kontrol atas cookie
-            yang digunakan oleh pengiklan pihak ketiga.
-          </p>
         </section>
 
-        {/* ANAK */}
         <section>
           <h2 className="text-lg font-semibold mb-2">
             Privasi Anak-anak
           </h2>
           <p>
-            MyTools tidak secara sadar mengumpulkan informasi
-            pribadi dari anak-anak di bawah usia 13 tahun. Jika
-            Anda meyakini bahwa anak Anda telah memberikan informasi
-            pribadi di situs ini, silakan hubungi kami agar dapat
-            segera ditindaklanjuti.
+            MyTools tidak secara sadar mengumpulkan informasi pribadi
+            dari anak-anak di bawah usia 13 tahun.
           </p>
         </section>
 
-        {/* PERSETUJUAN */}
         <section>
           <h2 className="text-lg font-semibold mb-2">
             Persetujuan
           </h2>
           <p>
             Dengan menggunakan situs MyTools, Anda dianggap telah
-            menyetujui kebijakan privasi ini beserta syarat dan
-            ketentuan yang berlaku.
+            menyetujui kebijakan privasi ini.
           </p>
         </section>
 
-        {/* PERUBAHAN */}
         <section>
           <h2 className="text-lg font-semibold mb-2">
             Perubahan Kebijakan Privasi
           </h2>
           <p>
-            Kebijakan privasi ini dapat diperbarui sewaktu-waktu.
-            Setiap perubahan akan ditampilkan di halaman ini dan
+            Kebijakan privasi ini dapat diperbarui sewaktu-waktu dan
             berlaku sejak tanggal diperbarui.
           </p>
         </section>
       </div>
+
+      {/* ✅ STRUCTURED DATA */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: 'Kebijakan Privasi MyTools',
+            url: 'https://mytools.web.id/privacy-policy',
+            description:
+              'Kebijakan privasi MyTools yang menjelaskan pengumpulan dan penggunaan data pengguna.',
+            isPartOf: {
+              '@type': 'WebSite',
+              name: 'MyTools',
+              url: 'https://mytools.web.id',
+            },
+          }),
+        }}
+      />
     </section>
   )
 }

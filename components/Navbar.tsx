@@ -54,6 +54,18 @@ export default function Navbar() {
             Beranda
           </Link>
 
+          {/* Kreator */}
+          <DropdownMenu
+            label="Kreator"
+            open={open === 'Kreator'}
+            onToggle={() => toggle('Kreator')}
+          >
+            <NavItem href="/kreator/youtube-income" label="Penghasilan YouTube" />
+            <NavItem href="/kreator/hashtag" label="Generator Hashtag" />
+            <NavItem href="/kreator/caption" label="Generator Caption" />
+            <NavItem href="/kreator/video-size" label="Estimasi Ukuran Video" />
+          </DropdownMenu>
+
           {/* KALKULATOR */}
           <DropdownMenu
             label="Kalkulator"

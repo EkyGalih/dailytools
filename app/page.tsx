@@ -25,52 +25,92 @@ export default function Home() {
       <section className="max-w-5xl mx-auto space-y-12">
         <div className="grid md:grid-cols-2 gap-6">
           {/* FINANCIAL */}
-          <div className="bg-white border rounded-2xl p-6">
+          <Link
+            href="/kreator"
+            className="block bg-white border rounded-2xl p-6
+             hover:shadow-lg hover:-translate-y-1
+             transition-all duration-200"
+          >
             <h3 className="text-lg font-semibold mb-2">
+              🎥 Tools untuk Konten Kreator
+            </h3>
+
+            <p className="text-gray-600 text-sm">
+              Kumpulan tools gratis untuk kreator seperti{' '}
+              <span className="font-medium">kalkulator penghasilan YouTube</span>,{' '}
+              <span className="font-medium">generator hashtag</span>,{' '}
+              <span className="font-medium">generator caption</span>, dan{' '}
+              <span className="font-medium">estimasi ukuran video</span>{' '}
+              untuk Instagram, TikTok, dan YouTube.
+            </p>
+
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-black">
+              Lihat semua tools kreator
+              <span className="transition group-hover:translate-x-1">→</span>
+            </span>
+          </Link>
+
+          <Link
+            href="/kalkulator"
+            className="group block bg-white border rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition"
+          >
+            <h3 className="text-lg font-semibold mb-2 group-hover:underline">
               📊 Kalkulator Finansial
             </h3>
+
             <p className="text-gray-600 text-sm">
               Hitung{' '}
-              <Link href="/kalkulator/thr" className="font-medium underline">
-                THR
-              </Link>
-              ,{' '}
-              <Link href="/kalkulator/zakat" className="font-medium underline">
-                zakat penghasilan
-              </Link>
-              ,{' '}
-              <Link href="/kalkulator/pph21" className="font-medium underline">
-                PPh 21
-              </Link>
-              , hingga{' '}
-              <Link href="/kalkulator/take-home-pay" className="font-medium underline">
-                gaji bersih
-              </Link>{' '}
+              <span className="font-medium underline">THR</span>,{' '}
+              <span className="font-medium underline">zakat penghasilan</span>,{' '}
+              <span className="font-medium underline">PPh 21</span>, hingga{' '}
+              <span className="font-medium underline">gaji bersih</span>{' '}
               berdasarkan rumus dan ketentuan yang umum digunakan di Indonesia.
             </p>
-          </div>
 
-          {/* TECH */}
-          <div className="bg-white border rounded-2xl p-6">
-            <h3 className="text-lg font-semibold mb-2">
-              🛠 Tools Teknis
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-black">
+              Lihat semua kalkulator{' '}
+              <span className="transition group-hover:translate-x-1">→</span>
+            </span>
+          </Link>
+
+          <Link
+            href="/konverter"
+            className="group block bg-white border rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition"
+          >
+            <h3 className="text-lg font-semibold mb-2 group-hover:underline">
+              🔄 Konverter File
             </h3>
+
             <p className="text-gray-600 text-sm">
-              Gunakan tools seperti{' '}
-              <Link href="/kompress/pdf" className="font-medium underline">
-                kompres PDF
-              </Link>
-              ,{' '}
-              <Link href="/kompress/gambar" className="font-medium underline">
-                kompres gambar
-              </Link>
-              , dan{' '}
-              <Link href="/konverter/image" className="font-medium underline">
-                konverter gambar
-              </Link>{' '}
-              langsung dari browser tanpa perlu instal aplikasi tambahan.
+              Konversi file langsung di browser seperti{' '}
+              <span className="font-medium underline">gambar (JPG, PNG, WebP)</span>{' '}
+              tanpa instal aplikasi tambahan.
             </p>
-          </div>
+
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-black">
+              Lihat semua konverter <span className="group-hover:translate-x-1 transition">→</span>
+            </span>
+          </Link>
+
+          <Link
+            href="/kompress"
+            className="group block bg-white border rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition"
+          >
+            <h3 className="text-lg font-semibold mb-2 group-hover:underline">
+              🗜 Kompres File
+            </h3>
+
+            <p className="text-gray-600 text-sm">
+              Perkecil ukuran{' '}
+              <span className="font-medium underline">gambar</span> dan{' '}
+              <span className="font-medium underline">PDF</span>{' '}
+              tanpa mengurangi kualitas secara signifikan.
+            </p>
+
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-black">
+              Lihat semua tool kompres <span className="group-hover:translate-x-1 transition">→</span>
+            </span>
+          </Link>
         </div>
       </section>
 

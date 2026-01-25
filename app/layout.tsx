@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import GAListener from '@/components/GAListener'
+import { Analytics } from '@vercel/analytics/next'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://mytools.web.id'),
@@ -52,6 +53,7 @@ export default function RootLayout({
         </footer>
         <GoogleAnalytics />
         <GAListener />
+        <Analytics />
       </body>
     </html>
   )

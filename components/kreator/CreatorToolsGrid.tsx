@@ -4,7 +4,7 @@ const items = [
     {
         title: 'Kalkulator Penghasilan Konten Kreator',
         desc: 'Estimasi penghasilan kreator dari YouTube, TikTok, Instagram Reels, dan Facebook berdasarkan views dan RPM.',
-        href: '/kreator/income',
+        href: '/kreator/calculate-income',
         emoji: '💰',
         tag: 'Penghasilan',
     },

@@ -35,11 +35,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
       <head>
         {/* ✅ GOOGLE ADSENSE */}
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4762845598503420"
-          crossOrigin="anonymous"></script>
+        <Script
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4762845598503420"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="bg-gray-50 text-gray-900">
         <Navbar />

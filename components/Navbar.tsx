@@ -54,6 +54,13 @@ export default function Navbar() {
             Beranda
           </Link>
 
+          <DropdownMenu
+            label="Drama"
+            open={!!open && open.startsWith('drama')} // ✅ Tetap terbuka jika open adalah 'sport' atau 'sport-bola'
+            onToggle={() => toggle('drama')}
+          >
+              <NavItem href="/drama/china" label="Drama China" />
+          </DropdownMenu>
           {/* MENU UTAMA: TOOLS */}
           <DropdownMenu
             label="Tools"

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import ToolGrid from '@/components/ToolsSearch'
 import Link from 'next/link'
-import MatchGrid from '@/components/bola/MatchGrid'
 import { getLiveMatches } from '@/libs/bola/api'
 
 export const metadata: Metadata = {

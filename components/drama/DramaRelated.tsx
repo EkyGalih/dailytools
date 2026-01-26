@@ -3,16 +3,12 @@ import DramaVideoGrid, { VideoCardItem } from './DramaVideoGrid'
 
 interface DramaRelatedProps {
   items: VideoCardItem[]
-  currentId?: string // Tambahkan prop ini
+  currentId?: string
 }
 
 export default function DramaRelated({ items, currentId }: DramaRelatedProps) {
-  // Filter items agar tidak menampilkan video yang sedang ditonton
-  const filteredItems = items.filter((item) => {
-    // Sesuaikan dengan properti ID yang kamu gunakan (__videoId atau id.videoId)
-    const videoId = item.__videoId || (typeof item.id === 'string' ? item.id : item.id.videoId);
-    return videoId !== currentId;
-  });
+  // Filter menggunakan __videoId yang sudah di-mapping di libs/drama/youtube.ts
+  const filteredItems = items.filter((item) => item.__videoId !== currentId);
 
   if (!filteredItems.length) return null;
 

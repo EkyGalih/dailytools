@@ -59,7 +59,7 @@ export default async function Home() {
               <p className="text-gray-500 text-sm">Pertandingan hari ini</p>
             </div>
             <Link
-              href="/bola"
+              href="/bola/livescore"
               className="text-indigo-600 font-semibold hover:text-indigo-800 transition-colors text-sm"
             >
               Lihat Jadwal Lengkap →

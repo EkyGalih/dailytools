@@ -57,7 +57,7 @@ export default function Navbar() {
           {/* MENU UTAMA: TOOLS */}
           <DropdownMenu
             label="Tools"
-            open={open?.startsWith('tools')} // ✅ Tetap terbuka jika open adalah 'tools' atau 'tools-...'
+            open={!!open && open.startsWith('tools')}// ✅ Tetap terbuka jika open adalah 'tools' atau 'tools-...'
             onToggle={() => toggle('tools')}
           >
             {/* SUB MENU: KREATOR */}
@@ -114,7 +114,7 @@ export default function Navbar() {
           {/* Ganti kondisi open pada menu induk yang punya sub-menu */}
           <DropdownMenu
             label="Sport"
-            open={!!open && open.startsWith('tools')} // ✅ Tetap terbuka jika open adalah 'sport' atau 'sport-bola'
+            open={!!open && open.startsWith('sport')} // ✅ Tetap terbuka jika open adalah 'sport' atau 'sport-bola'
             onToggle={() => toggle('sport')}
           >
             <DropdownMenu

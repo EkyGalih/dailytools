@@ -114,7 +114,7 @@ export default function Navbar() {
           {/* Ganti kondisi open pada menu induk yang punya sub-menu */}
           <DropdownMenu
             label="Sport"
-            open={open?.startsWith('sport')} // ✅ Tetap terbuka jika open adalah 'sport' atau 'sport-bola'
+            open={!!open && open.startsWith('tools')} // ✅ Tetap terbuka jika open adalah 'sport' atau 'sport-bola'
             onToggle={() => toggle('sport')}
           >
             <DropdownMenu

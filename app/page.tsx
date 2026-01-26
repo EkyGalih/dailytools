@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import ToolGrid from '@/components/ToolsSearch'
 import Link from 'next/link'
+import MatchGrid from '@/components/bola/MatchGrid'
+import { getLiveMatches } from '@/libs/bola/api'
 
 export const metadata: Metadata = {
   title: 'My Tools – Kalkulator & Tools Online Gratis',
@@ -8,7 +10,8 @@ export const metadata: Metadata = {
     'Kumpulan kalkulator dan tools online gratis: THR, zakat, PPh 21, KPR, gaji bersih, kompres PDF & gambar.',
 }
 
-export default function Home() {
+export default async function Home() {
+  const live = await getLiveMatches()
   return (
     <section className="space-y-24">
       {/* HERO */}

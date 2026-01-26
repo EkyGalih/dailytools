@@ -14,3 +14,17 @@ export function formatNumber(value: string) {
 export function parseNumber(value: string) {
     return Number(value.replace(/\./g, ''))
 }
+
+export type MatchStatItem = {
+    type: string
+    value: number | string | null
+}
+
+export type TeamStats = {
+    team: {
+        id: number
+        name: string
+        logo: string
+    }
+    statistics: MatchStatItem[]
+}

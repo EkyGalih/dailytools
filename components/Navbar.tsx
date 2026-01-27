@@ -27,6 +27,13 @@ export default function Navbar() {
       document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileMenu, setMobileMenu] = useState<string | null>(null)
+
+  const toggleMobileMenu = (key: string) => {
+    setMobileMenu(prev => (prev === key ? null : key))
+  }
+
   // ✅ Close on route change
   useEffect(() => {
     setOpen(null)
@@ -38,18 +45,49 @@ export default function Navbar() {
         ref={ref}
         className="max-w-5xl mx-auto px-2 py-1 flex items-center justify-between"
       >
-        <Link href="/" className="flex items-center">
-          <Image
-            src="/logo-with-text.png"
-            alt="My Tools – Kalkulator & Tools Online Gratis"
-            width={200}
-            height={60}
-            className="h-25 w-auto"
-            priority
-          />
-        </Link>
+        <div className="flex items-center gap-2">
+          {/* LOGO */}
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo-with-text.png"
+              alt="My Tools – Kalkulator & Tools Online Gratis"
+              width={160}
+              height={48}
+              className="h-10 w-auto"
+              priority
+            />
+          </Link>
 
-        <nav className="flex items-center gap-6 text-sm font-medium">
+          {/* ☕ TRAKTEER — MOBILE & DESKTOP */}
+          <a
+            href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open"
+            target="_blank"
+            rel="noopener sponsored nofollow"
+            className="
+      inline-flex items-center gap-1
+      rounded-full
+      bg-gradient-to-r from-orange-500 to-pink-500
+      px-3 py-1.5
+      text-xs font-semibold text-white
+      shadow
+      hover:opacity-90 transition
+    "
+            aria-label="Dukung kami lewat Trakteer"
+          >
+            ☕ Traktir
+          </a>
+        </div>
+
+        {/* MOBILE BUTTON */}
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+          aria-label="Buka menu"
+        >
+          ☰
+        </button>
+
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <Link href="/" className="text-gray-600 hover:text-black">
             Beranda
           </Link>
@@ -59,7 +97,7 @@ export default function Navbar() {
             open={!!open && open.startsWith('drama')} // ✅ Tetap terbuka jika open adalah 'sport' atau 'sport-bola'
             onToggle={() => toggle('drama')}
           >
-              <NavItem href="/drama/china/channel/dramabox" label="Drama China" />
+            <NavItem href="/drama/china/channel/dramabox" label="Drama China" />
           </DropdownMenu>
           {/* MENU UTAMA: TOOLS */}
           <DropdownMenu
@@ -136,11 +174,175 @@ export default function Navbar() {
             </DropdownMenu>
           </DropdownMenu>
 
+          <Link
+            href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open"
+            target="_blank"
+            rel="noopener sponsored nofollow"
+            className="ml-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow hover:opacity-90 transition"
+            aria-label="Dukung kami lewat Trakteer"
+          >
+            ☕ Traktir Kopi
+          </Link>
+
           <Link href="/about" className="text-gray-600 hover:text-black">
             About
           </Link>
         </nav>
       </div>
+
+      {mobileOpen && (
+        <div className="fixed inset-0 z-[100] bg-white overflow-y-auto">
+          {/* HEADER */}
+          <div className="flex items-center justify-between px-4 py-3 border-b">
+            <span className="font-semibold">Menu</span>
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="text-xl"
+              aria-label="Tutup menu"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="px-4 py-4 text-sm space-y-1">
+
+            {/* BERANDA */}
+            <Link href="/" onClick={() => setMobileOpen(false)} className="block py-2">
+              Beranda
+            </Link>
+
+            {/* DRAMA */}
+            <button
+              onClick={() => toggleMobileMenu('drama')}
+              className="flex w-full justify-between items-center py-2 font-medium"
+            >
+              Drama
+              <span>{mobileMenu === 'drama' ? '▲' : '▼'}</span>
+            </button>
+
+            {mobileMenu === 'drama' && (
+              <div className="ml-4 border-l pl-4">
+                <Link
+                  href="/drama/china/channel/dramabox"
+                  onClick={() => setMobileOpen(false)}
+                  className="block py-2"
+                >
+                  Drama China
+                </Link>
+              </div>
+            )}
+
+            {/* TOOLS */}
+            <button
+              onClick={() => toggleMobileMenu('tools')}
+              className="flex w-full justify-between items-center py-2 font-medium"
+            >
+              Tools
+              <span>{mobileMenu === 'tools' ? '▲' : '▼'}</span>
+            </button>
+
+            {mobileMenu === 'tools' && (
+              <div className="ml-4 border-l pl-4 space-y-1">
+
+                {/* KREATOR */}
+                <button
+                  onClick={() => toggleMobileMenu('kreator')}
+                  className="flex w-full justify-between py-2"
+                >
+                  Kreator
+                  <span>{mobileMenu === 'tools' ? '▲' : '▼'}</span>
+                </button>
+
+                {mobileMenu === 'tools' && (
+                  <div className="ml-4 border-l pl-4 space-y-1">
+                    <NavLinkMobile href="/kreator/calculate-income" close={setMobileOpen}>
+                      Penghasilan Sosial Media
+                    </NavLinkMobile>
+                    <NavLinkMobile href="/kreator/hashtag" close={setMobileOpen}>
+                      Generator Hashtag
+                    </NavLinkMobile>
+                    <NavLinkMobile href="/kreator/caption" close={setMobileOpen}>
+                      Generator Caption
+                    </NavLinkMobile>
+                    <NavLinkMobile href="/kreator/video-size" close={setMobileOpen}>
+                      Estimasi Ukuran Video
+                    </NavLinkMobile>
+                    <NavLinkMobile href="/kreator/auto-clipper" close={setMobileOpen}>
+                      Auto Clipper Video
+                    </NavLinkMobile>
+                  </div>
+                )}
+
+                {/* KALKULATOR */}
+                <button
+                  onClick={() => toggleMobileMenu('kalkulator')}
+                  className="flex w-full justify-between py-2"
+                >
+                  Kalkulator
+                  <span>{mobileMenu === 'tools' ? '▲' : '▼'}</span>
+                </button>
+
+                {mobileMenu === 'tools' && (
+                  <div className="ml-4 border-l pl-4 space-y-1">
+                    <NavLinkMobile href="/kalkulator/cicilan" close={setMobileOpen}>Cicilan</NavLinkMobile>
+                    <NavLinkMobile href="/kalkulator/kpr" close={setMobileOpen}>Simulasi KPR</NavLinkMobile>
+                    <NavLinkMobile href="/kalkulator/thr" close={setMobileOpen}>THR</NavLinkMobile>
+                    <NavLinkMobile href="/kalkulator/zakat" close={setMobileOpen}>Zakat Penghasilan</NavLinkMobile>
+                    <NavLinkMobile href="/kalkulator/zakat-fitrah" close={setMobileOpen}>Zakat Fitrah</NavLinkMobile>
+                    <NavLinkMobile href="/kalkulator/pph21" close={setMobileOpen}>PPh 21</NavLinkMobile>
+                    <NavLinkMobile href="/kalkulator/take-home-pay" close={setMobileOpen}>Gaji Bersih</NavLinkMobile>
+                  </div>
+                )}
+
+                {/* KONVERTER */}
+                <NavLinkMobile href="/konverter/image" close={setMobileOpen}>
+                  Konverter Gambar
+                </NavLinkMobile>
+
+                {/* KOMPRESS */}
+                <NavLinkMobile href="/kompress/gambar" close={setMobileOpen}>
+                  Kompress Gambar
+                </NavLinkMobile>
+                <NavLinkMobile href="/kompress/pdf" close={setMobileOpen}>
+                  Kompress PDF
+                </NavLinkMobile>
+              </div>
+            )}
+
+            {/* SPORT */}
+            <button
+              onClick={() => toggleMobileMenu('sport')}
+              className="flex w-full justify-between items-center py-2 font-medium"
+            >
+              Sport
+              <span>{mobileMenu === 'sport' ? '▲' : '▼'}</span>
+            </button>
+
+            {mobileMenu === 'sport' && (
+              <div className="ml-4 border-l pl-4">
+                <NavLinkMobile href="/bola/livescore" close={setMobileOpen}>
+                  Live Score
+                </NavLinkMobile>
+              </div>
+            )}
+
+            {/* ABOUT */}
+            <Link href="/about" onClick={() => setMobileOpen(false)} className="block py-2">
+              About
+            </Link>
+
+            {/* TRAKTEER */}
+            <a
+              href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open"
+              target="_blank"
+              rel="noopener sponsored nofollow"
+              className="mt-6 flex items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-pink-500 py-3 font-semibold text-white"
+            >
+              ☕ Traktir Kopi
+            </a>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
@@ -202,5 +404,25 @@ function NavItem({ href, label }: { href: string; label: string }) {
         {label}
       </Link>
     </li>
+  )
+}
+
+function NavLinkMobile({
+  href,
+  children,
+  close,
+}: {
+  href: string
+  children: React.ReactNode
+  close: (v: boolean) => void
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={() => close(false)}
+      className="block py-2 text-gray-600 hover:text-black"
+    >
+      {children}
+    </Link>
   )
 }

@@ -172,11 +172,11 @@ export default function ToolGrid() {
           <Link
             key={tool.href}
             href={tool.href}
-            className="group bg-white border rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition"
+            className="group bg-gradient-to-br from-purple-950 via-indigo-950 to-black border border-indigo-950 rounded-2xl overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all p-5"
           >
             <div className="flex justify-between items-start">
               <div className="text-3xl">{tool.emoji}</div>
-              <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
+              <span className="text-xs bg-gray-100 px-2 py-1 rounded text-indigo-950">
                 {tool.tag}
               </span>
             </div>
@@ -185,7 +185,7 @@ export default function ToolGrid() {
               {tool.title}
             </h2>
 
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-100">
               {tool.desc}
             </p>
           </Link>

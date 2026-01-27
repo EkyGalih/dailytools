@@ -1,3 +1,4 @@
+import DramaBookSkeleton from '@/components/common/DramaBoxSkleton'
 import AffiliateChannelPopup from '@/components/drama/ads/AffiliateChannelPopup'
 import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
 import DramaHero from '@/components/drama/reelshort/DramaHero'
@@ -45,12 +46,12 @@ export default async function ReelShortPage({
 
 
   return (
-    <section className="space-y-10 max-w-6xl mx-auto px-4 py-6">
+    <section className="space-y-10">
       {popupProduct && <AffiliateChannelPopup product={popupProduct} />}
       <AffiliateMiniPopup />
       <DramaHero activeChannel="reelshort" />
 
-      <div className="flex items-center justify-between gap-4 border-b pb-3">
+      <div className="flex items-center justify-between gap-4 border-b pb-3 px-4">
         <h2 className="text-lg font-bold">
           {sectionTitle}
         </h2>
@@ -58,25 +59,25 @@ export default async function ReelShortPage({
         <ReelShortSearch />
       </div>
 
-      {items.length === 0 && (
-        <p className="text-center text-gray-500">
-          Tidak ada hasil
-        </p>
+      {items.length === 0 ? (
+        <div className="px-4">
+          <DramaBookSkeleton count={8} />
+        </div>
+      ) : (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 px-4">
+          {items.map((item: any) => (
+            <ReelShortCard
+              key={item.bookId}
+              item={{
+                bookId: item.bookId,
+                title: item.title,
+                cover: item.cover,
+                totalEpisodes: item.chapterCount ?? item.totalEpisodes,
+              }}
+            />
+          ))}
+        </div>
       )}
-
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {items.map((item: any) => (
-          <ReelShortCard
-            key={item.bookId}
-            item={{
-              bookId: item.bookId,
-              title: item.title,
-              cover: item.cover,
-              totalEpisodes: item.chapterCount ?? item.totalEpisodes,
-            }}
-          />
-        ))}
-      </div>
     </section>
   )
 }

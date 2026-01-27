@@ -15,7 +15,7 @@ export default function ReelShortCard({ item }: { item: ReelShortItem }) {
     return (
         <Link
             href={`/drama/china/channel/reelshort/detail/${item.bookId}`}
-            className="group bg-white border rounded-2xl overflow-hidden
+            className="group bg-gradient-to-br from-purple-950 via-indigo-950 to-black border rounded-2xl overflow-hidden
                  hover:shadow-xl hover:-translate-y-0.5 transition-all"
         >
             {/* COVER */}
@@ -52,7 +52,7 @@ export default function ReelShortCard({ item }: { item: ReelShortItem }) {
                 </h3>
 
                 {/* SINOPSIS TEASER */}
-                <p className="text-xs text-gray-600 line-clamp-3">
+                <p className="text-xs text-gray-200 line-clamp-3">
                     Drama pendek populer dengan tema{' '}
                     {item.themes?.slice(0, 2).join(', ') || 'romantis & konflik emosional'}.
                 </p>

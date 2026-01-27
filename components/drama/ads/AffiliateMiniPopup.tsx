@@ -40,13 +40,13 @@ export default function AffiliateMiniPopup() {
           ✕
         </button>
 
-        <p className="text-[11px] text-gray-500 mb-2">
+        <p className="text-[11px] text-indigo-950 font-semibold mb-2">
           Rekomendasi buat kamu
         </p>
 
         <AffiliateProductMiniCard product={product} />
 
-        <p className="mt-2 text-[10px] text-gray-400">
+        <p className="mt-2 text-[10px] text-orange-800">
           *Affiliate
         </p>
       </div>

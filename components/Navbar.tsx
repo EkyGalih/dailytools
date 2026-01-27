@@ -40,7 +40,7 @@ export default function Navbar() {
   }, [pathname])
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b">
+    <header className="sticky top-0 z-50 bg-white text-indigo-950 border-b">
       <div
         ref={ref}
         className="max-w-5xl mx-auto px-2 py-1 flex items-center justify-between"
@@ -69,7 +69,7 @@ export default function Navbar() {
         </button>
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link href="/" className="text-gray-600 hover:text-black">
+          <Link href="/" className="text-indigo-950 hover:text-black">
             Beranda
           </Link>
 

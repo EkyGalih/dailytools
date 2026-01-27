@@ -17,8 +17,8 @@ export default function DramaHero({
 
     return (
         <>
-            <header className="rounded-3xl bg-gradient-to-br from-fuchsia-700 via-purple-700 to-indigo-800 text-white p-8 md:p-10">
-                <div className="max-w-3xl">
+            <header className="rounded-5xl bg-gradient-to-br from-purple-950 via-indigo-950 to-black text-white p-8 md:p-10">
+                <div className="w-full">
                     {/* SEO H1 */}
                     <h1 className="flex items-center gap-3 text-3xl md:text-4xl font-extrabold tracking-tight">
                         {/* ICON */}

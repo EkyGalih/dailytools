@@ -25,7 +25,7 @@ export default function AffiliateProductMiniCard({
       </div>
 
       <div className="min-w-0">
-        <p className="text-xs font-medium line-clamp-2">
+        <p className="text-xs text-indigo-950 font-medium line-clamp-2">
           {product.title}
         </p>
         <p className="text-xs font-semibold text-red-600 mt-0.5">

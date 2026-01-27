@@ -41,7 +41,7 @@ export default function ReelShortSearch() {
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Cari drama ReelShort..."
-                className="flex-1 bg-transparent outline-none text-sm"
+                className="flex-1 bg-transparent text-indigo-950 outline-none text-sm"
             />
 
             {/* RESET */}

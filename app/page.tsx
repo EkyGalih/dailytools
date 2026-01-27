@@ -65,7 +65,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <DramaBookGrid items={dramas} limit={6} />
+        <DramaBookGrid items={dramas} limit={10} />
       </section>
 
       {/* TOOLS SECTION */}

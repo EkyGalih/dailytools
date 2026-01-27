@@ -30,14 +30,14 @@ export default function AffiliateChannelPopup({
                 <button
                     onClick={() => setOpen(false)}
                     aria-label="Tutup"
-                    className="absolute right-4 top-4 text-gray-400 hover:text-black transition"
+                    className="absolute right-4 top-4 text-indigo-950 hover:text-black transition"
                 >
                     ✕
                 </button>
 
                 {/* HEADER */}
                 <div className="mb-4">
-                    <h3 className="text-sm font-semibold">
+                    <h3 className="text-sm text-indigo-950 font-semibold">
                         Rekomendasi Buat Kamu 🎁
                     </h3>
                     <p className="text-xs text-gray-500">

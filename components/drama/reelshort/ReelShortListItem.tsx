@@ -12,57 +12,84 @@ export type ReelShortItem = {
 
 export default function ReelShortListItem({
     item,
+    variant = 'list', // list | grid (grid columns handled by parent)
 }: {
     item: ReelShortItem
+    variant?: 'list' | 'grid'
 }) {
     return (
         <Link
             href={`/drama/china/channel/reelshort/detail/${item.bookId}`}
-            className="
-        group flex gap-4 rounded-2xl border bg-white p-3
-        hover:shadow-md transition
-      "
+            className={`group rounded-2xl border bg-gradient-to-br from-purple-950 via-indigo-950 to-black transition hover:shadow-md
+        ${variant === 'grid' ? 'overflow-hidden' : 'flex gap-4 p-3'}
+      `}
         >
             {/* COVER */}
-            <div className="relative h-28 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+            <div
+                className={
+                    variant === 'grid'
+                        ? 'relative aspect-[3/4] w-full overflow-hidden bg-gray-900'
+                        : 'relative h-28 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-900'
+                }
+            >
                 {item.cover && (
                     <Image
                         src={item.cover}
                         alt={item.title}
                         fill
-                        sizes="80px"
+                        sizes={variant === 'grid' ? '(max-width: 768px) 50vw, 240px' : '80px'}
                         className="object-cover group-hover:scale-105 transition-transform"
                     />
                 )}
 
-                {/* EP */}
-                {item.totalEpisodes && (
-                    <span className="absolute bottom-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] text-white backdrop-blur">
-                        {item.totalEpisodes} Ep
-                    </span>
+                {/* BADGES */}
+                {(item.totalEpisodes || item.hot) && (
+                    <div className="absolute inset-x-0 top-2 flex items-center justify-between px-2">
+                        {item.totalEpisodes ? (
+                            <span className="rounded-full bg-black/70 px-2 py-0.5 text-[10px] text-white backdrop-blur">
+                                🎬 {item.totalEpisodes} Ep
+                            </span>
+                        ) : (
+                            <span />
+                        )}
+
+                        {item.hot ? (
+                            <span className="rounded-full bg-red-600/90 px-2 py-0.5 text-[10px] font-semibold text-white">
+                                🔥 {Math.floor(item.hot / 1000)}K
+                            </span>
+                        ) : null}
+                    </div>
                 )}
             </div>
 
             {/* INFO */}
-            <div className="flex min-w-0 flex-col justify-between">
-                <div className="space-y-1">
-                    <h3 className="text-sm font-semibold leading-snug line-clamp-2">
+            <div
+                className={`min-w-0 ${
+                    variant === 'grid'
+                        ? 'p-3 space-y-2'
+                        : 'flex flex-col justify-between min-w-0'
+                }`}
+            >
+                <div className={variant === 'grid' ? 'space-y-1' : 'space-y-1'}>
+                    <h3
+                        className={`font-semibold leading-snug line-clamp-2 text-white group-hover:underline
+              ${variant === 'grid' ? 'text-sm' : 'text-sm'}
+            `}
+                    >
                         {item.title}
                     </h3>
 
                     {/* META */}
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-gray-500">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-100">
                         <span>🎬 Drama Pendek</span>
-
-                        {item.hot && (
-                            <span className="font-medium text-red-600">
-                                🔥 {Math.floor(item.hot / 1000)}K
-                            </span>
-                        )}
                     </div>
 
                     {/* SINOPSIS */}
-                    <p className="text-xs text-gray-600 line-clamp-2">
+                    <p
+                        className={`text-xs leading-relaxed text-gray-300
+              ${variant === 'grid' ? 'line-clamp-2' : 'line-clamp-2'}
+            `}
+                    >
                         Drama pendek populer dengan tema{' '}
                         {item.themes?.slice(0, 2).join(', ') ||
                             'romantis & konflik emosional'}
@@ -72,11 +99,11 @@ export default function ReelShortListItem({
 
                 {/* TAGS */}
                 {item.themes && item.themes.length > 0 && (
-                    <div className="mt-1 flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1">
                         {item.themes.slice(0, 3).map((t) => (
                             <span
                                 key={t}
-                                className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] text-gray-700"
+                                className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] text-indigo-950"
                             >
                                 #{t}
                             </span>

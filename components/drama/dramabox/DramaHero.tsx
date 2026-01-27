@@ -5,6 +5,7 @@ import {
     getChannel,
     DramaChannelSlug,
 } from '@/libs/drama/channel'
+import DramaShareIcons from './DramaShareIcon'
 
 export default function DramaHero({
     activeChannel,
@@ -12,11 +13,12 @@ export default function DramaHero({
     activeChannel?: DramaChannelSlug
 }) {
     const channel = getChannel(activeChannel)
+    const site = process.env.NEXT_PUBLIC_SITE_URL!
 
     return (
         <>
             <header className="rounded-5xl bg-gradient-to-br from-purple-950 via-indigo-950 to-black p-8 md:p-10">
-                <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
+                <div className="mw-full">
                     {/* SEO H1 */}
                     <h1 className="flex items-center gap-3 text-3xl md:text-4xl font-extrabold tracking-tight">
                         {/* ICON */}
@@ -74,6 +76,13 @@ export default function DramaHero({
                             )
                         })}
                     </div>
+                </div>
+                <div className="max-w-6xl mx-auto px-4 flex justify-end">
+                    <DramaShareIcons
+                        title="Drama China Viral & Trending"
+                        url={`${site}/drama/china/channel/dramabox`}
+                        tags={['DramaChina', 'Dracin', 'DramaViral']}
+                    />
                 </div>
             </header>
         </>

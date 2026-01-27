@@ -98,12 +98,6 @@ export default async function DramaChinaDetailPage({
             >
               ▶ Mulai Tonton
             </Link>
-
-            <DramaShareIcons
-              title={detail.bookName}
-              tags={detail.tags}
-              url={`${site}/drama/china/channel/dramabox/detail/${id}`}
-            />
           </div>
 
           {/* SINOPSIS */}

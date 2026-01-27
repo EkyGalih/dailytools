@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import ToolGrid from '@/components/ToolsSearch'
-import DramaVideoGrid from '@/components/drama/DramaVideoGrid'
-import { getLiveMatches, getTodayFixtures } from '@/libs/bola/api' // Tambahkan fixtures
-import { getTrendingDramaChina } from '@/libs/drama/youtube'
+import { getLiveMatches, getTodayFixtures } from '@/libs/bola/api'
 
 export const metadata: Metadata = {
   title: 'My Tools – Kalkulator, Livescore & Drama China',
@@ -12,14 +10,9 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   // 1. Ambil semua data secara paralel agar cepat
-  const [live, today, dramaVideos] = await Promise.all([
+  const [live, today] = await Promise.all([
     getLiveMatches(),
     getTodayFixtures(),
-    getTrendingDramaChina({
-      q: 'chinese drama short reelshort episode',
-      maxResults: 6, // Batasi 8 saja untuk Home agar ringan
-      days: 7,
-    }),
   ])
 
   // 2. Gabung & Dedupe (Sesuai logika "benar" di halaman Bola kamu)
@@ -102,25 +95,6 @@ export default async function Home() {
               </div>
             ))}
           </div>
-        </section>
-      )}
-
-      {/* 🎬 DRAMA CHINA */}
-
-      {dramaVideos?.length > 0 && (
-        <section className="max-w-6xl mx-auto space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">
-              🎬 Drama China Viral
-            </h2>
-            <Link
-              href="/drama/china"
-              className="text-sm font-medium hover:underline"
-            >
-              Jelajahi drama →
-            </Link>
-          </div>
-          <DramaVideoGrid items={dramaVideos} />
         </section>
       )}
 

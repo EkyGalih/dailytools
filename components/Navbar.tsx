@@ -59,7 +59,7 @@ export default function Navbar() {
             open={!!open && open.startsWith('drama')} // ✅ Tetap terbuka jika open adalah 'sport' atau 'sport-bola'
             onToggle={() => toggle('drama')}
           >
-              <NavItem href="/drama/china" label="Drama China" />
+              <NavItem href="/drama/china/channel/dramabox" label="Drama China" />
           </DropdownMenu>
           {/* MENU UTAMA: TOOLS */}
           <DropdownMenu

@@ -28,3 +28,18 @@ export type TeamStats = {
     }
     statistics: MatchStatItem[]
 }
+
+export function formatReleaseDate(s?: string) {
+    if (!s) return null
+    const d = new Date(s.replace(' ', 'T'))
+    if (isNaN(d.getTime())) return null
+
+    return {
+        year: d.getFullYear(),
+        short: d.toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+        }),
+    }
+}

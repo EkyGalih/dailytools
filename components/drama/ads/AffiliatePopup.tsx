@@ -16,8 +16,8 @@ export default function AffiliatePopup({
     const [firstTime, setFirstTime] = useState(false)
 
     useEffect(() => {
-        // hanya setiap 3 episode
-        if (episode % 3 !== 0) return
+        // hanya setiap 10 episode
+        if (episode % 10 !== 0) return
 
         const shownKey = `affiliate_popup_episode_${episode}`
 

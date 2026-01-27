@@ -8,6 +8,7 @@ import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 import AffiliatePopup from '@/components/drama/ads/AffiliatePopup'
 import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
 import DramaShareIcons from '@/components/drama/dramabox/DramaShareIcon'
+import DramaHero from '@/components/drama/dramabox/DramaHero'
 
 export const dynamic = 'force-dynamic'
 
@@ -68,18 +69,19 @@ export default async function DramaWatchPage({
     const site = process.env.NEXT_PUBLIC_SITE_URL!
 
     return (
-        <article className="space-y-6">
+        <article className="space-y-10">
             {popupProduct && (
                 <AffiliatePopup
                     product={popupProduct}
                     episode={episodeIndex + 1}
                 />
             )}
+            <DramaHero />
             {/* HEADER */}
-            <header className="flex items-start justify-between gap-4">
+            <header className="flex items-start justify-between gap-4 px-8">
                 {/* LEFT */}
                 <div className="space-y-1">
-                    <p className="text-xs uppercase tracking-wide text-gray-500">
+                    <p className="text-xs uppercase tracking-wide text-gray-100">
                         Drama China
                     </p>
 
@@ -87,7 +89,7 @@ export default async function DramaWatchPage({
                         {detail.bookName}
                     </h1>
 
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-100">
                         Episode {episodeIndex + 1}
                         {current.chapterName && ` • ${current.chapterName}`}
                         {current.chargeChapter && (
@@ -102,14 +104,14 @@ export default async function DramaWatchPage({
                 <Link
                     href={`/drama/china/channel/dramabox/detail/${detail.bookId}`}
                     aria-label="Kembali ke detail drama"
-                    className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50 transition"
+                    className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs bg-gradient-to-r from-purple-950 via-indigo-950 to-indigo-950 text-white hover:bg-gray-50 transition"
                 >
                     <span className="text-sm">←</span>
                     <span className="hidden sm:inline">Kembali</span>
                 </Link>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-8">
                 {/* LEFT: PLAYER */}
                 <div className="md:col-span-2 space-y-4">
                     {/* PLAYER */}
@@ -152,7 +154,7 @@ export default async function DramaWatchPage({
                                 href={prevUrl || '#'}
                                 className={`flex-1 text-center text-sm font-medium px-4 py-2.5 rounded-full border transition
         ${prevUrl
-                                        ? 'hover:bg-gray-50'
+                                        ? 'hover:bg-indigoe-95'
                                         : 'pointer-events-none opacity-40'
                                     }`}
                             >
@@ -163,7 +165,7 @@ export default async function DramaWatchPage({
                                 href={nextUrl || '#'}
                                 className={`flex-1 text-center text-sm font-semibold px-4 py-2.5 rounded-full transition
         ${nextUrl
-                                        ? 'bg-black text-white hover:bg-gray-900 shadow'
+                                        ? 'bg-gradient-to-r from-purple-950 via-indigo-950 to-indigo-950 text-white hover:bg-gray-900 shadow'
                                         : 'pointer-events-none opacity-40 border'
                                     }`}
                             >
@@ -190,56 +192,58 @@ export default async function DramaWatchPage({
                             </div>
                         </div>
                     </nav>
-
-                    {/* EPISODE LIST */}
-                    <section className="space-y-3">
-                        <h2 className="text-lg font-semibold">Daftar Episode</h2>
-
-                        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
-                            {episodes.map((epItem: any, i: number) => {
-                                const isActive = i === episodeIndex
-                                const isLocked = epItem.chargeChapter
-
-                                return (
-                                    <Link
-                                        key={epItem.chapterId}
-                                        href={`${baseUrl}?ep=${i + 1}${isVertical ? '&mode=vertical' : ''
-                                            }`}
-                                        aria-label={`Tonton episode ${i + 1}`}
-                                        className={`relative text-xs text-center rounded-lg px-2 py-1.5 border transition ${isActive
-                                            ? 'bg-black text-white border-black'
-                                            : isLocked
-                                                ? 'bg-gray-100 text-gray-400'
-                                                : 'hover:bg-gray-50'
-                                            }`}
-                                    >
-                                        Ep {i + 1}
-                                        {isLocked && (
-                                            <span className="absolute -top-1 -right-1 text-[10px]">
-                                                🔒
-                                            </span>
-                                        )}
-                                    </Link>
-                                )
-                            })}
-                        </div>
-                        <section className="mt-8 space-y-3">
-                            <h3 className="text-sm font-semibold">
-                                Rekomendasi Produk yang Cocok Buat Kamu 🎁
-                            </h3>
-
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                {products.map((p) => (
-                                    <AffiliateProductCard key={p.link} product={p} />
-                                ))}
-                            </div>
-                        </section>
-                    </section>
+                    <aside className="space-y-3">
+                        <h2 className="text-xl font-bold">Drama Terpopuler</h2>
+                        <DramaBookList
+                            items={related.slice(0, 8)}
+                            variant="grid"
+                        />
+                    </aside>
                 </div>
-                <aside className="space-y-3">
-                    <h2 className="text-xl font-bold">Drama Terpopuler</h2>
-                    <DramaBookList items={related.slice(0, 6)} />
-                </aside>
+                {/* EPISODE LIST */}
+                <section className="space-y-3">
+                    <h2 className="text-lg font-semibold">Daftar Episode</h2>
+
+                    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                        {episodes.map((epItem: any, i: number) => {
+                            const isActive = i === episodeIndex
+                            const isLocked = epItem.chargeChapter
+
+                            return (
+                                <Link
+                                    key={epItem.chapterId}
+                                    href={`${baseUrl}?ep=${i + 1}${isVertical ? '&mode=vertical' : ''
+                                        }`}
+                                    aria-label={`Tonton episode ${i + 1}`}
+                                    className={`relative text-xs text-center rounded-lg px-2 py-1.5 border transition ${isActive
+                                        ? 'bg-black text-white border-black'
+                                        : isLocked
+                                            ? 'bg-gray-100 text-gray-400'
+                                            : 'hover:bg-gray-50'
+                                        }`}
+                                >
+                                    Ep {i + 1}
+                                    {isLocked && (
+                                        <span className="absolute -top-1 -right-1 text-[10px]">
+                                            🔒
+                                        </span>
+                                    )}
+                                </Link>
+                            )
+                        })}
+                    </div>
+                    <section className="mt-8 space-y-3">
+                        <h3 className="text-sm font-semibold">
+                            Rekomendasi Produk yang Cocok Buat Kamu 🎁
+                        </h3>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            {products.map((p) => (
+                                <AffiliateProductCard key={p.link} product={p} />
+                            ))}
+                        </div>
+                    </section>
+                </section>
             </div>
         </article>
     )

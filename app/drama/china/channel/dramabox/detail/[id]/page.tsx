@@ -8,13 +8,14 @@ import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
 import AffiliateChannelPopup from '@/components/drama/ads/AffiliateChannelPopup'
 import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
 import { Metadata } from 'next'
+import DramaHero from '@/components/drama/dramabox/DramaHero'
 
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata(
   { params }: { params: { id: string } }
 ): Promise<Metadata> {
-  const { id } = params
+  const { id } = await params
 
   const detail = await getDramaDetail(id)
   if (!detail) return {}
@@ -59,38 +60,41 @@ export default async function DramaChinaDetailPage({
       {popupProduct && <AffiliateChannelPopup product={popupProduct} />}
       <AffiliateMiniPopup />
 
-      {/* HERO */}
-      <header className="relative overflow-hidden rounded-3xl">
-        {/* Background */}
-        <div className="absolute inset-0">
+      <DramaHero />
+
+      {/* CONTENT */}
+      <section className="grid md:grid-cols-[240px_1fr] px-8 gap-8 items-start">
+        {/* LEFT — COVER */}
+        <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gray-100 shadow">
           <Image
             src={detail.coverWap}
-            alt=""
+            alt={`Poster drama China ${detail.bookName}`}
             fill
-            className="object-cover blur-xl scale-110"
-            priority
+            className="object-cover"
           />
-          <div className="absolute inset-0 bg-black/70" />
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 p-8 md:p-12 text-white max-w-4xl">
-          <p className="text-sm text-white/70">Drama China</p>
+        {/* RIGHT — INFO (SATU KOLOM) */}
+        <div className="space-y-6">
+          {/* TITLE */}
+          <div>
+            <p className="text-sm text-white">Drama China</p>
 
-          <h1 className="mt-2 text-3xl md:text-4xl font-extrabold leading-tight">
-            {detail.bookName}
-          </h1>
+            <h1 className="mt-1 text-2xl md:text-3xl font-extrabold leading-tight">
+              {detail.bookName}
+            </h1>
 
-          <p className="mt-3 text-sm text-white/80">
-            {detail.chapterCount} Episode
-            {detail.shelfTime && ` • ${detail.shelfTime.slice(0, 4)}`}
-          </p>
+            <p className="mt-2 text-sm text-white">
+              {detail.chapterCount} Episode
+              {detail.shelfTime && ` • ${detail.shelfTime.slice(0, 4)}`}
+            </p>
+          </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4">
+          {/* ACTION */}
+          <div className="flex flex-wrap items-center gap-4">
             <Link
               href={`/drama/china/channel/dramabox/watch/${id}?ep=1`}
-              className="inline-flex items-center gap-2 rounded-full bg-red-600 px-7 py-3 text-sm font-semibold hover:bg-red-700 transition"
-              aria-label={`Mulai menonton drama ${detail.bookName}`}
+              className="inline-flex items-center gap-2 rounded-full bg-red-600 px-6 py-3 text-sm font-semibold text-white hover:bg-red-700 transition"
             >
               ▶ Mulai Tonton
             </Link>
@@ -101,39 +105,25 @@ export default async function DramaChinaDetailPage({
               url={`${site}/drama/china/channel/dramabox/detail/${id}`}
             />
           </div>
-        </div>
-      </header>
 
-      {/* CONTENT */}
-      <section className="grid md:grid-cols-[240px_1fr] gap-8">
-        {/* COVER */}
-        <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gray-100 shadow">
-          <Image
-            src={detail.coverWap}
-            alt={`Poster drama China ${detail.bookName}`}
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        {/* INFO */}
-        <div className="space-y-6">
+          {/* SINOPSIS */}
           <div>
-            <h2 className="text-lg font-semibold">Sinopsis</h2>
+            <h2 className="text-sm font-semibold text-white">Sinopsis</h2>
             <p
-              className="mt-2 text-sm text-gray-700 leading-relaxed"
+              className="mt-2 text-sm text-gray-200 leading-relaxed"
               itemProp="description"
             >
               {detail.introduction}
             </p>
           </div>
 
+          {/* TAGS */}
           {detail.tags?.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {detail.tags.map((t: string) => (
                 <span
                   key={t}
-                  className="rounded-full border bg-white px-3 py-1 text-xs text-gray-700"
+                  className="rounded-full bg-gray-100 px-3 py-1 text-xs text-indigo-950"
                 >
                   #{t}
                 </span>
@@ -144,7 +134,7 @@ export default async function DramaChinaDetailPage({
       </section>
 
       {/* RELATED */}
-      <section className="space-y-4">
+      <section className="space-y-4 px-8">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-xl font-bold">Drama Terkait</h2>
 

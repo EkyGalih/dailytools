@@ -28,7 +28,7 @@ export default function AffiliateProductCard({
 
       {/* INFO */}
       <div className="mt-2 space-y-0.5">
-        <h3 className="text-xs font-medium leading-snug line-clamp-2">
+        <h3 className="text-xs font-medium leading-snug text-indigo-950 line-clamp-2">
           {product.title}
         </h3>
 
@@ -38,9 +38,20 @@ export default function AffiliateProductCard({
           </div>
         )}
 
-        <div className="text-[10px] text-gray-500">
-          Beli di {product.source === 'shopee' ? 'Shopee' : 'TikTok'}
-        </div>
+        <a
+          href={product.link}
+          target="_blank"
+          rel="noopener noreferrer sponsored"
+          className="mt-1 inline-flex items-center justify-center
+                     w-full rounded-md
+                     bg-gradient-to-r from-orange-600 to-orange-600
+                     px-2 py-1
+                     text-[10px] font-semibold text-white
+                     hover:from-orange-700 hover:to-orange-700
+                     transition"
+        >
+          Checkout di {product.source === 'shopee' ? 'Shopee' : 'TikTok'}
+        </a>
       </div>
     </div>
   )

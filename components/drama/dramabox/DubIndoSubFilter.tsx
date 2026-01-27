@@ -1,40 +1,54 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
+
+type Classify = 'terbaru' | 'terpopuler'
 
 export default function DubIndoSubFilter() {
-    const router = useRouter()
-    const search = useSearchParams()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
 
-    const current = search.get('classify') || 'terbaru'
+  // hanya tampil di halaman dubindo
+  if (!pathname.endsWith('/dubindo')) return null
 
-    function setFilter(v: 'terbaru' | 'terpopuler') {
-        const params = new URLSearchParams(search.toString())
-        params.set('classify', v)
-        router.push(`?${params.toString()}`)
-    }
+  const current = (searchParams.get('classify') as Classify) || 'terbaru'
 
-    return (
-        <div className="flex gap-2 px-4">
-            <button
-                onClick={() => setFilter('terbaru')}
-                className={`px-3 py-1.5 rounded-full text-sm border transition ${current === 'terbaru'
-                        ? 'bg-black text-white border-black'
-                        : 'bg-white hover:bg-gray-50'
-                    }`}
-            >
-                Terbaru
-            </button>
+  function setFilter(value: Classify) {
+    if (value === current) return
 
-            <button
-                onClick={() => setFilter('terpopuler')}
-                className={`px-3 py-1.5 rounded-full text-sm border transition ${current === 'terpopuler'
-                        ? 'bg-black text-white border-black'
-                        : 'bg-white hover:bg-gray-50'
-                    }`}
-            >
-                Terpopuler
-            </button>
-        </div>
-    )
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('classify', value)
+
+    // 🔑 penting: push ke pathname + query
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
+  return (
+    <div className="flex gap-2 px-4">
+      <button
+        type="button"
+        onClick={() => setFilter('terbaru')}
+        className={`px-3 py-1.5 rounded-full text-sm border transition ${
+          current === 'terbaru'
+            ? 'bg-gradient-to-br from-purple-950 via-indigo-950 to-black text-white'
+            : 'bg-white text-indigo-950 hover:bg-purple-950 hover:text-white'
+        }`}
+      >
+        Terbaru
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setFilter('terpopuler')}
+        className={`px-3 py-1.5 rounded-full text-sm border transition ${
+          current === 'terpopuler'
+            ? 'bg-gradient-to-br from-purple-950 via-indigo-950 to-black text-white'
+            : 'bg-white text-indigo-950 hover:bg-purple-950 hover:text-white'
+        }`}
+      >
+        Terpopuler
+      </button>
+    </div>
+  )
 }

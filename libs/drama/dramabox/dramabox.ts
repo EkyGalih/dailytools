@@ -1,6 +1,42 @@
 // libs/drama/dramabox.ts
 const BASE = 'https://api.sansekai.my.id/api/dramabox'
 
+const DEFAULT_HEADERS = {
+  'accept': 'application/json',
+  'User-Agent': 'Sansekai-Dramabox/1.0',
+}
+
+const DEFAULT_TIMEOUT = 8000
+
+async function fetchJSON<T>(
+  url: string,
+  revalidate: number,
+  timeout = DEFAULT_TIMEOUT
+): Promise<T | null> {
+  const controller = new AbortController()
+  const id = setTimeout(() => controller.abort(), timeout)
+
+  try {
+    const res = await fetch(url, {
+      next: { revalidate },
+      headers: DEFAULT_HEADERS,
+      signal: controller.signal,
+    })
+
+    if (!res.ok) return null
+
+    const ct = res.headers.get('content-type') || ''
+    if (!ct.includes('application/json')) return null
+
+    return res.json()
+  } catch (err) {
+    console.error('[Dramabox API Error]', url, err)
+    return null
+  } finally {
+    clearTimeout(id)
+  }
+}
+
 export async function getDramaByCategory(
     slug: string,
     options?: {
@@ -42,76 +78,27 @@ export async function getDramaByCategory(
             ? `${BASE}${endpoint}?${params.toString()}`
             : `${BASE}${endpoint}`
 
-    const res = await fetch(url, {
-        next: { revalidate: 1800 },
-    })
-
-    // guard JSON
-    const ct = res.headers.get('content-type') || ''
-    if (!ct.includes('application/json')) return []
-
-    const json = await res.json()
-
-    // 🔑 NORMALISASI
+    const json = await fetchJSON<any>(url, 1800)
+    if (!json) return []
     if (Array.isArray(json)) return json
     if (Array.isArray(json?.data)) return json.data
     if (Array.isArray(json?.data?.list)) return json.data.list
-
     return []
 }
 
 export async function getDramaDetail(bookId: string) {
-    const url = `${BASE}/detail?bookId=${encodeURIComponent(bookId)}`
-
-    let res: Response
-    try {
-        res = await fetch(url, {
-            cache: 'no-store', // ⛔ WAJIB
-            headers: {
-                'accept': 'application/json',
-            },
-        })
-    } catch (err) {
-        console.error('Dramabox detail fetch FAILED:', err)
-        return null
-    }
-
-    if (!res.ok) {
-        console.error('Dramabox detail status error:', res.status, url)
-        return null
-    }
-
-    const raw = await res.text()
-
-    if (!raw || raw.trim().length === 0) {
-        console.error('Dramabox detail EMPTY body:', url)
-        return null
-    }
-
-    if (raw.trim().startsWith('<')) {
-        console.error('Dramabox detail HTML response:', raw.slice(0, 120))
-        return null
-    }
-
-    try {
-        const json = JSON.parse(raw)
-        if (json?.bookId) return json
-        return null
-    } catch (e) {
-        console.error('Dramabox detail JSON parse error:', raw.slice(0, 200))
-        return null
-    }
+    const json = await fetchJSON<any>(
+      `${BASE}/detail?bookId=${encodeURIComponent(bookId)}`,
+      3600
+    )
+    if (json?.bookId) return json
+    return null
 }
 
 export async function getDramaEpisodes(bookId: string) {
-    const url = `${BASE}/allepisode?bookId=${encodeURIComponent(bookId)}`
-
-    const res = await fetch(url, {
-        next: { revalidate: 3600 },
-    })
-
-    if (!res.ok) return []
-
-    const json = await res.json()
+    const json = await fetchJSON<any[]>(
+      `${BASE}/allepisode?bookId=${encodeURIComponent(bookId)}`,
+      3600
+    )
     return Array.isArray(json) ? json : []
 }

@@ -28,9 +28,9 @@ export default async function Home() {
   const matches = Array.from(map.values()).slice(0, 6)
 
   return (
-    <section className="space-y-24">
+    <section className="space-y-16">
       {/* HERO */}
-      <header className="rounded-3xl bg-gradient-to-br from-black to-sky-900 text-white px-6 py-20 text-center">
+      <header className="rounded-5xl bg-gradient-to-br from-black to-sky-900 text-white px-6 py-14 md:py-16 text-center">
         <h1 className="text-4xl md:text-5xl font-bold italic tracking-tighter">
           MY TOOLS
         </h1>
@@ -40,7 +40,7 @@ export default async function Home() {
       </header>
 
       {/* 🎬 DRAMA CHINA TERBARU */}
-      <section className="max-w-6xl mx-auto px-4 space-y-8">
+      <section className="max-w-7xl mx-auto px-4 space-y-8">
         <div className="flex items-end justify-between">
           <div>
             <h2 className="text-3xl font-black tracking-tight">
@@ -69,7 +69,7 @@ export default async function Home() {
       </section>
 
       {/* TOOLS SECTION */}
-      <section className="max-w-6xl mx-auto px-4">
+      <section className="max-w-5xl mx-auto px-4">
         <ToolGrid />
       </section>
 

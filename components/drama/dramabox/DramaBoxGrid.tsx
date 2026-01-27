@@ -18,9 +18,17 @@ export default function DramaBookGrid({
     const list = typeof limit === 'number' ? items.slice(0, limit) : items
 
     return (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+            className="
+      grid
+      grid-cols-2
+      sm:grid-cols-3
+      md:grid-cols-4
+      xl:grid-cols-5
+      gap-4
+    "
+        >
             {list.map((b) => {
-                // ✅ FIX UTAMA: pastikan STRING, bukan undefined
                 const cover =
                     b.coverWap || b.bookCover || b.cover || '/cover-fallback.jpg'
 
@@ -28,10 +36,7 @@ export default function DramaBookGrid({
                     <Link
                         key={b.bookId}
                         href={`/drama/china/channel/dramabox/detail/${b.bookId}`}
-                        aria-label={`Baca detail drama ${compactTitle(b.bookName)}`}
-                        itemScope
-                        itemType="https://schema.org/TVSeries"
-                        className="group bg-white border rounded-2xl overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all"
+                        className="group bg-gradient-to-br from-purple-950 via-indigo-950 to-black border border-indigo-950 rounded-2xl overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all"
                     >
                         {/* COVER */}
                         <div className="relative aspect-[3/4] bg-gray-100">
@@ -40,62 +45,32 @@ export default function DramaBookGrid({
                                 alt={`Poster drama China ${compactTitle(b.bookName)}`}
                                 fill
                                 className="object-cover"
-                                itemProp="image"
-                                sizes="(max-width: 1024px) 100vw, 33vw"
+                                sizes="(max-width: 768px) 50vw, 240px"
                             />
 
-                            {/* HOT BADGE */}
                             {b.rankVo?.hotCode && (
-                                <span className="absolute top-3 left-3 rounded-full bg-red-600 px-2 py-0.5 text-xs text-white">
+                                <span className="absolute top-2 left-2 rounded-full bg-red-600 px-2 py-0.5 text-[10px] text-white">
                                     🔥 {b.rankVo.hotCode}
                                 </span>
                             )}
                         </div>
 
                         {/* INFO */}
-                        <div className="p-4 space-y-2">
-                            <h3
-                                className="font-semibold leading-snug line-clamp-2 group-hover:underline"
-                                itemProp="name"
-                            >
+                        <div className="p-3 space-y-1.5">
+                            <h3 className="font-bold text-lg leading-snug line-clamp-2">
                                 {compactTitle(b.bookName)}
                             </h3>
 
-                            {/* META */}
-                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                            <div className="flex gap-2 text-[11px] text-white">
+                                {b.chapterCount && <span>🎬 {b.chapterCount} Ep</span>}
                                 {formatReleaseDate(b.shelfTime)?.year && (
-                                    <span itemProp="datePublished">
-                                        📅 {formatReleaseDate(b.shelfTime)!.year}
-                                    </span>
-                                )}
-
-                                {b.chapterCount && (
-                                    <span itemProp="numberOfEpisodes">
-                                        🎬 {b.chapterCount} Ep
-                                    </span>
+                                    <span>📅 {formatReleaseDate(b.shelfTime)!.year}</span>
                                 )}
                             </div>
 
-                            <p
-                                className="text-xs text-gray-600 line-clamp-3"
-                                itemProp="description"
-                            >
+                            <p className="text-[12px] text-white line-clamp-2">
                                 {b.introduction}
                             </p>
-
-                            {/* TAGS */}
-                            {b.tags?.length > 0 && (
-                                <div className="flex flex-wrap gap-1">
-                                    {b.tags.slice(0, 3).map((t) => (
-                                        <span
-                                            key={t}
-                                            className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] text-gray-700"
-                                        >
-                                            #{t}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
                         </div>
                     </Link>
                 )

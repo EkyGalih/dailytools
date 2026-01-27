@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import DramaFilters from '@/components/drama/dramabox/DramaFilter'
 import DramaHero from '@/components/drama/dramabox/DramaHero'
 import DramaExplorer from '@/components/drama/dramabox/DramaExplorer'
 import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
@@ -27,22 +26,19 @@ export default async function DramaChinaPage() {
   return (
     <section className="space-y-10">
       {popupProduct && <AffiliateChannelPopup product={popupProduct} />}
-      <AffiliateMiniPopup  />
+      <AffiliateMiniPopup />
+
+      {/* HERO – FULL WIDTH */}
       <DramaHero />
 
-      <section className="max-w-6xl mx-auto px-4 space-y-6">
-        {/* SEARCH + FILTER */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-          <DramaFilters />
-        </div>
-        <section className="max-w-6xl mx-auto px-4">
-          <DramaExplorer initialItems={items} />
-        </section>
+      {/* CONTENT – FULL WIDTH */}
+      <section className="w-full px-4">
+        <DramaExplorer initialItems={items} />
       </section>
 
-      {/* SEO text */}
-      <section className="max-w-4xl mx-auto px-4 text-sm text-gray-700 space-y-3 pb-12">
-        <h2 className="text-lg font-semibold text-gray-900">
+      {/* SEO TEXT – SEMI WIDTH */}
+      <section className="max-w-4xl mx-auto px-4 text-sm text-gray-400 space-y-3 pb-12">
+        <h2 className="text-lg font-semibold text-white">
           Drama China yang Lagi Viral
         </h2>
         <p>

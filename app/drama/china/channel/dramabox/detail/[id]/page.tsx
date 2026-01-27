@@ -7,11 +7,15 @@ import DramaShareIcons from '@/components/drama/dramabox/DramaShareIcon'
 import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
 import AffiliateChannelPopup from '@/components/drama/ads/AffiliateChannelPopup'
 import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
+import { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
-export async function generateMetadata({ params }) {
-  const { id } = await params
+export async function generateMetadata(
+  { params }: { params: { id: string } }
+): Promise<Metadata> {
+  const { id } = params
+
   const detail = await getDramaDetail(id)
   if (!detail) return {}
 

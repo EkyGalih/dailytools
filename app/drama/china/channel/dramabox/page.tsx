@@ -4,7 +4,7 @@ import DramaHero from '@/components/drama/dramabox/DramaHero'
 import DramaExplorer from '@/components/drama/dramabox/DramaExplorer'
 import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
 import AffiliateChannelPopup from '@/components/drama/ads/AffiliateChannelPopup'
-import AffiliatePopupWrapper from '@/components/drama/ads/AffiliatePopup'
+import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
 
 export const metadata: Metadata = {
   title: 'Drama China Viral & Trending Hari Ini',
@@ -27,7 +27,7 @@ export default async function DramaChinaPage() {
   return (
     <section className="space-y-10">
       {popupProduct && <AffiliateChannelPopup product={popupProduct} />}
-      <AffiliatePopupWrapper />
+      <AffiliateMiniPopup  />
       <DramaHero />
 
       <section className="max-w-6xl mx-auto px-4 space-y-6">

@@ -63,28 +63,44 @@ export async function getDramaByCategory(
 export async function getDramaDetail(bookId: string) {
     const url = `${BASE}/detail?bookId=${encodeURIComponent(bookId)}`
 
-    const res = await fetch(url, {
-        next: { revalidate: 3600 },
-    })
+    let res: Response
+    try {
+        res = await fetch(url, {
+            cache: 'no-store', // ⛔ WAJIB
+            headers: {
+                'accept': 'application/json',
+            },
+        })
+    } catch (err) {
+        console.error('Dramabox detail fetch FAILED:', err)
+        return null
+    }
 
-    // guard response
     if (!res.ok) {
-        console.error('Dramabox detail fetch failed:', res.status, url)
+        console.error('Dramabox detail status error:', res.status, url)
         return null
     }
 
-    const ct = res.headers.get('content-type') || ''
-    if (!ct.includes('application/json')) {
-        console.error('Expected JSON, got:', ct)
+    const raw = await res.text()
+
+    if (!raw || raw.trim().length === 0) {
+        console.error('Dramabox detail EMPTY body:', url)
         return null
     }
 
-    const json = await res.json()
+    if (raw.trim().startsWith('<')) {
+        console.error('Dramabox detail HTML response:', raw.slice(0, 120))
+        return null
+    }
 
-    // API ini return object langsung
-    if (json?.bookId) return json
-
-    return null
+    try {
+        const json = JSON.parse(raw)
+        if (json?.bookId) return json
+        return null
+    } catch (e) {
+        console.error('Dramabox detail JSON parse error:', raw.slice(0, 200))
+        return null
+    }
 }
 
 export async function getDramaEpisodes(bookId: string) {

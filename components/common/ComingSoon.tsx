@@ -22,11 +22,10 @@ export default function ComingSoon() {
                 {/* SASAK */}
                 <section className="space-y-2">
                     <h2 className="text-lg font-semibold">
-                        Jangke Te Pinak
+                        Jangke Te Pinak Ton
                     </h2>
                     <p className="text-gray-600">
-                        Fitur niki endeq te siapang juluk.
-                        Kami lek ne pinak-in sak te benaran bagus lan nyaman te pake.
+                        Sabar Juluk Nggeh, Boyak wah sak arak juluk
                     </p>
                 </section>
 

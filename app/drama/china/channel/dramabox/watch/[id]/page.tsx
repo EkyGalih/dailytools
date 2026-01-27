@@ -198,7 +198,7 @@ export default async function DramaWatchPage({
                         </div>
                         <section className="mt-8 space-y-3">
                             <h3 className="text-sm font-semibold">
-                                Rekomendasi yang Cocok Buat Kamu 🎁
+                                Rekomendasi Produk yang Cocok Buat Kamu 🎁
                             </h3>
 
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">

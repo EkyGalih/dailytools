@@ -95,5 +95,14 @@ export const AFFILIATE_BY_TAG: Record<string, AffiliateProduct[]> = {
             link: 'https://s.shopee.co.id/4VWrJspEM5',
             source: 'shopee',
         },
+        {
+            title:
+                'YSZ Bright Eyes Lazy Newbie Eye Shadow Stick High Gloss Makeup Tahan Lama Sekali Eye Shadow Stick Tutul Molding',
+            image:
+                'https://down-tx-id.img.susercontent.com/id-11134207-8224x-mjfd7jpu5wxxd8.webp',
+            price: 'Rp48.000',
+            link: 'https://s.shopee.co.id/1VtFyx9s4N',
+            source: 'shopee',
+        },
     ],
 }

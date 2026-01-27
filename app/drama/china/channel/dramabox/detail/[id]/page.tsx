@@ -150,11 +150,15 @@ export default async function DramaChinaDetailPage({
 
           <Link
             href="/drama/china/channel/dramabox"
-            aria-label="Kembali ke semua drama"
-            className="inline-flex items-center gap-1 text-sm text-gray-600 hover:underline"
+            className="inline-flex items-center gap-2 rounded-full 
+             bg-gradient-to-r from-indigo-600 to-purple-600
+             px-5 py-2 text-sm font-semibold text-white
+             shadow-md shadow-indigo-500/20
+             hover:from-indigo-700 hover:to-purple-700
+             hover:shadow-lg transition-all"
           >
             <span className="text-base">←</span>
-            <span>Semua Drama</span>
+            Lihat Semua
           </Link>
         </div>
 

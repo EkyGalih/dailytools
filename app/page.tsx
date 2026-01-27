@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import ToolGrid from '@/components/ToolsSearch'
 import { getLiveMatches, getTodayFixtures } from '@/libs/bola/api'
+import { getDramaByCategory } from '@/libs/drama/dramabox/dramabox'
+import DramaBookGrid from '@/components/drama/dramabox/DramaBoxGrid'
 
 export const metadata: Metadata = {
   title: 'My Tools – Kalkulator, Livescore & Drama China',
@@ -10,9 +12,10 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   // 1. Ambil semua data secara paralel agar cepat
-  const [live, today] = await Promise.all([
+  const [live, today, dramas] = await Promise.all([
     getLiveMatches(),
     getTodayFixtures(),
+    getDramaByCategory('trending'),
   ])
 
   // 2. Gabung & Dedupe (Sesuai logika "benar" di halaman Bola kamu)
@@ -35,6 +38,35 @@ export default async function Home() {
           Satu tempat untuk kalkulator finansial, skor bola real-time, dan update drama China terbaru.
         </p>
       </header>
+
+      {/* 🎬 DRAMA CHINA TERBARU */}
+      <section className="max-w-6xl mx-auto px-4 space-y-8">
+        <div className="flex items-end justify-between">
+          <div>
+            <h2 className="text-3xl font-black tracking-tight">
+              🎬 Drama China Populer
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Drama viral & trending yang lagi ramai ditonton
+            </p>
+          </div>
+
+          <Link
+            href="/drama/china/channel/dramabox"
+            className="inline-flex items-center gap-2 rounded-full 
+             bg-gradient-to-r from-indigo-600 to-purple-600
+             px-5 py-2 text-sm font-semibold text-white
+             shadow-md shadow-indigo-500/20
+             hover:from-indigo-700 hover:to-purple-700
+             hover:shadow-lg transition-all"
+          >
+            Lihat Semua
+            <span className="text-base">→</span>
+          </Link>
+        </div>
+
+        <DramaBookGrid items={dramas} limit={6} />
+      </section>
 
       {/* TOOLS SECTION */}
       <section className="max-w-6xl mx-auto px-4">

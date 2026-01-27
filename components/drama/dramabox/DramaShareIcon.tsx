@@ -12,12 +12,17 @@ import {
 export default function DramaShareIcons({
     title,
     url,
+    tags,
 }: {
     title: string
     url: string
+    tags?: string[]
 }) {
+    const hashtag = tags?.length ? tags.map(t => `#${t}`).join(' ') : ''
     const encodedUrl = encodeURIComponent(url)
-    const encodedText = encodeURIComponent(title)
+    const encodedText = encodeURIComponent(
+        hashtag ? `${title} ${hashtag}` : title
+    )
 
     function copyLink() {
         navigator.clipboard.writeText(url)

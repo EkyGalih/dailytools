@@ -43,6 +43,29 @@ export default function RootLayout({
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4762845598503420"
           crossOrigin="anonymous"
         />
+        {/* 🔥 MONETAG IN-PAGE PUSH — WAJIB DI HEAD */}
+        <Script
+          id="monetag-inpage-push"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(s){
+            s.dataset.zone='10524194';
+            s.src='https://nap5k.com/tag.min.js';
+          })(document.head.appendChild(document.createElement('script')));`,
+          }}
+        />
+
+        {/* 🔥 MONETAG VIGNETTE */}
+        <Script
+          id="monetag-vignette"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(s){
+          s.dataset.zone='10524198';
+          s.src='https://gizokraijaw.net/vignette.min.js';
+        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
+          }}
+        />
       </head>
       <body className="bg-gray-50 text-gray-900">
         <Navbar />

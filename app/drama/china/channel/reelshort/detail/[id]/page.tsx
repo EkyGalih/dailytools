@@ -9,6 +9,9 @@ import {
 
 import ReelShortCard from '@/components/drama/reelshort/ReelShortCard'
 import DramaShareIcons from '@/components/drama/dramabox/DramaShareIcon'
+import AffiliateChannelPopup from '@/components/drama/ads/AffiliateChannelPopup'
+import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
+import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
 
 /* =========================
    SEO METADATA
@@ -75,9 +78,12 @@ export default async function ReelShortDetailPage({
                     b.jump_param.book_id !== id
             )
             ?.slice(0, 6) ?? []
+    const popupProduct = getAffiliatePopup()
 
     return (
         <article className="max-w-6xl mx-auto px-4 py-8 space-y-12">
+            {popupProduct && <AffiliateChannelPopup product={popupProduct} />}
+            <AffiliateMiniPopup />
             <header className="relative overflow-hidden rounded-3xl">
                 {/* BACKGROUND */}
                 <div className="absolute inset-0">

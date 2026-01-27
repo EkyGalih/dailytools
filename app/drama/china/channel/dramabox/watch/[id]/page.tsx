@@ -7,6 +7,7 @@ import AffiliateProductCard from '@/components/drama/ads/AffiliateProductCard'
 import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 import AffiliatePopup from '@/components/drama/ads/AffiliatePopup'
 import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
+import DramaShareIcons from '@/components/drama/dramabox/DramaShareIcon'
 
 export const dynamic = 'force-dynamic'
 
@@ -64,6 +65,7 @@ export default async function DramaWatchPage({
     const related = await getDramaByCategory('trending')
     const products = getAffiliateProducts(detail.tags)
     const popupProduct = getAffiliatePopup()
+    const site = process.env.NEXT_PUBLIC_SITE_URL!
 
     return (
         <article className="space-y-6">
@@ -141,27 +143,52 @@ export default async function DramaWatchPage({
                         </Link>
                     </div>
 
-                    {/* NAV */}
-                    <nav className="flex gap-4">
-                        <Link
-                            href={prevUrl || '#'}
-                            className={`flex-1 text-center text-sm px-4 py-2 rounded-full border ${prevUrl
-                                ? 'hover:bg-gray-50'
-                                : 'pointer-events-none opacity-40'
-                                }`}
-                        >
-                            ← Episode Sebelumnya
-                        </Link>
+                    {/* NAVIGATION + SHARE */}
+                    <nav className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
 
-                        <Link
-                            href={nextUrl || '#'}
-                            className={`flex-1 text-center text-sm px-4 py-2 rounded-full border ${nextUrl
-                                ? 'bg-black text-white hover:bg-gray-900'
-                                : 'pointer-events-none opacity-40'
-                                }`}
-                        >
-                            Episode Selanjutnya →
-                        </Link>
+                        {/* EPISODE NAV */}
+                        <div className="flex flex-1 gap-3">
+                            <Link
+                                href={prevUrl || '#'}
+                                className={`flex-1 text-center text-sm font-medium px-4 py-2.5 rounded-full border transition
+        ${prevUrl
+                                        ? 'hover:bg-gray-50'
+                                        : 'pointer-events-none opacity-40'
+                                    }`}
+                            >
+                                ← Sebelumnya
+                            </Link>
+
+                            <Link
+                                href={nextUrl || '#'}
+                                className={`flex-1 text-center text-sm font-semibold px-4 py-2.5 rounded-full transition
+        ${nextUrl
+                                        ? 'bg-black text-white hover:bg-gray-900 shadow'
+                                        : 'pointer-events-none opacity-40 border'
+                                    }`}
+                            >
+                                Selanjutnya →
+                            </Link>
+                        </div>
+
+                        {/* SHARE */}
+                        <div className="flex justify-end">
+                            <div className="
+                            flex items-center
+                            rounded-full
+                            bg-white/70
+                            backdrop-blur-md
+                            border
+                            px-3 py-2
+                            shadow-sm
+                            ">
+                                <DramaShareIcons
+                                    title={detail.bookName}
+                                    url={`${site}/drama/china/channel/dramabox/watch/${id}?ep=${episodeIndex + 1}`}
+                                    tags={detail.tags}
+                                />
+                            </div>
+                        </div>
                     </nav>
 
                     {/* EPISODE LIST */}

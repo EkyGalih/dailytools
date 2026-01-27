@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import DramaBookGrid from './DramaBoxGrid'
+import DramaShareIcons from './DramaShareIcon'
 
 export default function DramaExplorer({
     initialItems,
@@ -11,6 +12,7 @@ export default function DramaExplorer({
     const [items, setItems] = useState(initialItems)
     const [loading, setLoading] = useState(false)
     const [query, setQuery] = useState('')
+    const site = process.env.NEXT_PUBLIC_SITE_URL!
 
     async function onSearch(e: React.FormEvent) {
         e.preventDefault()
@@ -75,6 +77,13 @@ export default function DramaExplorer({
                     🔍
                 </button>
             </form>
+            <div className="max-w-6xl mx-auto px-4 flex justify-end">
+                <DramaShareIcons
+                    title="Drama China Viral & Trending"
+                    url={`${site}/drama/china/channel/dramabox`}
+                    tags={['DramaChina', 'Dracin', 'DramaViral']}
+                />
+            </div>
 
             {/* RESULT */}
             {loading ? (

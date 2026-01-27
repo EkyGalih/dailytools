@@ -57,25 +57,6 @@ export default function Navbar() {
               priority
             />
           </Link>
-
-          {/* ☕ TRAKTEER — MOBILE & DESKTOP */}
-          <a
-            href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open"
-            target="_blank"
-            rel="noopener sponsored nofollow"
-            className="
-      inline-flex items-center gap-1
-      rounded-full
-      bg-gradient-to-r from-orange-500 to-pink-500
-      px-3 py-1.5
-      text-xs font-semibold text-white
-      shadow
-      hover:opacity-90 transition
-    "
-            aria-label="Dukung kami lewat Trakteer"
-          >
-            ☕ Traktir
-          </a>
         </div>
 
         {/* MOBILE BUTTON */}

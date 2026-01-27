@@ -6,8 +6,8 @@ import DramaFilters from '@/components/drama/dramabox/DramaFilter'
 import DramaHero from '@/components/drama/dramabox/DramaHero'
 import DubIndoSubFilter from '@/components/drama/dramabox/DubIndoSubFilter'
 import DramaExplorer from '@/components/drama/dramabox/DramaExplorer'
-import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
-import AffiliateChannelPopup from '@/components/drama/ads/AffiliateChannelPopup'
+// import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
+import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
 
 export default async function DramaCategoryPage({
   params,
@@ -21,11 +21,12 @@ export default async function DramaCategoryPage({
   if (!cat) notFound()
 
   const items = await getDramaByCategory(cat.slug)
-  const popupProduct = getAffiliatePopup()
+  // const popupProduct = getAffiliatePopup()
 
   return (
     <section className="space-y-8">
-      {popupProduct && <AffiliateChannelPopup product={popupProduct} />}
+      {/* {popupProduct && <AffiliateChannelPopup product={popupProduct} />} */}
+      <AffiliateMiniPopup />
       <DramaHero activeChannel="dramabox" />
 
       {/* CATEGORY FILTER (SOURCE OF TRUTH) */}

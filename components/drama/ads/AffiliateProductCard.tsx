@@ -14,13 +14,7 @@ export default function AffiliateProductCard({
   product: AffiliateProduct
 }) {
   return (
-    <a
-      href={product.link}
-      target="_blank"
-      rel="nofollow sponsored noopener"
-      className="group block rounded-xl border bg-white p-2
-                 hover:shadow-md transition"
-    >
+    <div className="rounded-xl border bg-white p-2">
       {/* IMAGE */}
       <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
         <Image
@@ -28,7 +22,7 @@ export default function AffiliateProductCard({
           alt={product.title}
           fill
           sizes="(max-width: 768px) 50vw, 160px"
-          className="object-cover group-hover:scale-105 transition-transform"
+          className="object-cover"
         />
       </div>
 
@@ -45,9 +39,9 @@ export default function AffiliateProductCard({
         )}
 
         <div className="text-[10px] text-gray-500">
-          {product.source === 'shopee' ? 'Shopee' : 'TikTok'}
+          Beli di {product.source === 'shopee' ? 'Shopee' : 'TikTok'}
         </div>
       </div>
-    </a>
+    </div>
   )
 }

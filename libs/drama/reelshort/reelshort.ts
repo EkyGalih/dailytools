@@ -28,6 +28,23 @@ export type ReelShortDetailResponse = {
     }[]
 }
 
+export type ReelShortSearchItem = {
+    bookId: string
+    title: string
+    cover: string
+    description?: string
+    chapterCount?: number
+    tag?: string[]
+}
+
+export type ReelShortSearchResponse = {
+    success: boolean
+    keyword: string
+    page: number
+    total: number
+    results: ReelShortSearchItem[]
+}
+
 /* =========================
    FETCH HELPERS
 ========================= */
@@ -101,9 +118,9 @@ export async function getReelShortEpisode(
 export async function searchReelShort(query: string) {
     if (!query) return null
 
-    return fetchJSON(
+    return fetchJSON<ReelShortSearchResponse>(
         `${BASE_URL}/search?query=${encodeURIComponent(query)}`,
-        120 // 2 menit
+        120
     )
 }
 

@@ -239,7 +239,7 @@ export default async function DramaDetailPage({
             </Link>
           </div>
 
-          <WatchPlayer episodes={drama.episodes} />
+          <WatchPlayer episodes={drama.episodes} genres={drama.genres[0]} />
         </section>
 
         {/* ================================= */}

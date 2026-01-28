@@ -1,154 +1,203 @@
-const API_KEY = "key1"
-const BASE_URL = "https://api.xyra.stream/v1/dramacool"
+const BASE_URL = "https://scrapper-suru.vercel.app/"
 
-const REVALIDATE_HOME = 300 // 5 menit
-const REVALIDATE_LATEST = 120 // 2 menit
-const REVALIDATE_INFO = 600 // 10 menit
-const REVALIDATE_POPULAR = 120 // 2 menit
-const REVALIDATE_DISCOVER = 300 // 2 menit
-const REVALIDATE_SEARCH = 60 // 1 menit (search bisa sering berubah)
+const REVALIDATE_HOME = 300
+const REVALIDATE_LIST = 120
+const REVALIDATE_DETAIL = 600
+const REVALIDATE_SEARCH = 60
 
 /**
- * Ambil data home (recently added, popular, dll)
+ * ✅ Ambil semua series (default homepage)
+ * GET /series
  */
-export async function getHomeData() {
+export async function getSeries(page: number = 1) {
     try {
         const res = await fetch(
-            `${BASE_URL}/home?api_key=${API_KEY}`,
-            { next: { revalidate: REVALIDATE_HOME } }
-        )
-
-        if (!res.ok) return null
-        return res.json()
-    } catch (error) {
-        console.error("getHomeData error:", error)
-        return null
-    }
-}
-
-/**
- * Ambil detail drama (info lengkap)
- */
-export async function getDramaInfo(id: string) {
-    try {
-        const res = await fetch(
-            `${BASE_URL}/info?api_key=${API_KEY}&id=${id}`,
+            `${BASE_URL}/series?page=${page}`,
             {
-                next: { revalidate: REVALIDATE_INFO },
-                headers: {
-                    "Accept": "application/json",
-                    "User-Agent": "Mozilla/5.0",
-                },
+                next: { revalidate: REVALIDATE_HOME },
             }
         )
 
         if (!res.ok) return null
         return res.json()
-    } catch (error) {
-        console.error("getDramaInfo error:", error)
+    } catch (err) {
+        console.error("getSeries error:", err)
         return null
     }
 }
 
 /**
- * Ambil latest update (pagination)
+ * ✅ Ambil ongoing series
+ * GET /series/ongoing
  */
-export async function getLatestDrama(page: number = 1) {
+export async function getOngoingSeries(page: number = 1) {
     try {
-        const res = await fetch(
-            `${BASE_URL}/latest?api_key=${API_KEY}&page=${page}`,
-            {
-                next: { revalidate: REVALIDATE_LATEST },
-                headers: {
-                    "Accept": "application/json",
-                    "User-Agent": "Mozilla/5.0",
-                },
-            }
-        )
+        const res = await fetch(`${BASE_URL}/series/ongoing?page=${page}`, {
+            next: { revalidate: REVALIDATE_LIST },
+        })
 
         if (!res.ok) return null
         return res.json()
-    } catch (error) {
-        console.error("getLatestDrama error:", error)
+    } catch (err) {
+        console.error("getOngoingSeries error:", err)
         return null
     }
 }
 
 /**
- * Ambil popular
+ * ✅ Ambil updated series
+ * GET /series/updated
  */
-export async function getPopular(page: number = 1) {
+export async function getUpdatedSeries(page: number = 1) {
     try {
-        const res = await fetch(
-            `${BASE_URL}/popular?api_key=${API_KEY}&page=${page}`,
-            {
-                next: { revalidate: REVALIDATE_POPULAR },
-                headers: {
-                    Accept: "application/json",
-                    "User-Agent": "Mozilla/5.0",
-                },
-            }
-        )
+        const res = await fetch(`${BASE_URL}/series/updated?page=${page}`, {
+            next: { revalidate: REVALIDATE_LIST },
+        })
 
         if (!res.ok) return null
         return res.json()
-    } catch (error) {
-        console.error("getPopular error:", error)
+    } catch (err) {
+        console.error("getUpdatedSeries error:", err)
         return null
     }
 }
 
 /**
- * Ambil discover
+ * ✅ Ambil completed series
+ * GET /series/completed
  */
-export async function getDIscover(page: number = 1) {
+export async function getCompletedSeries(page: number = 1) {
     try {
-        const res = await fetch(
-            `${BASE_URL}/discover?api_key=${API_KEY}&page=${page}`,
-            {
-                next: { revalidate: REVALIDATE_DISCOVER },
-                headers: {
-                    Accept: "application/json",
-                    "User-Agent": "Mozilla/5.0",
-                },
-            }
-        )
+        const res = await fetch(`${BASE_URL}/series/completed?page=${page}`, {
+            next: { revalidate: REVALIDATE_LIST },
+        })
 
         if (!res.ok) return null
         return res.json()
-    } catch (error) {
-        console.error("getPopular error:", error)
+    } catch (err) {
+        console.error("getCompletedSeries error:", err)
         return null
     }
 }
 
 /**
- * Search drama
+ * ✅ Detail drama
+ * GET /detail/:slug
  */
-export async function searchDrama(
-  query: string,
-  page: number = 1
+export async function getDramaDetail(slug: string) {
+    try {
+        const res = await fetch(`${BASE_URL}/detail/${slug}`, {
+            next: { revalidate: REVALIDATE_DETAIL },
+        })
+
+        if (!res.ok) return null
+        return res.json()
+    } catch (err) {
+        console.error("getDramaDetail error:", err)
+        return null
+    }
+}
+
+/**
+ * ✅ List movie
+ * GET /movie
+ */
+export async function getMovies(page: number = 1) {
+    try {
+        const res = await fetch(`${BASE_URL}/movie?page=${page}`, {
+            next: { revalidate: REVALIDATE_LIST },
+        })
+
+        if (!res.ok) return null
+        return res.json()
+    } catch (err) {
+        console.error("getMovies error:", err)
+        return null
+    }
+}
+
+/**
+ * ✅ Movie terbaru
+ * GET /movie/newest
+ */
+export async function getNewestMovies(page: number = 1) {
+    try {
+        const res = await fetch(`${BASE_URL}/movie/newest?page=${page}`, {
+            next: { revalidate: REVALIDATE_LIST },
+        })
+
+        if (!res.ok) return null
+        return res.json()
+    } catch (err) {
+        console.error("getNewestMovies error:", err)
+        return null
+    }
+}
+
+/**
+ * ✅ Semua genre
+ * GET /genres
+ */
+export async function getGenres() {
+    try {
+        const res = await fetch(`${BASE_URL}/genres`, {
+            next: { revalidate: REVALIDATE_HOME },
+        })
+
+        if (!res.ok) return null
+        return res.json()
+    } catch (err) {
+        console.error("getGenres error:", err)
+        return null
+    }
+}
+
+
+/**
+ * ✅ Drama berdasarkan genre
+ * GET /genres/:genre
+ */
+export async function getDramaByGenre(
+    genre: string,
+    page: number = 1
 ) {
-  if (!query) return null
+    if (!genre) return null
 
-  try {
-    const res = await fetch(
-      `${BASE_URL}/search?api_key=${API_KEY}&query=${encodeURIComponent(
-        query
-      )}&page=${page}`,
-      {
-        next: { revalidate: REVALIDATE_SEARCH },
-        headers: {
-          Accept: "application/json",
-          "User-Agent": "Mozilla/5.0",
-        },
-      }
-    )
+    try {
+        const res = await fetch(
+            `${BASE_URL}/genres/${encodeURIComponent(genre)}?page=${page}`,
+            {
+                next: { revalidate: 60 },
+            }
+        )
 
-    if (!res.ok) return null
-    return res.json()
-  } catch (error) {
-    console.error("searchDrama error:", error)
-    return null
-  }
+        if (!res.ok) return null
+        return res.json()
+    } catch (err) {
+        console.error("getDramaByGenre error:", err)
+        return null
+    }
+}
+
+/**
+ * ✅ Search drama
+ * GET /search?query=
+ */
+export async function searchDrama(query: string, page: number = 1) {
+    if (!query) return null
+
+    try {
+        const res = await fetch(
+            `${BASE_URL}/search?q=${encodeURIComponent(query)}&page=${page}`,
+            {
+                next: { revalidate: REVALIDATE_SEARCH },
+            }
+        )
+
+        if (!res.ok) return null
+        return res.json()
+    } catch (err) {
+        console.error("searchDrama error:", err)
+        return null
+    }
 }

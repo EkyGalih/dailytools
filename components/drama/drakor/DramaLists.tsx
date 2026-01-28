@@ -1,80 +1,66 @@
-import { getCountryFlag } from "@/libs/drama/drakor/country"
-import Image from "next/image"
 import Link from "next/link"
 
 export default function DramaListCard({
-    drama,
+  drama,
 }: {
-    drama: any
+  drama: any
 }) {
-    return (
-        <Link href={`/drama/filem/${drama.id}`}>
-            <div className="flex gap-4 bg-zinc-900 rounded-lg overflow-hidden p-3 hover:bg-zinc-800 transition">
+  // Data dari API drakorkita
+  const title = drama.title
+  const year = drama.year
+  const eps = drama.eps
+  const rating = drama.rating
+  const thumbnail = drama.thumbnail
+  console.log(drama)
 
-                {/* THUMB */}
-                <img
-                    src={drama.image}
-                    alt={drama.title}
-                    className="w-[90px] h-[130px] object-cover rounded-md flex-shrink-0"
-                />
+  // Convert rating angka (0-10) ke bintang (0-5)
+  const starCount = rating ? Math.round(Number(rating) / 2) : 0
 
-                {/* CONTENT */}
-                <div className="flex flex-col justify-between flex-1">
-                    <div className="space-y-1">
-                        <h3 className="text-sm font-semibold line-clamp-2">
-                            {drama.title}
-                        </h3>
+  // EPS format: "E4/16" → "4/16"
+  const epsText = eps ? eps.replace(/^E/i, "") : null
 
-                        {/* META */}
-                        <div className="text-[11px] text-zinc-400 flex flex-wrap gap-x-2">
-                            {drama.country && (
-                                <span className="inline-flex items-center gap-1">
-                                    {getCountryFlag(drama.country) ? (
-                                        <Image
-                                            src={getCountryFlag(drama.country)!}
-                                            alt={drama.country}
-                                            width={16}
-                                            height={12}
-                                            className="rounded-sm"
-                                        />
-                                    ) : (
-                                        <span>🌏</span>
-                                    )}
-                                    <span>{drama.country}</span>
-                                </span>
-                            )}
-                            {drama.releaseYear && <span>• {drama.releaseYear}</span>}
-                        </div>
+  return (
+    <Link href={`/drama/filem/${drama.id}`}>
+      <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-zinc-900/40 hover:bg-zinc-800/60 transition">
+        {/* Poster kecil */}
+        <div className="w-[48px] h-[70px] flex-shrink-0 overflow-hidden rounded-md bg-zinc-800">
+          <img
+            src={thumbnail}
+            alt={title}
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-                        {/* STATUS */}
-                        {drama.status && (
-                            <span
-                                className={`inline-block text-[10px] px-2 py-[2px] rounded mt-1
-                ${drama.status.toLowerCase().includes("ongoing")
-                                        ? "bg-rose-500/20 text-rose-400"
-                                        : "bg-emerald-500/20 text-emerald-400"
-                                    }`}
-                            >
-                                {drama.status}
-                            </span>
-                        )}
-                    </div>
+        {/* Content */}
+        <div className="flex flex-col flex-1 min-w-0">
+          {/* Title */}
+          <h3 className="text-sm font-semibold text-white truncate">
+            {title} {year && <span className="text-white/70">({year})</span>}
+          </h3>
 
-                    {/* TAGS */}
-                    {drama.genres?.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-2">
-                            {drama.genres.slice(0, 4).map((g: string) => (
-                                <span
-                                    key={g}
-                                    className="text-[10px] px-2 py-[2px] rounded bg-zinc-800 text-zinc-300"
-                                >
-                                    {g}
-                                </span>
-                            ))}
-                        </div>
-                    )}
-                </div>
+          {/* Stars */}
+          {rating && (
+            <div className="flex items-center gap-[2px] text-yellow-400 text-xs mt-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <span key={i}>{i < starCount ? "★" : "☆"}</span>
+              ))}
             </div>
-        </Link>
-    )
+          )}
+
+          {/* Rating + EPS */}
+          <p className="text-[11px] text-zinc-400 mt-1 flex items-center gap-2">
+            {rating ? (
+              <span>⭐ {rating}</span>
+            ) : null}
+
+            {rating && epsText ? <span>|</span> : null}
+
+            {epsText ? (
+              <span>{epsText} EPS</span>
+            ) : null}
+          </p>
+        </div>
+      </div>
+    </Link>
+  )
 }

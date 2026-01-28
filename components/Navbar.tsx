@@ -79,7 +79,7 @@ export default function Navbar() {
             onToggle={() => toggle('drama')}
           >
             <NavItem href="/drama/china/channel/dramabox" label="Drama China" />
-            <NavItem href="/drama/filem" label="Drama Filem" />
+            <NavItem href="/drama/korea" label="Drama Korea" />
           </DropdownMenu>
           {/* MENU UTAMA: TOOLS */}
           <DropdownMenu
@@ -212,7 +212,7 @@ export default function Navbar() {
                   Drama China
                 </Link>
                 <Link
-                  href="/drama/filem"
+                  href="/drama/korea"
                   onClick={() => setMobileOpen(false)}
                   className="block py-2"
                 >

@@ -44,7 +44,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         {/* 🔥 MONETAG IN-PAGE PUSH — WAJIB DI HEAD */}
-        <Script
+        {/* <Script
           id="monetag-inpage-push"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
@@ -53,10 +53,10 @@ export default function RootLayout({
             s.src='https://nap5k.com/tag.min.js';
           })(document.head.appendChild(document.createElement('script')));`,
           }}
-        />
+        /> */}
 
         {/* 🔥 MONETAG VIGNETTE */}
-        <Script
+        {/* <Script
           id="monetag-vignette"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
@@ -65,7 +65,7 @@ export default function RootLayout({
           s.src='https://gizokraijaw.net/vignette.min.js';
         })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
           }}
-        />
+        /> */}
       </head>
       <body className="bg-gray-50 text-gray-900">
         <Navbar />

@@ -1,4 +1,4 @@
-const BASE_URL = "https://scrapper-suru.vercel.app/"
+const BASE_URL = "https://scrapper-suru.vercel.app:3000"
 
 const REVALIDATE_HOME = 300
 const REVALIDATE_LIST = 120

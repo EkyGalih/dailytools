@@ -1,6 +1,7 @@
 import AffiliateMiniPopup from "@/components/drama/ads/AffiliateMiniPopup"
 import DramaCard from "@/components/drama/drakor/DramaCard"
 import DramaHero from "@/components/drama/drakor/DramaHero"
+import RefreshButton from "@/components/drama/drakor/RefreshButton"
 import WatchPlayer from "@/components/drama/drakor/WatchPlayer"
 
 import { getDramaByGenre, getDramaDetail } from "@/libs/drama/drakor/drama"
@@ -63,6 +64,8 @@ export default async function DramaDetailPage({
         <p className="text-zinc-400">
           Data tidak bisa dimuat. Silakan refresh atau coba lagi nanti.
         </p>
+
+        <RefreshButton />
       </main>
     )
   }

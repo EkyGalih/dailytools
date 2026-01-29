@@ -55,7 +55,7 @@ export default function DramaHero() {
                 <div className="mt-6 flex justify-end">
                     <DramaShareIcons
                         title="Nonton Drama Korea Subtitle Indonesia"
-                        url={`${site}/drama/filem`}
+                        url={`${site}/drama/korea`}
                         tags={[
                             "DramaKorea",
                             "KDramaSubIndo",

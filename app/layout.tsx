@@ -39,7 +39,6 @@ export default function RootLayout({
       <head>
         {/* ✅ GOOGLE ADSENSE */}
         <Script
-          strategy="afterInteractive"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4762845598503420"
           crossOrigin="anonymous"
         />

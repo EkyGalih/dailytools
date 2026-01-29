@@ -4,6 +4,7 @@ import DramaHero from "@/components/drama/drakor/DramaHero"
 import WatchPlayer from "@/components/drama/drakor/WatchPlayer"
 
 import { getDramaByGenre, getDramaDetail } from "@/libs/drama/drakor/drama"
+import Image from "next/image"
 import Link from "next/link"
 
 /* ======================================== */
@@ -77,7 +78,7 @@ export default async function DramaDetailPage({
   const merged = relatedAll
     .flatMap((r) => r?.datas ?? [])
     .filter((v, i, arr) => arr.findIndex(x => x.endpoint === v.endpoint) === i)
-  
+
   return (
     <>
       <AffiliateMiniPopup />
@@ -92,7 +93,7 @@ export default async function DramaDetailPage({
             Home
           </Link>
           <span>/</span>
-          <Link href="/drama/filem" className="hover:text-white">
+          <Link href="/drama/korea" className="hover:text-white">
             Drama
           </Link>
           <span>/</span>
@@ -107,10 +108,13 @@ export default async function DramaDetailPage({
         <section className="grid md:grid-cols-3 gap-10">
           {/* Poster */}
           <div className="relative">
-            <img
-              src={drama.thumbnail}
+            <Image
+              src={drama.thumbnail || "/placeholder.jpg"}
               alt={drama.title}
+              width={500}
+              height={750}
               className="rounded-2xl w-full object-cover shadow-xl"
+              priority
             />
 
             {/* Rating Badge */}
@@ -140,7 +144,7 @@ export default async function DramaDetailPage({
                 {drama.genres.map((g: string) => (
                   <Link
                     key={g}
-                    href={`/drama/filem?genre=${g}`}
+                    href={`/drama/korea?genre=${g}`}
                     className="px-3 py-1 text-xs rounded-full bg-purple-500/20 text-purple-300 hover:bg-purple-600 hover:text-white transition"
                   >
                     {g}

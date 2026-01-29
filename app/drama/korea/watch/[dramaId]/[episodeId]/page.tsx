@@ -129,7 +129,7 @@ export default async function WatchPage({
         {/* KANAN: Tombol-tombol */}
         <div className="flex items-center gap-3">
           <Link
-            href={`/drama/filem/${dramaId}`}
+            href={`/drama/korea/${dramaId}`}
             className="text-sm text-zinc-400 hover:text-white transition"
           >
             ← Lihat Episode Lain

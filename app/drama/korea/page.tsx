@@ -47,7 +47,7 @@ export default async function HomePage({
 
   // SERIES + MOVIES
   const homeRes = await getHomePage();
- 
+  console.log(homeRes);
   const latestEps = homeRes?.data?.latest_eps
   const seriesRes = homeRes?.data?.latest_series
   const movieRes = homeRes?.data?.latest_movies

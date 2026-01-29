@@ -26,7 +26,7 @@ export async function getHomePage(page: number = 1) {
             console.error("Homepage fetch failed:", res.status);
             return null;
         }
-
+        console.log("res", res);
         return res.json();
     } catch (err) {
         console.error("getHomePage error:", err);

@@ -11,10 +11,10 @@ const REVALIDATE_SEARCH = 60
  * ✅ Ambil semua series (default homepage)
  * GET /series
  */
-export async function getHomePage(page: number = 1) {
+export async function getHomePage() {
     try {
         const res = await apiFetch(
-            `${BASE_URL}/drakorkita/homepage?page=${page}`,
+            `${BASE_URL}/drakorkita/homepage`,
             REVALIDATE_HOME
         );
 

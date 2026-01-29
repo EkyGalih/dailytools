@@ -1,4 +1,5 @@
 import { DramaCardItem } from "@/libs/types/drakor"
+import Image from "next/image"
 import Link from "next/link"
 
 export default function DramaCard({
@@ -15,10 +16,11 @@ export default function DramaCard({
       >
         {/* THUMBNAIL */}
         <div className="relative w-full h-[280px] bg-black flex-shrink-0">
-          <img
-            src={drama.thumbnail}
+          <Image
+            src={drama.thumbnail ?? "/placeholder.jpg"}
             alt={drama.title}
-            className="w-full h-full object-cover group-hover:scale-[1.05] transition duration-500"
+            fill
+            className="object-cover"
           />
 
           {/* Gradient Overlay */}

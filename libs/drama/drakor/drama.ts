@@ -1,4 +1,6 @@
-const BASE_URL = "https://scrapper-suru.vercel.app:3000"
+import { apiFetch } from "@/libs/fetchApi"
+
+const BASE_URL = process.env.BASE_URL_API
 
 const REVALIDATE_HOME = 300
 const REVALIDATE_LIST = 120
@@ -9,14 +11,43 @@ const REVALIDATE_SEARCH = 60
  * ✅ Ambil semua series (default homepage)
  * GET /series
  */
+export async function getHomePage(page: number = 1) {
+    try {
+        const res = await apiFetch(
+            `${BASE_URL}/drakorkita/homepage?page=${page}`,
+            REVALIDATE_HOME
+        );
+
+        if (!BASE_URL) {
+            throw new Error("BASE_URL_API belum di set di .env");
+        }
+
+        if (!res.ok) {
+            console.error("Homepage fetch failed:", res.status);
+            return null;
+        }
+
+        return res.json();
+    } catch (err) {
+        console.error("getHomePage error:", err);
+        return null;
+    }
+}
+
+/**
+ * ✅ Ambil semua series (default homepage)
+ * GET /series
+ */
 export async function getSeries(page: number = 1) {
     try {
-        const res = await fetch(
-            `${BASE_URL}/series?page=${page}`,
-            {
-                next: { revalidate: REVALIDATE_HOME },
-            }
+        const res = await apiFetch(
+            `${BASE_URL}/drakorkita/series?page=${page}`,
+            REVALIDATE_LIST
         )
+
+        if (!BASE_URL) {
+            throw new Error("BASE_URL_API belum di set di .env");
+        }
 
         if (!res.ok) return null
         return res.json()
@@ -32,9 +63,13 @@ export async function getSeries(page: number = 1) {
  */
 export async function getOngoingSeries(page: number = 1) {
     try {
-        const res = await fetch(`${BASE_URL}/series/ongoing?page=${page}`, {
-            next: { revalidate: REVALIDATE_LIST },
-        })
+        const res = await apiFetch(`${BASE_URL}/drakorkita/series/ongoing?page=${page}`,
+            REVALIDATE_LIST
+        )
+
+        if (!BASE_URL) {
+            throw new Error("BASE_URL_API belum di set di .env");
+        }
 
         if (!res.ok) return null
         return res.json()
@@ -50,9 +85,11 @@ export async function getOngoingSeries(page: number = 1) {
  */
 export async function getUpdatedSeries(page: number = 1) {
     try {
-        const res = await fetch(`${BASE_URL}/series/updated?page=${page}`, {
-            next: { revalidate: REVALIDATE_LIST },
-        })
+        const res = await apiFetch(`${BASE_URL}/drakorkita/series/updated?page=${page}`, REVALIDATE_LIST)
+
+        if (!BASE_URL) {
+            throw new Error("BASE_URL_API belum di set di .env");
+        }
 
         if (!res.ok) return null
         return res.json()
@@ -68,15 +105,16 @@ export async function getUpdatedSeries(page: number = 1) {
  */
 export async function getCompletedSeries(page: number = 1) {
     try {
-        const res = await fetch(`${BASE_URL}/series/completed?page=${page}`, {
-            next: { revalidate: REVALIDATE_LIST },
-        })
+        const res = await apiFetch(
+            `${BASE_URL}/drakorkita/series/completed?page=${page}`,
+            REVALIDATE_LIST
+        );
 
-        if (!res.ok) return null
-        return res.json()
+        if (!res.ok) return null;
+        return res.json();
     } catch (err) {
-        console.error("getCompletedSeries error:", err)
-        return null
+        console.error("getCompletedSeries error:", err);
+        return null;
     }
 }
 
@@ -86,9 +124,11 @@ export async function getCompletedSeries(page: number = 1) {
  */
 export async function getDramaDetail(slug: string) {
     try {
-        const res = await fetch(`${BASE_URL}/detail/${slug}`, {
-            next: { revalidate: REVALIDATE_DETAIL },
-        })
+        const res = await apiFetch(`${BASE_URL}/drakorkita/detail/${slug}`, REVALIDATE_DETAIL)
+
+        if (!BASE_URL) {
+            throw new Error("BASE_URL_API belum di set di .env");
+        }
 
         if (!res.ok) return null
         return res.json()
@@ -104,9 +144,11 @@ export async function getDramaDetail(slug: string) {
  */
 export async function getMovies(page: number = 1) {
     try {
-        const res = await fetch(`${BASE_URL}/movie?page=${page}`, {
-            next: { revalidate: REVALIDATE_LIST },
-        })
+        const res = await apiFetch(`${BASE_URL}/drakorkita/movie?page=${page}`, REVALIDATE_LIST)
+
+        if (!BASE_URL) {
+            throw new Error("BASE_URL_API belum di set di .env");
+        }
 
         if (!res.ok) return null
         return res.json()
@@ -122,9 +164,11 @@ export async function getMovies(page: number = 1) {
  */
 export async function getNewestMovies(page: number = 1) {
     try {
-        const res = await fetch(`${BASE_URL}/movie/newest?page=${page}`, {
-            next: { revalidate: REVALIDATE_LIST },
-        })
+        const res = await apiFetch(`${BASE_URL}/drakorkita/movie/newest?page=${page}`, REVALIDATE_LIST)
+
+        if (!BASE_URL) {
+            throw new Error("BASE_URL_API belum di set di .env");
+        }
 
         if (!res.ok) return null
         return res.json()
@@ -140,9 +184,11 @@ export async function getNewestMovies(page: number = 1) {
  */
 export async function getGenres() {
     try {
-        const res = await fetch(`${BASE_URL}/genres`, {
-            next: { revalidate: REVALIDATE_HOME },
-        })
+        const res = await apiFetch(`${BASE_URL}/drakorkita/genres`, REVALIDATE_HOME)
+
+        if (!BASE_URL) {
+            throw new Error("BASE_URL_API belum di set di .env");
+        }
 
         if (!res.ok) return null
         return res.json()
@@ -164,12 +210,14 @@ export async function getDramaByGenre(
     if (!genre) return null
 
     try {
-        const res = await fetch(
-            `${BASE_URL}/genres/${encodeURIComponent(genre)}?page=${page}`,
-            {
-                next: { revalidate: 60 },
-            }
+        const res = await apiFetch(
+            `${BASE_URL}/drakorkita/genres/${encodeURIComponent(genre)}?page=${page}`,
+            REVALIDATE_HOME
         )
+
+        if (!BASE_URL) {
+            throw new Error("BASE_URL_API belum di set di .env");
+        }
 
         if (!res.ok) return null
         return res.json()
@@ -187,12 +235,14 @@ export async function searchDrama(query: string, page: number = 1) {
     if (!query) return null
 
     try {
-        const res = await fetch(
-            `${BASE_URL}/search?q=${encodeURIComponent(query)}&page=${page}`,
-            {
-                next: { revalidate: REVALIDATE_SEARCH },
-            }
+        const res = await apiFetch(
+            `${BASE_URL}/drakorkita/search?q=${encodeURIComponent(query)}&page=${page}`,
+            REVALIDATE_SEARCH
         )
+
+        if (!BASE_URL) {
+            throw new Error("BASE_URL_API belum di set di .env");
+        }
 
         if (!res.ok) return null
         return res.json()

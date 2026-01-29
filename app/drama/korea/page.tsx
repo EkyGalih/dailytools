@@ -8,13 +8,12 @@ import DramaListCard from "@/components/drama/drakor/DramaLists"
 import { getAffiliatePopup } from "@/libs/ads/getAffiliatePopup"
 
 import {
-  getSeries,
-  getMovies,
   searchDrama,
-  getCompletedSeries,
   getGenres,
   getDramaByGenre,
+  getHomePage,
 } from "@/libs/drama/drakor/drama"
+import { DramaCardItem, GenreItem } from "@/libs/types/drakor"
 import Link from "next/link"
 
 export default async function HomePage({
@@ -47,21 +46,17 @@ export default async function HomePage({
   const isFilterMode = isSearchMode || isGenreMode
 
   // SERIES + MOVIES
-  const seriesRes = await getSeries(currentPage)
-  const movieRes = await getMovies(currentPage)
-  const completedRes = await getCompletedSeries(currentPage)
+  const homeRes = await getHomePage();
+ 
+  const latestEps = homeRes?.data?.latest_eps
+  const seriesRes = homeRes?.data?.latest_series
+  const movieRes = homeRes?.data?.latest_movies
   const genreRes = await getGenres()
 
-  const series = seriesRes?.datas ?? []
-  const movies = movieRes?.datas ?? []
-  const completed = completedRes?.datas ?? []
+  const series = seriesRes ?? []
+  const movies = movieRes ?? []
+  const episode = latestEps ?? []
   const genres = genreRes?.datas ?? []
-
-  const paginationSeries = seriesRes?.pagination_info
-  const paginationMovies = movieRes?.pagination_info
-
-  // tab switcher
-  const activeTab = sp?.tab || "series"
 
   // const popupProduct = getAffiliatePopup()
 
@@ -146,7 +141,7 @@ export default async function HomePage({
                         {/* Baris 2 (Clear kanan) */}
                         <div className="flex justify-end">
                           <Link
-                            href="/drama/filem"
+                            href="/drama/korea"
                             className="text-sm text-red-400 hover:underline"
                           >
                             ✖ Clear Filter
@@ -161,7 +156,7 @@ export default async function HomePage({
                     {(isSearchMode
                       ? searchResult?.datas
                       : genreResult?.datas
-                    )?.map((item: any) => (
+                    )?.map((item: DramaCardItem) => (
                       <DramaCard key={item.endpoint} drama={item} />
                     ))}
                   </div>
@@ -177,7 +172,7 @@ export default async function HomePage({
                           : genreResult.pagination_info.has_prev) && (
                             <Link
                               href={{
-                                pathname: "/drama/filem",
+                                pathname: "/drama/korea",
                                 query: {
                                   page:
                                     isSearchMode
@@ -206,7 +201,7 @@ export default async function HomePage({
                           : genreResult.pagination_info.has_next) && (
                             <Link
                               href={{
-                                pathname: "/drama/filem",
+                                pathname: "/drama/korea",
                                 query: {
                                   page:
                                     isSearchMode
@@ -230,157 +225,24 @@ export default async function HomePage({
             {/* TABS */}
             {!isFilterMode && (
               <div>
-                <div className="flex gap-3 mb-6">
-                  <Link
-                    href={{
-                      pathname: "/drama/filem",
-                      query: { tab: "series", page: 1, ...(query ? { q: query } : {}) },
-                    }}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${activeTab === "series"
-                      ? "bg-white text-black"
-                      : "bg-zinc-800 text-white hover:bg-zinc-700"
-                      }`}
-                  >
-                    📺 Series
-                  </Link>
+                {/* SERIES TAB */}
 
-                  <Link
-                    href={{
-                      pathname: "/drama/filem",
-                      query: { tab: "movies", page: 1, ...(query ? { q: query } : {}) },
-                    }}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${activeTab === "movies"
-                      ? "bg-white text-black"
-                      : "bg-zinc-800 text-white hover:bg-zinc-700"
-                      }`}
-                  >
-                    🎬 Movies
-                  </Link>
+                <h2 className="text-2xl font-bold mb-4">Series Terbaru</h2>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                  {series.map((item: DramaCardItem) => (
+                    <DramaCard key={item.endpoint} drama={item} />
+                  ))}
                 </div>
 
-                {/* SERIES TAB */}
-                {activeTab === "series" && (
-                  <>
-                    <h2 className="text-2xl font-bold mb-4">Series Highlight</h2>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                      {series.map((item: any) => (
-                        <DramaCard key={item.endpoint} drama={item} />
-                      ))}
-                    </div>
+                <h2 className="text-2xl font-bold mb-4 md:mt-5">Movies Terbaru</h2>
 
-                    {/* PAGINATION SERIES */}
-                    {paginationSeries && (
-                      <div className="flex items-center justify-center gap-3 mt-10">
-                        {paginationSeries.has_prev ? (
-                          <Link
-                            href={{
-                              pathname: "/drama/filem",
-                              query: {
-                                tab: "series",
-                                page: paginationSeries.prev_page,
-                                ...(query ? { q: query } : {}),
-                              },
-                            }}
-                            className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-sm"
-                          >
-                            ← Prev
-                          </Link>
-                        ) : (
-                          <span className="px-4 py-2 rounded-lg bg-zinc-900 text-zinc-500 text-sm cursor-not-allowed">
-                            ← Prev
-                          </span>
-                        )}
-
-                        <span className="text-sm text-zinc-400">
-                          Page {paginationSeries.current_page} of {paginationSeries.total_page}
-                        </span>
-
-                        {paginationSeries.has_next ? (
-                          <Link
-                            href={{
-                              pathname: "/drama/filem",
-                              query: {
-                                tab: "series",
-                                page: paginationSeries.next_page,
-                                ...(query ? { q: query } : {}),
-                              },
-                            }}
-                            className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-sm"
-                          >
-                            Next →
-                          </Link>
-                        ) : (
-                          <span className="px-4 py-2 rounded-lg bg-zinc-900 text-zinc-500 text-sm cursor-not-allowed">
-                            Next →
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {/* MOVIES TAB */}
-                {activeTab === "movies" && (
-                  <>
-                    <h2 className="text-2xl font-bold mb-4">Movies Highlight</h2>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-                      {movies.map((item: any) => (
-                        <DramaCard key={item.endpoint} drama={item} />
-                      ))}
-                    </div>
-
-                    {/* PAGINATION MOVIES */}
-                    {paginationMovies && (
-                      <div className="flex items-center justify-center gap-3 mt-10">
-                        {paginationMovies.has_prev ? (
-                          <Link
-                            href={{
-                              pathname: "/drama/filem",
-                              query: {
-                                tab: "movies",
-                                page: paginationMovies.prev_page,
-                                ...(query ? { q: query } : {}),
-                              },
-                            }}
-                            className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-sm"
-                          >
-                            ← Prev
-                          </Link>
-                        ) : (
-                          <span className="px-4 py-2 rounded-lg bg-zinc-900 text-zinc-500 text-sm cursor-not-allowed">
-                            ← Prev
-                          </span>
-                        )}
-
-                        <span className="text-sm text-zinc-400">
-                          Page {paginationMovies.current_page} of {paginationMovies.total_page}
-                        </span>
-
-                        {paginationMovies.has_next ? (
-                          <Link
-                            href={{
-                              pathname: "/drama/filem",
-                              query: {
-                                tab: "movies",
-                                page: paginationMovies.next_page,
-                                ...(query ? { q: query } : {}),
-                              },
-                            }}
-                            className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-sm"
-                          >
-                            Next →
-                          </Link>
-                        ) : (
-                          <span className="px-4 py-2 rounded-lg bg-zinc-900 text-zinc-500 text-sm cursor-not-allowed">
-                            Next →
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </>
-                )}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                  {movies.map((item: DramaCardItem) => (
+                    <DramaCard key={item.endpoint} drama={item} />
+                  ))}
+                </div>
               </div>
             )}
           </section>
@@ -390,11 +252,11 @@ export default async function HomePage({
           {/* ========================= */}
           <aside className="col-span-12 md:col-span-3 md:mt-37 md:mr-15">
             <h2 className="text-xl font-bold mb-4">
-              Drama Selesai 🎬
+              Episode Terbaru 🎬
             </h2>
 
             <div className="grid grid-cols-1 gap-3">
-              {completed.slice(0, 8).map((item: any) => (
+              {episode.slice(0, 8).map((item: DramaCardItem) => (
                 <DramaListCard
                   key={item.endpoint}
                   drama={item}
@@ -410,15 +272,15 @@ export default async function HomePage({
 
               {/* UL GENRE */}
               <ul className="flex flex-wrap justify-center gap-2">
-                {genres.map((g: any) => {
+                {genres.map((g: GenreItem) => {
                   const isActive =
                     activeGenre.toLowerCase() === g.title.toLowerCase()
 
                   return (
-                    <li key={g.endpoint} className="list-none">
+                    <li key={g.title} className="list-none">
                       <Link
                         href={{
-                          pathname: "/drama/filem",
+                          pathname: "/drama/korea",
                           query: {
                             genre: g.title,
                             page: 1,

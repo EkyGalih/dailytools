@@ -1,9 +1,10 @@
+import { DramaCardItem } from "@/libs/types/drakor"
 import Link from "next/link"
 
 export default function DramaCard({
   drama,
 }: {
-  drama: any
+  drama: DramaCardItem
 }) {
   return (
     <Link href={`/drama/korea/${drama.endpoint}`}>

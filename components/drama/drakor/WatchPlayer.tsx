@@ -10,7 +10,7 @@ export default function WatchPlayer({
     genres,
 }: {
     episodes: any[]
-    genres: string[]
+    genres: string
 }) {
     const videoRef = useRef<HTMLVideoElement | null>(null)
     const playerRef = useRef<any>(null)
@@ -21,122 +21,113 @@ export default function WatchPlayer({
         episodes[0]?.resolutions[0]
     )
 
-    // ===============================
-    // ✅ Sponsor Gate
-    // ===============================
     const [clickCount, setClickCount] = useState(0)
     const [unlocked, setUnlocked] = useState(false)
 
-    const affiliateProducts = getAffiliateProducts(genres)
+    const affiliateProducts = getAffiliateProducts([genres])
 
     // ===============================
-    // INIT PLAYER
+    // CLEANUP FUNCTION
+    // ===============================
+    const cleanup = () => {
+        if (playerRef.current) {
+            playerRef.current.destroy()
+            playerRef.current = null
+        }
+
+        if (hlsRef.current) {
+            hlsRef.current.destroy()
+            hlsRef.current = null
+        }
+
+        if (videoRef.current) {
+            videoRef.current.pause()
+            videoRef.current.removeAttribute("src")
+            videoRef.current.load()
+        }
+    }
+
+    // ===============================
+    // INIT PLAYER ONLY WHEN UNLOCKED
     // ===============================
     useEffect(() => {
-        async function initPlayer() {
-            if (!videoRef.current) return
+        const init = async () => {
+            if (!unlocked || !videoRef.current || !activeSource?.src) return
+
+            cleanup()
 
             const video = videoRef.current
             const Plyr = (await import("plyr")).default
 
-            // Destroy old player + HLS instance
-            if (playerRef.current) {
-                playerRef.current.destroy()
-                playerRef.current = null
-            }
-
-            if (hlsRef.current) {
-                hlsRef.current.destroy()
-                hlsRef.current = null
-            }
-
-            // Reset video element
-            video.pause()
-            video.removeAttribute("src")
-            video.load()
-
-            // Load Source (HLS safe)
-            if (Hls.isSupported() && activeSource?.src?.includes(".m3u8")) {
-                const hls = new Hls()
+            // ✅ Setup Source Only (NO autoplay here)
+            if (Hls.isSupported() && activeSource.src.includes(".m3u8")) {
+                const hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                })
 
                 hls.loadSource(activeSource.src)
                 hls.attachMedia(video)
-
-                // Ensure playback starts correctly after manifest is ready
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(() => {})
-                })
-
                 hlsRef.current = hls
             } else {
                 video.src = activeSource.src
-                video.load()
             }
 
-            // Init Plyr
+            // ✅ Init Plyr (autoplay false!)
             playerRef.current = new Plyr(video, {
                 autoplay: false,
                 controls: [
                     "play-large",
-                    "rewind",
                     "play",
-                    "fast-forward",
                     "progress",
                     "current-time",
                     "mute",
                     "volume",
                     "settings",
-                    "captions",
-                    "download",
                     "fullscreen",
                 ],
-                seekTime: 10,
             })
-
-            // Force repaint/load to avoid black screen issues
-            video.load()
         }
 
-        initPlayer()
-    }, [activeSource])
+        init()
+
+        return () => cleanup()
+    }, [unlocked, activeSource])
 
     // ===============================
-    // ✅ Sponsor Click Handler
+    // SPONSOR CLICK HANDLER
     // ===============================
-    function handleSponsorGate() {
-        // Sponsor klik 2x dulu
+    const handleSponsorGate = async () => {
         if (clickCount < 2) {
-            const product = affiliateProducts[clickCount]
+            const product =
+                affiliateProducts[clickCount % affiliateProducts.length]
 
-            if (product?.link) {
-                window.open(product.link, "_blank")
-            }
+            if (product?.link) window.open(product.link, "_blank")
 
             setClickCount((prev) => prev + 1)
             return
         }
 
-        // ✅ Unlock setelah 2 klik sponsor
+        // ✅ Unlock Player
         setUnlocked(true)
 
-        // ✅ Auto play setelah video siap
-        const video = videoRef.current
+        // ✅ Play AFTER unlock + delay
+        setTimeout(() => {
+            playerRef.current?.play().catch(() => { })
+        }, 300)
+    }
 
-        if (video) {
-            const tryPlay = async () => {
-                try {
-                    await playerRef.current?.play()
-                } catch (err) {
-                    console.warn("Autoplay blocked:", err)
-                }
-            }
+    // ===============================
+    // CHANGE EPISODE
+    // ===============================
+    const changeEpisode = (ep: any) => {
+        cleanup()
 
-            if (video.readyState >= 2) {
-                tryPlay()
-            } else {
-                video.addEventListener("loadedmetadata", tryPlay, { once: true })
-            }
-        }
+        setUnlocked(false)
+        setClickCount(0)
+
+        setActiveEpisode(ep)
+        setActiveSource(ep.resolutions[0])
     }
 
     return (
@@ -145,48 +136,61 @@ export default function WatchPlayer({
             {/* VIDEO PLAYER */}
             {/* =============================== */}
             <div className="col-span-12 md:col-span-8 space-y-5">
-                {/* Info */}
-
-                {/* PLAYER */}
-                {/* PLAYER */}
-                <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-xl bg-black">
+                <div
+                    key={activeSource.src}
+                    className="relative rounded-3xl overflow-hidden border border-white/10 shadow-xl bg-black aspect-video flex items-center justify-center"
+                >
                     <video
                         ref={videoRef}
-                        className="w-full h-[460px] object-contain"
+                        playsInline
+                        className="w-full h-full"
                     />
 
-                    {/* ✅ Sponsor Gate Overlay (Clean Mode) */}
+                    {/* Sponsor Gate */}
                     {!unlocked && (
-                        <button
+                        <div
+                            className="absolute inset-0 z-[60] flex flex-col items-center justify-center bg-zinc-900/95 backdrop-blur-md cursor-pointer"
                             onClick={handleSponsorGate}
-                            className="absolute inset-0 flex items-center justify-center bg-black/50 hover:bg-black/30 transition"
                         >
-                            {/* Play Icon Only */}
-                            <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:scale-110 transition">
-                                <span className="text-white text-5xl ml-1">▶</span>
+                            <div className="w-20 h-20 rounded-full bg-purple-600 flex items-center justify-center shadow-[0_0_50px_rgba(147,51,234,0.5)] hover:scale-110 transition-transform duration-300">
+                                <span className="text-white text-4xl ml-1">▶</span>
                             </div>
-                        </button>
+
+                            <p className="mt-6 text-white font-bold text-lg tracking-wide">
+                                {clickCount < 2
+                                    ? "KLIK UNTUK MEMUTAR"
+                                    : "KLIK SEKALI LAGI..."}
+                            </p>
+
+                            <div className="flex gap-1 mt-3">
+                                {[0, 1, 2].map((i) => (
+                                    <div
+                                        key={i}
+                                        className={`h-1.5 w-8 rounded-full transition-colors ${i < clickCount ? "bg-purple-500" : "bg-zinc-700"
+                                            }`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
                     )}
                 </div>
 
-                {/* Resolution */}
-                <div className="flex gap-2 flex-wrap">
+                {/* Resolution Buttons */}
+                <div className="flex gap-2">
                     {activeEpisode.resolutions.map((r: any) => (
                         <button
                             key={r.resolution}
                             onClick={() => {
-                                setActiveSource(r)
+                                if (activeSource.resolution === r.resolution) return
 
-                                // Reset sponsor gate
+                                cleanup()
                                 setUnlocked(false)
                                 setClickCount(0)
-
-                                playerRef.current?.pause()
+                                setActiveSource(r)
                             }}
-                            className={`px-4 py-2 rounded-full text-sm font-semibold transition
-                ${activeSource.resolution === r.resolution
-                                    ? "bg-purple-600 text-white"
-                                    : "bg-zinc-900 text-white/70 hover:bg-zinc-800"
+                            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${activeSource.resolution === r.resolution
+                                ? "bg-purple-600 text-white shadow-lg shadow-purple-600/20"
+                                : "bg-zinc-900 text-zinc-400 hover:bg-zinc-800"
                                 }`}
                         >
                             {r.resolution}
@@ -199,36 +203,39 @@ export default function WatchPlayer({
             {/* EPISODE LIST */}
             {/* =============================== */}
             <aside className="col-span-12 md:col-span-4">
-                <div className="rounded-3xl bg-zinc-950/70 border border-white/10 p-5 shadow-lg">
-                    <h2 className="text-lg font-bold mb-4">
-                        Episodes ({episodes.length})
+                <div className="rounded-3xl bg-zinc-900/50 border border-white/5 p-5">
+                    <h2 className="text-xs font-black uppercase tracking-[0.2em] text-zinc-500 mb-6 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
+                        Episode List
                     </h2>
 
-                    <div className="space-y-2 max-h-[520px] overflow-y-auto pr-2">
+                    <div className="space-y-3 max-h-[450px] overflow-y-auto pr-2">
                         {episodes.map((ep: any, i: number) => {
-                            const active =
+                            const isSelected =
                                 activeEpisode.episode_id === ep.episode_id
 
                             return (
                                 <button
                                     key={ep.episode_id}
-                                    onClick={() => {
-                                        setActiveEpisode(ep)
-                                        setActiveSource(ep.resolutions[0])
-
-                                        // Reset sponsor gate
-                                        setUnlocked(false)
-                                        setClickCount(0)
-
-                                        playerRef.current?.pause()
-                                    }}
-                                    className={`w-full px-4 py-3 rounded-2xl text-left transition
-                    ${active
-                                            ? "bg-purple-600 text-white"
-                                            : "bg-zinc-900 text-white/70 hover:bg-zinc-800"
+                                    onClick={() => changeEpisode(ep)}
+                                    className={`w-full p-4 rounded-2xl text-left text-sm transition-all border ${isSelected
+                                        ? "bg-purple-600/10 border-purple-500/50 text-purple-300"
+                                        : "bg-zinc-800/30 border-transparent text-zinc-500 hover:border-zinc-700 hover:text-zinc-300"
                                         }`}
                                 >
-                                    {i + 1}. {ep.title}
+                                    <div className="flex items-center gap-3">
+                                        <span
+                                            className={`text-xs font-bold ${isSelected
+                                                ? "text-purple-400"
+                                                : "text-zinc-600"
+                                                }`}
+                                        >
+                                            {String(i + 1).padStart(2, "0")}
+                                        </span>
+                                        <span className="font-medium truncate">
+                                           Episode {ep.title}
+                                        </span>
+                                    </div>
                                 </button>
                             )
                         })}

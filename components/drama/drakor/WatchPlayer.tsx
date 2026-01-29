@@ -159,7 +159,7 @@ export default function WatchPlayer({
                             <p className="mt-6 text-white font-bold text-lg tracking-wide">
                                 {clickCount < 2
                                     ? "KLIK UNTUK MEMUTAR"
-                                    : "KLIK SEKALI LAGI..."}
+                                    : "KLIK UNTUK MEMULAI"}
                             </p>
 
                             <div className="flex gap-1 mt-3">

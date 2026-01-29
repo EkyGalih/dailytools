@@ -7,7 +7,6 @@ export default function DramaListCard({
 }) {
   // Data dari API drakorkita
   const title = drama.title
-  const year = drama.year
   const eps = drama.eps
   const rating = drama.rating
   const thumbnail = drama.thumbnail
@@ -35,7 +34,7 @@ export default function DramaListCard({
         <div className="flex flex-col flex-1 min-w-0">
           {/* Title */}
           <h3 className="text-sm font-semibold text-white truncate">
-            {title} {year && <span className="text-white/70">({year})</span>}
+            {title}
           </h3>
 
           {/* Stars */}

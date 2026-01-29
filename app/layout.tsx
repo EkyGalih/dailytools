@@ -56,7 +56,7 @@ export default function RootLayout({
         /> */}
 
         {/* 🔥 MONETAG VIGNETTE */}
-        {/* <Script
+        <Script
           id="monetag-vignette"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
@@ -65,7 +65,7 @@ export default function RootLayout({
           s.src='https://gizokraijaw.net/vignette.min.js';
         })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
           }}
-        /> */}
+        />
       </head>
       <body className="bg-gray-50 text-gray-900">
         <Navbar />

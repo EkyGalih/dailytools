@@ -77,7 +77,7 @@ export default async function DramaDetailPage({
   const merged = relatedAll
     .flatMap((r) => r?.datas ?? [])
     .filter((v, i, arr) => arr.findIndex(x => x.endpoint === v.endpoint) === i)
-
+  
   return (
     <>
       <AffiliateMiniPopup />
@@ -230,7 +230,7 @@ export default async function DramaDetailPage({
             </h2>
 
             <Link
-              href="/drama/filem"
+              href="/drama/korea"
               className="px-4 py-2 rounded-full text-sm font-semibold
               bg-zinc-900 border border-white/10 text-white/80
               hover:bg-purple-600 hover:text-white transition-all"
@@ -263,7 +263,7 @@ export default async function DramaDetailPage({
             {/* Button Explore */}
             <div className="flex justify-end mt-6">
               <Link
-                href={`/drama/filem?genre=${drama.genres[0]}`}
+                href={`/drama/korea?genre=${drama.genres[0]}`}
                 className="text-sm text-purple-400 hover:underline"
               >
                 Lihat semua drama genre {drama.genres[0]} →

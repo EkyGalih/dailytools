@@ -12,7 +12,7 @@ export default function DramaCard({
       <div
         className="group relative rounded-2xl overflow-hidden bg-zinc-900/80 border border-white/5
         hover:border-white/15 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-500/10
-        transition-all duration-300 flex flex-col h-[400px]"
+        transition-all duration-300 flex flex-col h-[360px]"
       >
         {/* THUMBNAIL */}
         <div className="relative w-full h-[280px] bg-black flex-shrink-0">

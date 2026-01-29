@@ -64,50 +64,67 @@ export const metadata: Metadata = {
   },
 }
 
+export const dynamic = "force-dynamic"
+
 async function getTrendingDramaBox() {
-  const res = await fetch(
-    'https://dramabox.sansekai.my.id/api/dramabox/latest',
-    { next: { revalidate: 3600 } }
-  )
-  return res.json()
+  try {
+    const res = await fetch(
+      "https://dramabox.sansekai.my.id/api/dramabox/latest",
+      {
+        next: { revalidate: 3600 },
+      }
+    )
+
+    if (!res.ok) {
+      console.error("Dramabox API Error:", res.status)
+      return []
+    }
+
+    const contentType = res.headers.get("content-type")
+
+    if (!contentType?.includes("application/json")) {
+      console.error("Invalid JSON Response:", contentType)
+      return []
+    }
+
+    return res.json()
+  } catch (err) {
+    console.error("Fetch Dramabox Failed:", err)
+    return []
+  }
 }
 
 export default async function DramaChinaPage() {
   const items = await getTrendingDramaBox()
-  const popupProduct = getAffiliatePopup()
+  const safeItems = Array.isArray(items) ? items : []
+
+  if (safeItems.length === 0) {
+    return (
+      <main className="p-10 text-center text-white">
+        <h1 className="text-2xl font-bold">DramaBox sedang maintenance</h1>
+        <p className="text-zinc-400">
+          Data belum bisa dimuat, silakan coba beberapa saat lagi.
+        </p>
+      </main>
+    )
+  }
 
   return (
     <section className="space-y-10">
-      {popupProduct && <AffiliateChannelPopup product={popupProduct} />}
-      <AffiliateMiniPopup />
-
-      {/* HERO – FULL WIDTH */}
       <DramaHero />
 
-      {/* CONTENT – FULL WIDTH */}
       <section className="w-full px-4">
-        <DramaExplorer initialItems={items} />
+        <DramaExplorer initialItems={safeItems} />
       </section>
 
-      {/* SEO TEXT – SEMI WIDTH */}
-      <section className="max-w-4xl mx-auto px-4 text-sm text-gray-400 space-y-3 pb-12">
-        <h2 className="text-lg font-semibold text-white">
-          Drama China yang Lagi Viral
-        </h2>
-        <p>
-          Kami menyajikan <Link href="/drama/china/channel/dramabox" className="underline">drama China viral</Link>,
-          termasuk genre <strong>CEO</strong>, <strong>romance</strong>, dan <strong>revenge</strong>
-          dengan update harian.
-        </p>
-      </section>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'ItemList',
-            itemListElement: items.slice(0, 10).map((item: any, i: number) => ({
-              '@type': 'ListItem',
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            itemListElement: safeItems.slice(0, 10).map((item: any, i: number) => ({
+              "@type": "ListItem",
               position: i + 1,
               url: `https://mytools.web.id/drama/china/channel/dramabox/detail/${item.bookId}`,
               name: item.bookName || item.title,

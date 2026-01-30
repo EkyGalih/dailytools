@@ -49,6 +49,7 @@ export default async function DramaDetailPage({ params }: { params: Promise<{ id
 
   return (
     <main className="bg-[#fafafa] min-h-screen pb-20">
+      <AffiliateMiniPopup />
       <div className="max-w-7xl mx-auto px-4 md:px-6 space-y-12">
         <DramaHero />
 
@@ -65,15 +66,15 @@ export default async function DramaDetailPage({ params }: { params: Promise<{ id
 
 
           {/* ✅ MAIN INFO SECTION (THE CINEMA CARD) */}
-          <section className="bg-white rounded-[4rem] p-6 md:p-16 border border-zinc-100 shadow-[0_50px_100px_rgba(0,0,0,0.02)] relative overflow-hidden">
+          <section className="bg-white rounded-[1.5rem] p-6 md:p-16 border border-zinc-100 shadow-[0_50px_100px_rgba(0,0,0,0.02)] relative overflow-hidden">
             {/* ✅ Tombol Kembali Atas */}
-            <div className="flex justify-end">
+            <div className="flex justify-end md:mb-4 mb-4 w-full">
               <Link
                 href="/drama/korea"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-zinc-100 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-rose-500 hover:border-rose-200 transition-all shadow-sm group"
+                className="flex items-center justify-center gap-2 w-full md:w-auto px-8 py-4 md:px-6 md:py-3 bg-pink-50 border border-pink-50 rounded-2xl text-[10px] font-black uppercase tracking-widest text-pink-600 hover:text-rose-500 hover:border-rose-200 transition-all shadow-sm group active:scale-[0.98]"
               >
                 <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                Semua Drama
+                <span className="tracking-[0.2em]">Semua Drama</span>
               </Link>
             </div>
             <div className="grid lg:grid-cols-12 gap-12 items-start">
@@ -189,16 +190,24 @@ export default async function DramaDetailPage({ params }: { params: Promise<{ id
           {/* ✅ RELATED SECTION */}
           {merged.length > 0 && (
             <section className="mt-32 space-y-16">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
+                {/* Sisi Kiri: Judul & Dekorasi */}
                 <div className="space-y-1">
-                  <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-zinc-900">
-                    Rekomendasi
+                  <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">
+                    Rekomendasi <span className="text-rose-500">Drama</span>
                   </h2>
                   <div className="w-20 h-1.5 bg-rose-500 rounded-full" />
                 </div>
-                <Link href={`/drama/korea?genre=${drama.genres[0]}`} className="px-6 py-3 rounded-2xl bg-white border border-zinc-100 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-rose-500 transition-all shadow-sm">
-                  Lihat Semua
-                </Link>
+
+                {/* Sisi Kanan: Tombol (Akan pindah ke bawah judul di mobile) */}
+                <div className="flex justify-start md:justify-end">
+                  <Link
+                    href={`/drama/korea?genre=${drama.genres[0]}`}
+                    className="w-full md:w-auto text-center px-8 py-4 md:px-6 md:py-3 rounded-2xl bg-pink-50 border-pnk-50 text-[10px] font-black uppercase tracking-widest text-pink-600 hover:text-rose-500 hover:border-rose-200 transition-all shadow-sm active:scale-95"
+                  >
+                    Lihat Semua <span className="md:hidden">Genre {drama.genres[0]}</span> →
+                  </Link>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-10">

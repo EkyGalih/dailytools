@@ -261,10 +261,7 @@ export default async function DramaDetailPage({
             </Link>
           </div>
 
-          <EpisodePlayer
-            episodes={drama.episodes}
-            tag={drama?.episodes[0]?.tag}
-          />
+          <EpisodePlayer episodes={drama.episodes} />
         </section>
 
         {/* ================================= */}

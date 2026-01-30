@@ -1,313 +1,165 @@
-import AffiliateChannelPopup from "@/components/drama/ads/AffiliateChannelPopup"
-import AffiliateMiniPopup from "@/components/drama/ads/AffiliateMiniPopup"
-
+import { Search, Play, Filter, History, Clapperboard, Flame, ListFilter, X, ChevronRight, ChevronLeft, Globe } from "lucide-react"
 import DramaCard from "@/components/drama/drakor/DramaCard"
 import DramaHero from "@/components/drama/drakor/DramaHero"
 import DramaListCard from "@/components/drama/drakor/DramaLists"
-
-import { getAffiliatePopup } from "@/libs/ads/getAffiliatePopup"
-
-import {
-  searchDrama,
-  getGenres,
-  getDramaByGenre,
-  getHomePage,
-} from "@/libs/drama/drakor/drama"
-import { DramaCardItem, GenreItem } from "@/libs/types/drakor"
+import { searchDrama, getGenres, getDramaByGenre, getHomePage } from "@/libs/drama/drakor/drama"
 import Link from "next/link"
 
 function unwrap(res: any) {
   return res?.data ?? res
 }
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ q?: string; page?: string; tab?: string; genre?: string }>
-}) {
-
-  // ✅ unwrap dulu
+export default async function HomePage({ searchParams }: { searchParams?: Promise<{ q?: string; page?: string; genre?: string }> }) {
   const sp = await searchParams
-  const activeGenre = sp?.genre || ""
-
   const query = sp?.q || ""
-  const genre = sp?.genre || ""
+  const activeGenre = sp?.genre || ""
   const currentPage = Number(sp?.page || 1)
 
-  // SEARCH
-  const searchResult = query
-    ? await searchDrama(query, currentPage)
-    : null
+  const [searchResult, genreResult, homeRes, genreRes] = await Promise.all([
+    query ? searchDrama(query, currentPage) : null,
+    activeGenre ? getDramaByGenre(activeGenre, currentPage) : null,
+    getHomePage(),
+    getGenres()
+  ])
 
-  // ============================
-  // GENRE
-  // ============================
-  const genreResult = genre
-    ? await getDramaByGenre(genre, currentPage)
-    : null
-
-  const isSearchMode = query.length > 0
-  const isGenreMode = Boolean(activeGenre)
-  const isFilterMode = isSearchMode || isGenreMode
-
-  // SERIES + MOVIES
-  const homeRes = unwrap(await getHomePage());
-  const genreRes = unwrap(await getGenres())
-
-  const latestEps = homeRes?.latest_eps
-  const seriesRes = homeRes?.latest_series
-  const movieRes = homeRes?.latest_movies
-
-  const series = seriesRes ?? []
-  const movies = movieRes ?? []
-  const episode = latestEps ?? []
-  const genres = genreRes?.datas ?? []
-
-  // const popupProduct = getAffiliatePopup()
+  const h = unwrap(homeRes)
+  const g = unwrap(genreRes)
+  const isFilterMode = query.length > 0 || activeGenre.length > 0
 
   return (
-    <main className="w-full">
-      {/* POPUP */}
-      {/* {popupProduct && <AffiliateChannelPopup product={popupProduct} />} */}
-      {/* <AffiliateMiniPopup /> */}
+    <main className="bg-[#fafafa] min-h-screen pb-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 space-y-12">
 
-      {/* HERO */}
-      <DramaHero />
+        <DramaHero />
 
-      {/* CONTENT */}
-      <section className="space-y-10 py-8">
-        <div className="grid grid-cols-12 gap-6 px-4">
-          {/* ========================= */}
-          {/* LEFT SIDE (SERIES) */}
-          {/* ========================= */}
-          <section className="col-span-12 md:col-span-9 space-y-10 lg:ml-20">
-            {/* SEARCH */}
-            <div>
-              <form
-                method="get"
-                action="/drama/korea"
-                className="flex flex-col gap-3"
-              >
-                <div className="flex items-center gap-2 relative">
-                  {/* INPUT */}
-                  <input
-                    type="search"
-                    name="q"
-                    placeholder="Cari drama atau movie..."
-                    defaultValue={query}
-                    className="flex-1 rounded-xl bg-zinc-900 border border-white/10 px-4 py-3 text-sm
-      placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
-                  />
-
-                  {/* ❌ CLEAR BUTTON */}
-                  {query && (
-                    <Link
-                      href="/drama/korea"
-                      className="absolute right-[110px] text-white/40 hover:text-white text-lg"
-                    >
-                      ✕
-                    </Link>
-                  )}
-
-                  {/* BUTTON SEARCH */}
-                  <button
-                    type="submit"
-                    className="rounded-xl px-5 py-3 text-sm font-semibold bg-white text-black hover:bg-white/90 transition"
-                  >
-                    Search
-                  </button>
-                </div>
-              </form>
-
-              {/* =============================== */}
-              {/* FILTER RESULT (SEARCH / GENRE) */}
-              {/* =============================== */}
-              {isFilterMode && (
-                <div className="mt-10">
-
-                  <h2 className="text-xl font-bold mb-6">
-                    {isSearchMode && (
-                      <>
-                        Hasil pencarian:{" "}
-                        <span className="text-purple-400">"{query}"</span>
-                      </>
-                    )}
-
-                    {isGenreMode && (
-                      <div className="flex flex-col gap-2">
-                        {/* Baris 1 */}
-                        <div>
-                          Genre:{" "}
-                          <span className="text-purple-400 font-semibold">
-                            {genre}
-                          </span>
-                        </div>
-
-                        {/* Baris 2 (Clear kanan) */}
-                        <div className="flex justify-end">
-                          <Link
-                            href="/drama/korea"
-                            className="text-sm text-red-400 hover:underline"
-                          >
-                            ✖ Clear Filter
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </h2>
-
-                  {/* DATA */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                    {(isSearchMode
-                      ? searchResult?.datas
-                      : genreResult?.datas
-                    )?.map((item: DramaCardItem) => (
-                      <DramaCard key={item.endpoint} drama={item} />
-                    ))}
-                  </div>
-
-                  {/* PAGINATION */}
-                  {(isSearchMode
-                    ? searchResult?.pagination_info
-                    : genreResult?.pagination_info) && (
-                      <div className="flex justify-center gap-3 mt-10">
-                        {/* Prev */}
-                        {(isSearchMode
-                          ? searchResult.pagination_info.has_prev
-                          : genreResult.pagination_info.has_prev) && (
-                            <Link
-                              href={{
-                                pathname: "/drama/korea",
-                                query: {
-                                  page:
-                                    isSearchMode
-                                      ? searchResult.pagination_info.prev_page
-                                      : genreResult.pagination_info.prev_page,
-                                  ...(isSearchMode ? { q: query } : {}),
-                                  ...(isGenreMode ? { genre } : {}),
-                                },
-                              }}
-                              className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700"
-                            >
-                              ← Prev
-                            </Link>
-                          )}
-
-                        <span className="text-sm text-zinc-400 flex items-center">
-                          Page{" "}
-                          {isSearchMode
-                            ? searchResult.pagination_info.current_page
-                            : genreResult.pagination_info.current_page}
-                        </span>
-
-                        {/* Next */}
-                        {(isSearchMode
-                          ? searchResult.pagination_info.has_next
-                          : genreResult.pagination_info.has_next) && (
-                            <Link
-                              href={{
-                                pathname: "/drama/korea",
-                                query: {
-                                  page:
-                                    isSearchMode
-                                      ? searchResult.pagination_info.next_page
-                                      : genreResult.pagination_info.next_page,
-                                  ...(isSearchMode ? { q: query } : {}),
-                                  ...(isGenreMode ? { genre } : {}),
-                                },
-                              }}
-                              className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700"
-                            >
-                              Next →
-                            </Link>
-                          )}
-                      </div>
-                    )}
-                </div>
-              )}
-            </div>
-
-            {/* TABS */}
-            {!isFilterMode && (
-              <div>
-                {/* SERIES TAB */}
-
-                <h2 className="text-2xl font-bold mb-4">Series Terbaru</h2>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                  {series.map((item: DramaCardItem) => (
-                    <DramaCard key={item.endpoint} drama={item} />
-                  ))}
-                </div>
-
-
-                <h2 className="text-2xl font-bold mb-4 md:mt-5">Movies Terbaru</h2>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-                  {movies.map((item: DramaCardItem) => (
-                    <DramaCard key={item.endpoint} drama={item} />
-                  ))}
-                </div>
-              </div>
+        {/* TOOLBAR: SEARCH & FILTER INFO */}
+        <div className="flex flex-col md:flex-row gap-6 items-center justify-between bg-white rounded-3xl p-4 shadow-sm border border-zinc-100">
+          <form action="/drama/korea" className="relative w-full md:max-w-xl group">
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-pink-500 transition-colors" size={18} />
+            <input
+              name="q"
+              defaultValue={query}
+              placeholder="Cari judul drama, aktor, atau genre..."
+              className="w-full pl-14 pr-10 py-4 bg-zinc-50 border-none rounded-2xl text-sm font-bold placeholder:text-zinc-600 focus:ring-2 focus:ring-pink-500/20 transition-all shadow-sm"
+            />
+            {query && (
+              <Link href="/drama/korea" className="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-red-500">
+                <X size={16} />
+              </Link>
             )}
-          </section>
+          </form>
 
-          {/* ========================= */}
-          {/* RIGHT SIDE (MOVIES) */}
-          {/* ========================= */}
-          <aside className="col-span-12 md:col-span-3 md:mt-37 md:mr-15">
-            <h2 className="text-xl font-bold mb-4">
-              Episode Terbaru 🎬
-            </h2>
+          {isFilterMode && (
+            <Link href="/drama/korea" className="px-6 py-3 rounded-xl bg-red-50 text-red-500 text-[10px] font-black uppercase tracking-widest hover:bg-red-100 transition-all flex items-center gap-2">
+              <X size={14} /> Reset Filter
+            </Link>
+          )}
+        </div>
 
-            <div className="grid grid-cols-1 gap-3">
-              {episode.slice(0, 8).map((item: DramaCardItem) => (
-                <DramaListCard
-                  key={item.endpoint}
-                  drama={item}
-                />
-              ))}
-            </div>
+        <div className="grid grid-cols-12 gap-8 lg:gap-12">
+          {/* LEFT SIDE: MAIN CONTENT */}
+          <div className="col-span-12 lg:col-span-9 space-y-16">
 
-            {/* GENRE FILTER */}
-            <div className="bg-zinc-900/70 border border-white/10 rounded-2xl p-5 shadow-md md:mt-5">
-              <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                🎭 Genre
-              </h2>
+            {isFilterMode ? (
+              <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="flex items-center gap-3 mb-8 ml-2">
+                  <div className="p-2 bg-pink-100 rounded-xl text-pink-600"><Filter size={20} /></div>
+                  <h2 className="text-2xl font-black italic uppercase tracking-tighter text-zinc-900">
+                    Results for <span className="text-pink-500">"{query || activeGenre}"</span>
+                  </h2>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                  {(query ? searchResult?.datas : genreResult?.datas)?.map((item: any) => (
+                    <DramaCard key={item.endpoint} drama={item} />
+                  ))}
+                </div>
+                {/* Pagination UI Minimalis */}
+                <Pagination info={query ? searchResult?.pagination_info : genreResult?.pagination_info} query={query} genre={activeGenre} />
+              </section>
+            ) : (
+              <>
+                <section>
+                  <SectionHeader title="Series Terbaru" subtitle="Koleksi drama terbaru minggu ini" />
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6">
+                    {h?.latest_series?.map((item: any) => <DramaCard key={item.endpoint} drama={item} />)}
+                  </div>
+                </section>
 
-              {/* UL GENRE */}
-              <ul className="flex flex-wrap justify-center gap-2">
-                {genres.map((g: GenreItem) => {
-                  const isActive =
-                    activeGenre.toLowerCase() === g.title.toLowerCase()
+                <section>
+                  <SectionHeader title="Film Terbaru" subtitle="Film Terbaru minggu ini" />
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {h?.latest_movies?.map((item: any) => <DramaCard key={item.endpoint} drama={item} />)}
+                  </div>
+                </section>
+              </>
+            )}
+          </div>
 
-                  return (
-                    <li key={g.title} className="list-none">
-                      <Link
-                        href={{
-                          pathname: "/drama/korea",
-                          query: {
-                            genre: g.title,
-                            page: 1,
-                          },
-                        }}
-                        className={`block px-4 py-2 rounded-lg text-xs font-semibold transition
-              ${isActive
-                            ? "bg-purple-600 text-white ring-2 ring-purple-400"
-                            : "bg-zinc-800 text-white/80 hover:bg-purple-600 hover:text-white"
-                          }
-            `}
-                      >
-                        {g.title}
-                      </Link>
-                    </li>
-                  )
-                })}
-              </ul>
+          {/* RIGHT SIDE: SIDEBAR */}
+          <aside className="col-span-12 lg:col-span-3 space-y-10">
+            <div className="sticky top-24 space-y-10">
+              {/* EPISODE UPDATES */}
+              <section className="bg-white rounded-[2.5rem] p-8 border border-zinc-100 shadow-sm">
+                <div className="flex items-center gap-2 mb-6">
+                  <History className="text-pink-500" size={18} />
+                  <h3 className="text-sm font-black italic uppercase tracking-widest text-zinc-900">Episode Terbaru</h3>
+                </div>
+                <div className="space-y-4">
+                  {h?.latest_eps?.slice(0, 6).map((item: any) => (
+                    <DramaListCard key={item.endpoint} drama={item} />
+                  ))}
+                </div>
+              </section>
+
+              {/* GENRE CLOUD */}
+              <section className="bg-[#0c0c0c] rounded-[2.5rem] p-8 border border-white/5 shadow-2xl relative overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-600/20 blur-3xl rounded-full" />
+                <h3 className="text-xs font-black italic uppercase tracking-[0.2em] text-pink-400 mb-6 relative z-10">Pilih Sesuai Genre</h3>
+                <div className="flex flex-wrap gap-2 relative z-10">
+                  {g?.datas?.map((genre: any) => (
+                    <Link
+                      key={genre.title}
+                      href={{ pathname: "/drama/korea", query: { genre: genre.title } }}
+                      className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-tighter transition-all ${activeGenre === genre.title ? 'bg-pink-500 text-white' : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white'}`}
+                    >
+                      {genre.title}
+                    </Link>
+                  ))}
+                </div>
+              </section>
             </div>
           </aside>
         </div>
-      </section>
+      </div>
     </main>
+  )
+}
+
+// Sub-components pendukung agar rapi
+function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
+  return (
+    <div className="mb-8 ml-2 space-y-1">
+      <h2 className="text-3xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">{title}</h2>
+      <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{subtitle}</p>
+    </div>
+  )
+}
+
+function Pagination({ info, query, genre }: any) {
+  if (!info) return null
+  return (
+    <div className="flex items-center justify-center gap-4 mt-16 pt-10 border-t border-zinc-100">
+      {info.has_prev && (
+        <Link href={{ pathname: "/drama/korea", query: { page: info.prev_page, q: query, genre } }} className="px-6 py-3 rounded-2xl bg-white border border-zinc-200 text-xs font-black uppercase tracking-widest hover:border-pink-500 transition-all">
+          ← Prev
+        </Link>
+      )}
+      <span className="text-xs font-black italic text-zinc-400">Page {info.current_page}</span>
+      {info.has_next && (
+        <Link href={{ pathname: "/drama/korea", query: { page: info.next_page, q: query, genre } }} className="px-6 py-3 rounded-2xl bg-zinc-900 text-white text-xs font-black uppercase tracking-widest hover:bg-pink-600 transition-all">
+          Next →
+        </Link>
+      )}
+    </div>
   )
 }

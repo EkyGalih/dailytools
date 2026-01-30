@@ -3,316 +3,218 @@ import DramaCard from "@/components/drama/drakor/DramaCard"
 import DramaHero from "@/components/drama/drakor/DramaHero"
 import EpisodePlayer from "@/components/drama/drakor/EpisodePlayer"
 import RefreshButton from "@/components/drama/drakor/RefreshButton"
-
 import { getDramaByGenre, getDramaDetail } from "@/libs/drama/drakor/drama"
 import Image from "next/image"
 import Link from "next/link"
+import { Sparkles, Star, Calendar, Globe, Film, ChevronRight, PlayCircle, User2, Download, MonitorPlay, ArrowLeft } from "lucide-react"
 
-/* ======================================== */
-/* ✅ SEO METADATA */
-/* ======================================== */
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-
   const raw = await getDramaDetail(id)
-
-  if (!raw?.data) {
-    return {
-      title: "Drama Tidak Ditemukan",
-      description: "Drama detail tidak tersedia.",
-    }
-  }
-
+  if (!raw?.data) return { title: "Drama Tidak Ditemukan" }
   const drama = raw.data
-
   return {
-    title: `${drama.title} | Nonton Drama Subtitle Indonesia`,
-    description: drama.synopsis?.slice(0, 150),
-
+    title: `Nonton ${drama.title} Sub Indo Full Episode | Hallyu Station`,
+    description: `Streaming & Download ${drama.title} Subtitle Indonesia. ${drama.synopsis?.slice(0, 150)}...`,
     openGraph: {
-      title: drama.title,
-      description: drama.synopsis?.slice(0, 160),
-      images: [drama.thumbnail],
-    },
-
-    keywords: drama.genres?.join(", "),
+      images: [drama.thumbnail]
+    }
   }
 }
 
-/* ======================================== */
-/* ✅ PAGE */
-/* ======================================== */
-export default async function DramaDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default async function DramaDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-
   const raw = await getDramaDetail(id)
-  console.log(raw)
 
   if (!raw?.data) {
     return (
-      <main className="p-6 max-w-3xl mx-auto space-y-4">
-        <h1 className="text-2xl font-bold">
-          Drama detail unavailable
-        </h1>
-
-        <p className="text-zinc-400">
-          Data tidak bisa dimuat untuk endpoint:
-          <span className="text-purple-400 font-semibold"> {id}</span>
-        </p>
-
-        <p className="text-zinc-500 text-sm">
-          Kemungkinan provider sedang down atau endpoint salah.
-          Silakan refresh atau coba lagi nanti.
-        </p>
-
-        <RefreshButton />
-
-        <Link
-          href="/drama/korea"
-          className="inline-block text-sm text-purple-400 hover:underline"
-        >
-          ← Kembali ke daftar drama
-        </Link>
+      <main className="min-h-screen flex items-center justify-center p-8 bg-[#FAFAFA]">
+        <div className="bg-white p-12 rounded-[3.5rem] shadow-2xl border border-zinc-100 text-center space-y-6 max-w-lg">
+          <div className="w-24 h-24 bg-rose-50 text-rose-500 rounded-[2rem] flex items-center justify-center mx-auto rotate-6 shadow-inner">
+            <Sparkles size={48} />
+          </div>
+          <h1 className="text-3xl font-black text-zinc-900 uppercase italic tracking-tighter">Data Terputus</h1>
+          <p className="text-zinc-500 font-medium italic">Server sedang mengalami gangguan atau drama telah dihapus.</p>
+          <RefreshButton />
+        </div>
       </main>
     )
   }
 
   const drama = raw.data
-  // ===============================
-  // ✅ RELATED DRAMA (GENRE)
-  // ===============================
-  const relatedAll = await Promise.all(
-    drama.genres.map((g: string) => getDramaByGenre(g))
-  )
-
+  const relatedAll = await Promise.all(drama.genres.map((g: string) => getDramaByGenre(g)))
   const merged = relatedAll
     .flatMap((r) => r?.datas ?? [])
     .filter((v, i, arr) => arr.findIndex(x => x.endpoint === v.endpoint) === i)
 
   return (
-    <>
-      <AffiliateMiniPopup />
-      <DramaHero />
+    <main className="bg-[#fafafa] min-h-screen pb-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 space-y-12">
+        <DramaHero />
 
-      <main className="p-6 max-w-6xl mx-auto space-y-14">
-        {/* ================================= */}
-        {/* ✅ BREADCRUMB */}
-        {/* ================================= */}
-        <nav className="text-sm text-zinc-400 flex gap-2">
-          <Link href="/" className="hover:text-white">
-            Home
-          </Link>
-          <span>/</span>
-          <Link href="/drama/korea" className="hover:text-white">
-            Drama
-          </Link>
-          <span>/</span>
-          <span className="text-white font-semibold line-clamp-1">
-            {drama.title}
-          </span>
-        </nav>
+        <div className="max-w-7xl mx-auto px-4 md:px-10 relative z-10 -mt-8 md:-mt-4">
 
-        {/* ================================= */}
-        {/* ✅ HEADER INFO */}
-        {/* ================================= */}
-        <section className="grid md:grid-cols-3 gap-10">
-          {/* Poster */}
-          <div className="relative">
-            <Image
-              src={drama.thumbnail || "/placeholder.jpg"}
-              alt={drama.title}
-              width={500}
-              height={750}
-              className="rounded-2xl w-full object-cover shadow-xl"
-              priority
-            />
+          {/* ✅ Breadcrumb: Dibuat lebih solid agar tidak 'transparan kotor' saat menindih hero */}
+          <nav className="inline-flex items-center gap-3 px-6 py-3 bg-white rounded-2xl border border-zinc-100 shadow-lg text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-8 ml-4 md:ml-8">
+            <Link href="/" className="hover:text-rose-500 transition-colors">Home</Link>
+            <ChevronRight size={12} className="text-zinc-300" />
+            <Link href="/drama/korea" className="hover:text-rose-500 transition-colors">Drama</Link>
+            <ChevronRight size={12} className="text-zinc-300" />
+            <span className="text-zinc-900 truncate max-w-[100px] md:max-w-none">{drama.title}</span>
+          </nav>
 
-            {/* Rating Badge */}
-            {drama.rating?.score && (
-              <div className="absolute top-3 left-3 bg-black/70 px-3 py-1 rounded-full text-sm text-yellow-300 font-semibold">
-                ⭐ {drama.rating.score}
+
+          {/* ✅ MAIN INFO SECTION (THE CINEMA CARD) */}
+          <section className="bg-white rounded-[4rem] p-6 md:p-16 border border-zinc-100 shadow-[0_50px_100px_rgba(0,0,0,0.02)] relative overflow-hidden">
+            {/* ✅ Tombol Kembali Atas */}
+            <div className="flex justify-end">
+              <Link
+                href="/drama/korea"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-zinc-100 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-rose-500 hover:border-rose-200 transition-all shadow-sm group"
+              >
+                <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                Semua Drama
+              </Link>
+            </div>
+            <div className="grid lg:grid-cols-12 gap-12 items-start">
+
+              {/* Poster with Interactive Shadow */}
+              <div className="lg:col-span-4 xl:col-span-3 sticky top-10">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-tr from-rose-400 to-indigo-400 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
+                  <div className="relative aspect-[2/3] rounded-[2.8rem] overflow-hidden shadow-2xl border-[6px] border-white">
+                    <Image
+                      src={drama.thumbnail || "/placeholder.jpg"}
+                      alt={drama.title}
+                      fill
+                      className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                      priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    {/* Rating Tag */}
+                    {drama.rating?.score && (
+                      <div className="absolute top-6 right-6 bg-white/95 backdrop-blur-md w-14 h-14 rounded-2xl shadow-xl flex flex-col items-center justify-center border border-zinc-100">
+                        <Star size={14} fill="#f43f5e" className="text-rose-500" />
+                        <span className="text-sm font-black text-zinc-900">{drama.rating.score}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
 
-          {/* Info */}
-          <div className="md:col-span-2 space-y-5">
-            <h1 className="text-4xl font-extrabold leading-snug">
-              {drama.title}
-            </h1>
+              {/* Typography & Details */}
+              <div className="lg:col-span-8 xl:col-span-9 space-y-12">
+                <div className="space-y-6">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="px-4 py-1.5 rounded-full bg-rose-50 text-rose-600 text-[10px] font-black uppercase tracking-widest border border-rose-100 shadow-sm animate-pulse">
+                      Live Update
+                    </span>
+                    <span className="px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest border border-indigo-100">
+                      {drama.info?.type || 'Series'}
+                    </span>
+                  </div>
 
-            {/* Alt Title */}
-            {drama.title_alt && (
-              <p className="text-zinc-400 italic">
-                {drama.title_alt}
-              </p>
-            )}
+                  <h1 className="text-2xl md:text-2xl font-black text-zinc-900 italic tracking-tighter leading-[0.9] uppercase">
+                    {drama.title}
+                  </h1>
 
-            {/* Genres */}
-            {drama.genres?.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {drama.genres.map((g: string) => (
-                  <Link
-                    key={g}
-                    href={`/drama/korea?genre=${g}`}
-                    className="px-3 py-1 text-xs rounded-full bg-purple-500/20 text-purple-300 hover:bg-purple-600 hover:text-white transition"
-                  >
-                    {g}
-                  </Link>
-                ))}
-              </div>
-            )}
+                  {drama.title_alt && (
+                    <p className="text-zinc-400 text-xl font-semibold italic border-l-[6px] border-rose-200 pl-8 py-1">
+                      {drama.title_alt}
+                    </p>
+                  )}
+                </div>
 
-            {/* Synopsis */}
-            <p className="text-zinc-300 leading-relaxed whitespace-pre-line">
-              {drama.synopsis}
-            </p>
+                {/* Enhanced Genre Buttons */}
+                <div className="flex flex-wrap gap-3">
+                  {drama.genres.map((g: string) => (
+                    <Link key={g} href={`/drama/korea?genre=${g}`} className="px-8 py-3 bg-zinc-50 border border-zinc-100 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:bg-rose-500 hover:text-white hover:border-rose-500 hover:shadow-lg hover:shadow-rose-100 transition-all duration-300">
+                      {g}
+                    </Link>
+                  ))}
+                </div>
 
-            {/* Detail Info + Cast */}
-            <div className="pt-6 border-t border-white/10">
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                {/* ========================= */}
-                {/* LEFT SIDE (INFO) */}
-                {/* ========================= */}
-                <div className="space-y-3 text-sm text-zinc-400">
-                  <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
-                    🎬 Details & Info
+                {/* Synopsis with better readability */}
+                <div className="bg-zinc-50/50 rounded-[2.5rem] p-8 md:p-10 border border-zinc-100/50">
+                  <h3 className="text-xs font-black uppercase tracking-[0.3em] text-rose-500 mb-6 flex items-center gap-2">
+                    <Film size={14} /> Sinopsis
                   </h3>
-                  <p>
-                    <b>Status:</b> {drama.info?.status}
-                  </p>
-
-                  <p>
-                    <b>Type:</b> {drama.info?.type}
-                  </p>
-
-                  <p>
-                    <b>Country:</b> {drama.info?.country}
-                  </p>
-
-                  <p>
-                    <b>Total Episode:</b> {drama.total_episode_available}
-                  </p>
-
-                  <p>
-                    <b>Director:</b> {drama.info?.director}
-                  </p>
-
-                  <p>
-                    <b>Release:</b> {drama.info?.first_air_date}
+                  <p className="text-zinc-600 text-lg md:text-xl font-medium leading-relaxed italic whitespace-pre-line">
+                    {drama.synopsis}
                   </p>
                 </div>
 
-                {/* ========================= */}
-                {/* RIGHT SIDE (CAST) */}
-                {/* ========================= */}
-                {drama.stars?.length > 0 && (
-                  <div>
-                    <h3 className="font-semibold text-white mb-3">
-                      🎭 Aktor
-                    </h3>
-
-                    <ul className="space-y-2 text-sm text-zinc-400">
-                      {drama.stars.slice(0, 8).map((s: any) => (
-                        <li
-                          key={s.name}
-                          className="flex items-start gap-2"
-                        >
-                          <span className="text-purple-400">•</span>
-                          <span className="leading-snug">
-                            {s.name}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                {/* Info Grid with Icons */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-10 pt-4">
+                  {[
+                    { label: "Status", value: drama.info?.status, icon: Globe, color: "text-blue-500" },
+                    { label: "Release", value: drama.info?.first_air_date, icon: Calendar, color: "text-orange-500" },
+                    { label: "Episodes", value: drama.total_episode_available, icon: PlayCircle, color: "text-rose-500" },
+                    { label: "Country", value: drama.info?.country, icon: Star, color: "text-amber-500" },
+                  ].map((item, i) => (
+                    <div key={i} className="space-y-2 group">
+                      <div className={`p-3 w-fit rounded-xl bg-white border border-zinc-100 shadow-sm group-hover:scale-110 transition-transform ${item.color}`}>
+                        <item.icon size={18} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{item.label}</p>
+                        <p className="text-zinc-900 font-bold tracking-tight">{item.value || "-"}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ================================= */}
-        {/* ✅ WATCH SECTION */}
-        {/* ================================= */}
-        <section>
-          <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-center sm:justify-between border-b border-white/5 pb-6">
-            {/* Sisi Kiri: Judul dengan Aksen */}
-            <div className="flex items-center gap-3">
-              <div className="w-1.5 h-8 bg-purple-600 rounded-full shadow-[0_0_15px_rgba(147,51,234,0.5)]" />
-              <div className="flex flex-col">
-                <h2 className="text-xl md:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-                  🎬 Tonton Sekarang
-                </h2>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">
-                  Streaming Kualitas Terbaik
-                </p>
-              </div>
-            </div>
-
-            {/* Sisi Kanan: Tombol Kembali yang Responsif */}
-            <Link
-              href="/drama/korea"
-              className="group flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl 
-               bg-zinc-900/50 border border-white/10 text-white/70 
-               hover:bg-purple-600 hover:text-white hover:border-purple-500
-               transition-all duration-300 active:scale-95 text-xs font-bold"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4 transition-transform group-hover:-translate-x-1"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-              </svg>
-              <span className="hidden sm:inline">Kembali ke Daftar Drama</span>
-              <span className="sm:hidden">Lihat Drama Lain</span>
-            </Link>
-          </div>
-
-          <EpisodePlayer episodes={drama.episodes} />
-        </section>
-
-        {/* ================================= */}
-        {/* ✅ RELATED DRAMA */}
-        {/* ================================= */}
-        {merged.length > 0 && (
-          <section className="mt-14">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              🔥 Drama Serupa Berdasarkan Genre
-            </h2>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5">
-              {merged
-                .filter((d: any) => d.endpoint !== id)
-                .slice(0, 10)
-                .map((item: any) => (
-                  <DramaCard key={item.endpoint} drama={item} />
-                ))}
-            </div>
-
-            {/* Button Explore */}
-            <div className="flex justify-end mt-6">
-              <Link
-                href={`/drama/korea?genre=${drama.genres[0]}`}
-                className="text-sm text-purple-400 hover:underline"
-              >
-                Lihat semua drama genre {drama.genres[0]} →
-              </Link>
             </div>
           </section>
-        )}
-      </main>
-    </>
+
+          {/* ✅ STREAMING SECTION */}
+          <section className="mt-24 space-y-12">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="w-px h-16 bg-gradient-to-b from-transparent to-rose-500" />
+              <h2 className="text-5xl md:text-7xl font-black text-zinc-900 italic tracking-tighter uppercase">
+                Pusat <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-indigo-600">Streaming</span>
+              </h2>
+
+              <p className="text-zinc-400 font-black uppercase text-[10px] tracking-[0.4em]">
+                Pengalaman Nonton Kualitas Ultra HD
+              </p>
+            </div>
+
+            <div className="bg-zinc-900 rounded-[1.5rem] p-4 md:p-10 shadow-3xl shadow-rose-100 border-[8px] border-white overflow-hidden">
+              <EpisodePlayer episodes={drama.episodes} />
+            </div>
+          </section>
+
+          {/* ✅ RELATED SECTION */}
+          {merged.length > 0 && (
+            <section className="mt-32 space-y-16">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-zinc-900">
+                    Rekomendasi
+                  </h2>
+                  <div className="w-20 h-1.5 bg-rose-500 rounded-full" />
+                </div>
+                <Link href={`/drama/korea?genre=${drama.genres[0]}`} className="px-6 py-3 rounded-2xl bg-white border border-zinc-100 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-rose-500 transition-all shadow-sm">
+                  Lihat Semua
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-10">
+                {merged
+                  .filter((d: any) => d.endpoint !== id)
+                  .slice(0, 10)
+                  .map((item: any) => (
+                    <div key={item.endpoint} className="group hover:-translate-y-4 transition-all duration-500">
+                      <DramaCard drama={item} />
+                    </div>
+                  ))}
+              </div>
+            </section>
+          )}
+        </div>
+      </div>
+    </main>
   )
 }

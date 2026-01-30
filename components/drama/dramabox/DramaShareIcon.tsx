@@ -8,6 +8,7 @@ import {
     FaLink,
     FaShareNodes,
 } from 'react-icons/fa6'
+import { useState } from 'react'
 
 export default function DramaShareIcons({
     title,
@@ -18,6 +19,7 @@ export default function DramaShareIcons({
     url: string
     tags?: string[]
 }) {
+    const [copied, setCopied] = useState(false)
     const hashtag = tags?.length ? tags.map(t => `#${t}`).join(' ') : ''
     const encodedUrl = encodeURIComponent(url)
     const encodedText = encodeURIComponent(
@@ -26,75 +28,94 @@ export default function DramaShareIcons({
 
     function copyLink() {
         navigator.clipboard.writeText(url)
-        alert('Link berhasil disalin')
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
     }
 
     function nativeShare() {
         if (navigator.share) {
-            navigator.share({ title, url })
+            navigator.share({ title, url }).catch(() => null)
         } else {
             copyLink()
         }
     }
 
+    // Base Style untuk Button/Link
+    const itemClass = "group relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 hover:-translate-y-1 active:scale-90"
+    const iconClass = "transition-transform duration-300 group-hover:scale-110"
+
     return (
-        <div className="flex items-center gap-2">
-            {/* Native Share (TikTok, IG, dll via system share) */}
+        <div className="flex items-center gap-3 p-1.5 bg-white/40 backdrop-blur-md rounded-2xl border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+
+            {/* Native Share */}
             <button
                 onClick={nativeShare}
+                className={`${itemClass} bg-zinc-900 text-white hover:shadow-lg hover:shadow-zinc-200`}
                 title="Bagikan"
-                className="rounded-full border p-2 hover:bg-gray-100"
             >
-                <FaShareNodes size={16} />
+                <FaShareNodes size={14} className={iconClass} />
             </button>
+
+            <div className="w-[1px] h-6 bg-zinc-200/60 mx-1" /> {/* Divider */}
 
             {/* WhatsApp */}
             <a
                 href={`https://wa.me/?text=${encodedText}%20${encodedUrl}`}
                 target="_blank"
+                className={`${itemClass} text-green-600 hover:bg-green-50`}
                 title="WhatsApp"
-                className="rounded-full border p-2 hover:bg-green-50 text-green-600"
             >
-                <FaWhatsapp size={16} />
+                <FaWhatsapp size={18} className={iconClass} />
             </a>
 
             {/* Facebook */}
             <a
                 href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
                 target="_blank"
+                className={`${itemClass} text-blue-600 hover:bg-blue-50`}
                 title="Facebook"
-                className="rounded-full border p-2 hover:bg-blue-50 text-blue-600"
             >
-                <FaFacebook size={16} />
+                <FaFacebook size={18} className={iconClass} />
             </a>
 
             {/* X / Twitter */}
             <a
                 href={`https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`}
                 target="_blank"
+                className={`${itemClass} text-zinc-800 hover:bg-zinc-50`}
                 title="X (Twitter)"
-                className="rounded-full border p-2 hover:bg-gray-100"
             >
-                <FaXTwitter size={16} />
+                <FaXTwitter size={16} className={iconClass} />
             </a>
 
             {/* Telegram */}
             <a
                 href={`https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`}
                 target="_blank"
+                className={`${itemClass} text-sky-500 hover:bg-sky-50`}
                 title="Telegram"
-                className="rounded-full border p-2 hover:bg-sky-50 text-sky-600"
             >
-                <FaTelegram size={16} />
+                <FaTelegram size={18} className={iconClass} />
             </a>
 
-            {/* Copy Link */}
+            {/* Copy Link dengan Feedback */}
             <button
                 onClick={copyLink}
+                className={`${itemClass} ${copied ? 'bg-green-500 text-white' : 'text-zinc-500 hover:bg-zinc-50'}`}
                 title="Salin Link"
-                className="rounded-full border p-2 hover:bg-gray-100"
             >
-                <FaLink size={16} />
+                {copied ? (
+                    <span className="text-[10px] font-bold uppercase tracking-tighter">Copied</span>
+                ) : (
+                    <FaLink size={16} className={iconClass} />
+                )}
+
+                {/* Tooltip sederhana */}
+                {!copied && (
+                    <span className="absolute -top-10 scale-0 group-hover:scale-100 transition-all bg-zinc-800 text-white text-[10px] py-1 px-2 rounded-md">
+                        Copy
+                    </span>
+                )}
             </button>
         </div>
     )

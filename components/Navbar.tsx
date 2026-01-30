@@ -7,7 +7,8 @@ import { usePathname } from 'next/navigation'
 import {
   Menu, X, ChevronDown, ChevronRight,
   Sparkles, Calculator, Play, Trophy,
-  Info, Laptop
+  Info, Laptop, Image as ImageIcon, FileArchive,
+  Wallet, Receipt, Home as HomeIcon, Coffee
 } from 'lucide-react'
 import { BsFileZip } from 'react-icons/bs'
 
@@ -21,7 +22,6 @@ export default function Navbar() {
   const toggle = (menu: string) => setOpen((prev) => (prev === menu ? null : menu))
   const toggleMobileMenu = (key: string) => setMobileMenu(prev => (prev === key ? null : key))
 
-  // Close when click outside
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(null)
@@ -30,20 +30,17 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  // Close on route change
   useEffect(() => {
     setOpen(null)
     setMobileOpen(false)
   }, [pathname])
 
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    if (mobileOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'unset';
     return () => { document.body.style.overflow = 'unset'; };
   }, [mobileOpen]);
+
   const isActive = (path: string) => pathname === path
 
   return (
@@ -52,71 +49,30 @@ export default function Navbar() {
 
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-2 transition hover:opacity-80">
-          <Image
-            src="/logo-with-text.png"
-            alt="My Tools Logo"
-            width={140}
-            height={40}
-            className="h-9 w-auto object-contain"
-            priority
-          />
+          <Image src="/logo-with-text.png" alt="My Tools Logo" width={140} height={40} className="h-9 w-auto object-contain" priority />
         </Link>
 
-        {/* DESKTOP NAV */}
+        {/* DESKTOP NAV (Keep as is) */}
         <nav className="hidden items-center gap-1 lg:flex">
-          <Link
-            href="/"
-            className={`px-4 py-2 text-sm font-bold transition ${isActive('/') ? 'text-purple-600' : 'text-zinc-600 hover:text-black'}`}
-          >
-            Beranda
-          </Link>
+          <Link href="/" className={`px-4 py-2 text-sm font-bold transition ${isActive('/') ? 'text-purple-600' : 'text-zinc-600 hover:text-black'}`}>Beranda</Link>
 
-          {/* DRAMA */}
-          <DesktopDropdown
-            label="Drama"
-            icon={<Play className="w-4 h-4" />}
-            open={open === 'drama'}
-            onToggle={() => toggle('drama')}
-          >
+          <DesktopDropdown label="Drama" icon={<Play className="w-4 h-4" />} open={open === 'drama'} onToggle={() => toggle('drama')}>
             <NavItem href="/drama/china/channel/dramabox" label="Drama China" desc="Trending & Viral" />
             <NavItem href="/drama/korea" label="Drama Korea" desc="Update Setiap Hari" />
           </DesktopDropdown>
 
-          {/* TOOLS */}
-          <DesktopDropdown
-            label="Tools"
-            icon={<Laptop className="w-4 h-4" />}
-            open={open?.startsWith('tools') ?? false}
-            onToggle={() => toggle('tools')}
-          >
-            <NestedDropdown
-              label="Kreator"
-              icon={<Sparkles className="w-3.5 h-3.5" />}
-              isOpen={open === 'tools-kreator'}
-              onToggle={() => toggle('tools-kreator')}
-            >
+          <DesktopDropdown label="Tools" icon={<Laptop className="w-4 h-4" />} open={open?.startsWith('tools') ?? false} onToggle={() => toggle('tools')}>
+            <NestedDropdown label="Kreator" icon={<Sparkles className="w-3.5 h-3.5" />} isOpen={open === 'tools-kreator'} onToggle={() => toggle('tools-kreator')}>
               <NavItem href="/kreator/calculate-income" label="Income Sosmed" />
               <NavItem href="/kreator/hashtag" label="Hashtag Gen" />
               <NavItem href="/kreator/caption" label="Caption Gen" />
               <NavItem href="/kreator/video-size" label="Video Estimator" />
             </NestedDropdown>
-
-            <NestedDropdown
-              label="Konversi"
-              icon={<BsFileZip className="w-3.5 h-3.5" />}
-              isOpen={open === 'tools-konversi'}
-              onToggle={() => toggle('tools-konversi')}
-            >
+            <NestedDropdown label="Konversi" icon={<BsFileZip className="w-3.5 h-3.5" />} isOpen={open === 'tools-konversi'} onToggle={() => toggle('tools-konversi')}>
               <NavItem href="/kompress/gambar" label="Gambar" />
               <NavItem href="/kompress/pdf" label="PDF" />
             </NestedDropdown>
-
-            <NestedDropdown
-              label="Kalkulator"
-              icon={<Calculator className="w-3.5 h-3.5" />}
-              isOpen={open === 'tools-kalkulator'}
-              onToggle={() => toggle('tools-kalkulator')}
-            >
+            <NestedDropdown label="Kalkulator" icon={<Calculator className="w-3.5 h-3.5" />} isOpen={open === 'tools-kalkulator'} onToggle={() => toggle('tools-kalkulator')}>
               <NavItem href="/kalkulator/cicilan" label="Cicilan" />
               <NavItem href="/kalkulator/kpr" label="Simulasi KPR" />
               <NavItem href="/kalkulator/thr" label="THR" />
@@ -128,108 +84,109 @@ export default function Navbar() {
             </NestedDropdown>
           </DesktopDropdown>
 
-          {/* SPORT */}
-          <DesktopDropdown
-            label="Sport"
-            icon={<Trophy className="w-4 h-4" />}
-            open={open === 'sport'}
-            onToggle={() => toggle('sport')}
-          >
+          <DesktopDropdown label="Sport" icon={<Trophy className="w-4 h-4" />} open={open === 'sport'} onToggle={() => toggle('sport')}>
             <NavItem href="/bola/livescore" label="Live Score" desc="Skor Real-time Liga Dunia" />
           </DesktopDropdown>
 
           <Link href="/about" className="px-4 py-2 text-sm font-bold text-zinc-600 hover:text-black">About</Link>
-
-          {/* CTA TRAKTEER */}
-          <a
-            href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open"
-            target="_blank"
-            className="ml-4 flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-[13px] font-black text-white transition hover:bg-purple-600 active:scale-95 shadow-xl shadow-purple-500/10"
-          >
-            ☕ Traktir Kopi
-          </a>
+          <a href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open" target="_blank" className="ml-4 flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-[13px] font-black text-white transition hover:bg-purple-600 active:scale-95 shadow-xl shadow-purple-500/10">☕ Traktir Kopi</a>
         </nav>
 
         {/* MOBILE TRIGGER */}
-        <button
-          onClick={() => setMobileOpen(true)}
-          className="rounded-xl p-2.5 text-zinc-600 hover:bg-zinc-100 lg:hidden"
-        >
-          <Menu className="h-6 w-6" />
-        </button>
+        <button onClick={() => setMobileOpen(true)} className="rounded-xl p-2.5 text-zinc-600 hover:bg-zinc-100 lg:hidden"><Menu className="h-6 w-6" /></button>
       </div>
 
       {/* MOBILE MENU OVERLAY */}
       {mobileOpen && (
-        <div className="fixed inset-0 min-h-screen h-[50dvh] z-[200] bg-white lg:hidden flex flex-col animate-in slide-in-from-right duration-300">
+        <div className="fixed inset-0 min-h-screen z-[200] bg-white lg:hidden flex flex-col animate-in slide-in-from-right duration-300">
 
-          {/* 1. Header Menu (Tinggi Konsisten) */}
-          <div className="flex items-center justify-between px-8 py-6 border-b border-zinc-50 bg-white">
+          {/* Header Mobile */}
+          <div className="flex items-center justify-between px-8 py-6 border-b border-zinc-50">
             <div className="flex flex-col">
               <span className="text-xl font-black italic tracking-tighter text-purple-600 leading-none">MY TOOLS.</span>
               <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-[0.2em] mt-1">Digital Ecosystem</span>
             </div>
-            <button
-              onClick={() => setMobileOpen(false)}
-              className="p-3 bg-zinc-100 text-zinc-600 rounded-2xl hover:bg-zinc-200 transition-all active:scale-90"
-            >
-              <X className="w-6 h-6" />
-            </button>
+            <button onClick={() => setMobileOpen(false)} className="p-3 bg-zinc-100 text-zinc-600 rounded-2xl active:scale-90"><X className="w-6 h-6" /></button>
           </div>
 
-          {/* 2. Scrollable Content (Tinggi Maksimal / flex-1) */}
-          <div className="flex-1 overflow-y-auto px-8 py-10 bg-white custom-scrollbar">
-            <div className="flex flex-col min-h-full"> {/* Gunakan min-h-full agar footer bisa didorong ke bawah */}
+          {/* Content Mobile */}
+          <div className="flex-1 overflow-y-auto px-8 py-10">
+            <div className="flex flex-col min-h-full space-y-8 pb-20">
 
-              <div className="space-y-8 flex-1">
-                <MobileLink href="/" icon={<Info className="w-5 h-5" />} label="Beranda" />
+              <MobileLink href="/" icon={<HomeIcon className="w-5 h-5" />} label="Beranda" />
 
-                <MobileCollapse label="Drama Asia" isOpen={mobileMenu === 'drama'} onToggle={() => toggleMobileMenu('drama')}>
-                  <div className="mt-4 space-y-4 border-l-2 border-purple-100 ml-3 pl-5">
-                    <MobileLink href="/drama/china/channel/dramabox" label="Drama China" sub />
-                    <MobileLink href="/drama/korea" label="Drama Korea" sub />
-                  </div>
-                </MobileCollapse>
+              {/* DRAMA ASIA */}
+              <MobileCollapse label="Drama Asia" icon={<Play className="w-5 h-5" />} isOpen={mobileMenu === 'drama'} onToggle={() => toggleMobileMenu('drama')}>
+                <div className="mt-4 space-y-4 border-l-2 border-purple-100 ml-3 pl-5">
+                  <MobileLink href="/drama/china/channel/dramabox" label="Drama China" sub />
+                  <MobileLink href="/drama/korea" label="Drama Korea" sub />
+                </div>
+              </MobileCollapse>
 
-                <MobileCollapse label="Smart Tools" isOpen={mobileMenu === 'tools'} onToggle={() => toggleMobileMenu('tools')}>
-                  <div className="mt-4 space-y-8 border-l-2 border-purple-100 ml-3 pl-5">
-                    <div>
-                      <p className="text-[10px] font-black text-purple-400 uppercase tracking-widest mb-3">Kreator</p>
-                      <div className="space-y-3">
-                        <MobileLink href="/kreator/calculate-income" label="Income Sosmed" sub />
-                        <MobileLink href="/kreator/hashtag" label="Hashtag Generator" sub />
-                      </div>
+              {/* SMART TOOLS (Divided by Categories) */}
+              <MobileCollapse label="Smart Tools" icon={<Laptop className="w-5 h-5" />} isOpen={mobileMenu === 'tools'} onToggle={() => toggleMobileMenu('tools')}>
+                <div className="mt-6 space-y-10 border-l-2 border-purple-100 ml-3 pl-5">
+
+                  {/* Kreator */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Sparkles className="w-3 h-3 text-purple-500" />
+                      <p className="text-[10px] font-black text-purple-500 uppercase tracking-widest leading-none">Kreator Suite</p>
                     </div>
-                    <div>
-                      <p className="text-[10px] font-black text-purple-400 uppercase tracking-widest mb-3">Kalkulator</p>
-                      <div className="space-y-3">
-                        <MobileLink href="/kalkulator/cicilan" label="Simulasi Cicilan" sub />
-                        <MobileLink href="/kalkulator/kpr" label="Kalkulator KPR" sub />
-                      </div>
+                    <div className="grid grid-cols-1 gap-3">
+                      <MobileLink href="/kreator/calculate-income" label="Income Sosmed" sub />
+                      <MobileLink href="/kreator/hashtag" label="Hashtag Generator" sub />
+                      <MobileLink href="/kreator/caption" label="Caption Generator" sub />
+                      <MobileLink href="/kreator/video-size" label="Video Estimator" sub />
                     </div>
                   </div>
-                </MobileCollapse>
 
-                <MobileCollapse label="Sports Center" isOpen={mobileMenu === 'sport'} onToggle={() => toggleMobileMenu('sport')}>
-                  <div className="mt-4 border-l-2 border-purple-100 ml-3 pl-5">
-                    <MobileLink href="/bola/livescore" label="Live Score Bola" sub />
+                  {/* Konversi */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <BsFileZip className="w-3 h-3 text-blue-500" />
+                      <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest leading-none">Konversi & Kompres</p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3">
+                      <MobileLink href="/kompress/gambar" label="Kompres Gambar" sub />
+                      <MobileLink href="/kompress/pdf" label="Kompres PDF" sub />
+                    </div>
                   </div>
-                </MobileCollapse>
 
-                <MobileLink href="/about" label="Tentang Kami" />
-              </div>
+                  {/* Kalkulator */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Calculator className="w-3 h-3 text-emerald-500" />
+                      <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest leading-none">Kalkulator Finansial</p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3">
+                      <MobileLink href="/kalkulator/cicilan" label="Simulasi Cicilan" sub />
+                      <MobileLink href="/kalkulator/kpr" label="Simulasi KPR" sub />
+                      <MobileLink href="/kalkulator/thr" label="Hitung THR" sub />
+                      <MobileLink href="/kalkulator/zakat-fitrah" label="Zakat Fitrah" sub />
+                      <MobileLink href="/kalkulator/zakat" label="Zakat Mall" sub />
+                      <MobileLink href="/kalkulator/take-home-pay" label="Gaji Bersih (THP)" sub />
+                      <MobileLink href="/kalkulator/pph21" label="Pajak PPH 21" sub />
+                      <MobileLink href="/kalkulator/fidya" label="Kalkulator Fidya" sub />
+                    </div>
+                  </div>
+                </div>
+              </MobileCollapse>
 
-              {/* 3. Footer Menu (Nempel di bawah kalau konten sedikit) */}
+              {/* SPORTS */}
+              <MobileCollapse label="Sports Center" icon={<Trophy className="w-5 h-5" />} isOpen={mobileMenu === 'sport'} onToggle={() => toggleMobileMenu('sport')}>
+                <div className="mt-4 border-l-2 border-purple-100 ml-3 pl-5">
+                  <MobileLink href="/bola/livescore" label="Live Score Bola" sub />
+                </div>
+              </MobileCollapse>
+
+              <MobileLink href="/about" icon={<Info className="w-5 h-5" />} label="Tentang Kami" />
+
+              {/* Footer Mobile Menu */}
               <div className="mt-12 pt-8 border-t border-zinc-100">
-                <p className="text-center text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-6">Support Our Project</p>
-                <a
-                  href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open"
-                  target="_blank"
-                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-zinc-950 py-5 font-black text-white shadow-[0_20px_40px_rgba(0,0,0,0.2)] active:scale-95 transition-all"
-                >
-                  <span className="text-xl">☕</span> Traktir Kopi
+                <a href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open" target="_blank" className="flex w-full items-center justify-center gap-3 rounded-2xl bg-zinc-900 py-5 font-black text-white active:scale-95 transition-all">
+                  <Coffee className="w-5 h-5 text-amber-400" /> Traktir Kopi
                 </a>
-                <p className="text-center text-[9px] text-zinc-400 mt-6 font-medium">© 2026 My Tools Indonesia. v2.1.0</p>
               </div>
             </div>
           </div>
@@ -240,24 +197,17 @@ export default function Navbar() {
 }
 
 /* ===============================
-   REUSABLE SUB-COMPONENTS
+   COMPONENTS
 =============================== */
 
 function DesktopDropdown({ label, icon, open, onToggle, children }: any) {
   return (
     <div className="relative group">
-      <button
-        onClick={onToggle}
-        className={`flex items-center gap-1.5 px-4 py-2 text-sm font-bold transition-all rounded-lg hover:bg-zinc-50 ${open ? 'text-purple-600 bg-zinc-50' : 'text-zinc-600'}`}
-      >
+      <button onClick={onToggle} className={`flex items-center gap-1.5 px-4 py-2 text-sm font-bold transition-all rounded-lg hover:bg-zinc-50 ${open ? 'text-purple-600 bg-zinc-50' : 'text-zinc-600'}`}>
         {icon} {label}
         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
       </button>
-      {open && (
-        <div className="absolute left-0 mt-2 w-64 bg-white border border-zinc-100 rounded-2xl shadow-2xl p-2 animate-in fade-in zoom-in-95 duration-200">
-          {children}
-        </div>
-      )}
+      {open && <div className="absolute left-0 mt-2 w-64 bg-white border border-zinc-100 rounded-2xl shadow-2xl p-2 animate-in fade-in zoom-in-95 duration-200">{children}</div>}
     </div>
   )
 }
@@ -265,18 +215,11 @@ function DesktopDropdown({ label, icon, open, onToggle, children }: any) {
 function NestedDropdown({ label, icon, isOpen, onToggle, children }: any) {
   return (
     <div className="relative">
-      <button
-        onClick={(e) => { e.stopPropagation(); onToggle(); }}
-        className="flex w-full items-center justify-between px-4 py-2 text-[13px] font-bold text-zinc-600 hover:bg-zinc-50 rounded-lg"
-      >
+      <button onClick={(e) => { e.stopPropagation(); onToggle(); }} className="flex w-full items-center justify-between px-4 py-2 text-[13px] font-bold text-zinc-600 hover:bg-zinc-50 rounded-lg">
         <span className="flex items-center gap-2">{icon} {label}</span>
         <ChevronRight className="w-3.5 h-3.5" />
       </button>
-      {isOpen && (
-        <div className="absolute left-full top-0 ml-1 w-56 bg-white border border-zinc-100 rounded-2xl shadow-2xl p-2 z-50 animate-in slide-in-from-left-2 duration-200">
-          {children}
-        </div>
-      )}
+      {isOpen && <div className="absolute left-full top-0 ml-1 w-56 bg-white border border-zinc-100 rounded-2xl shadow-2xl p-2 z-50 animate-in slide-in-from-left-2 duration-200">{children}</div>}
     </div>
   )
 }
@@ -290,21 +233,22 @@ function NavItem({ href, label, desc }: any) {
   )
 }
 
-function MobileCollapse({ label, isOpen, onToggle, children }: any) {
+function MobileCollapse({ label, icon, isOpen, onToggle, children }: any) {
   return (
     <div className="border-b border-zinc-50 pb-2">
-      <button onClick={onToggle} className="flex w-full items-center justify-between py-3 text-lg font-black text-zinc-900">
-        {label} <ChevronDown className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      <button onClick={onToggle} className="flex w-full items-center justify-between py-3 text-lg font-black text-zinc-900 italic tracking-tighter uppercase">
+        <span className="flex items-center gap-3">{icon} {label}</span>
+        <ChevronDown className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180 text-purple-600' : 'text-zinc-300'}`} />
       </button>
-      {isOpen && <div className="mt-2 space-y-1">{children}</div>}
+      {isOpen && <div className="pb-4">{children}</div>}
     </div>
   )
 }
 
-function MobileLink({ href, label, sub }: any) {
+function MobileLink({ href, label, sub, icon }: any) {
   return (
-    <Link href={href} className={`block py-3 font-bold ${sub ? 'pl-4 text-zinc-500 text-sm' : 'text-lg text-zinc-900'}`}>
-      {label}
+    <Link href={href} className={`flex items-center gap-3 font-bold transition-colors ${sub ? 'py-1 text-zinc-500 text-[13px] hover:text-purple-600' : 'py-3 text-lg text-zinc-900 italic uppercase tracking-tighter'}`}>
+      {icon} {label}
     </Link>
   )
 }

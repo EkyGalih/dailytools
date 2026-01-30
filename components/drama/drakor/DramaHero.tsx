@@ -1,8 +1,12 @@
+"use client"
 import DramaShareIcons from "@/components/drama/dramabox/DramaShareIcon"
 import { Sparkles, Clapperboard, Film } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export default function DramaHero() {
     const site = process.env.NEXT_PUBLIC_SITE_URL!
+    const pathname = usePathname()
 
     return (
         <header className="relative overflow-hidden rounded-[3rem] bg-white p-8 md:p-16 border border-zinc-100 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
@@ -41,11 +45,28 @@ export default function DramaHero() {
 
                     {/* Interactive Tags */}
                     <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                        {['Ongoing', 'Completed', 'Movies', 'Trending'].map((tag) => (
-                            <button key={tag} className="px-6 py-2.5 rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-600 text-[11px] font-black uppercase tracking-widest hover:bg-pink-500 hover:text-white hover:border-pink-500 hover:shadow-lg hover:shadow-pink-200 transition-all duration-300 active:scale-95">
-                                {tag}
-                            </button>
-                        ))}
+                        {[
+                            { name: 'Ongoing', slug: 'ongoing' },
+                            { name: 'Selesai', slug: 'completed' },
+                            { name: 'Film', slug: 'movies' },
+                        ].map((tag) => {
+                            // Logika pengecekan apakah link aktif
+                            const isActive = pathname === `/drama/korea/${tag.slug}`
+
+                            return (
+                                <Link
+                                    key={tag.slug}
+                                    href={`/drama/korea/${tag.slug}`}
+                                    className={`px-6 py-2.5 rounded-2xl border text-[11px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 flex items-center justify-center shadow-sm
+                                        ${isActive
+                                            ? 'bg-pink-500 text-white border-pink-500 shadow-lg shadow-pink-200'
+                                            : 'bg-zinc-50 text-zinc-600 border-zinc-100 hover:bg-pink-500 hover:text-white hover:border-pink-500 hover:shadow-lg hover:shadow-pink-200'
+                                        }`}
+                                >
+                                    {tag.name}
+                                </Link>
+                            )
+                        })}
                     </div>
                 </div>
 

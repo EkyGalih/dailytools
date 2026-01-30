@@ -12,7 +12,7 @@ export default function DramaListCard({ drama }: { drama: any }) {
   const epsText = eps ? eps.replace(/^E/i, "") : null
 
   return (
-    <Link href={`/drama/korea/${drama.endpoint}`}>
+    <Link href={`/drama/korea/detail/${drama.endpoint}`}>
       <div className="group flex items-center gap-4 p-3 rounded-[1.5rem] bg-white border border-zinc-100 hover:border-pink-200 hover:shadow-[0_20px_40px_rgba(236,72,153,0.05)] transition-all duration-500">
 
         {/* THUMBNAIL AREA */}

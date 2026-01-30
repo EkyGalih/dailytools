@@ -6,6 +6,7 @@ import GoogleAnalytics from '@/components/GoogleAnalytics'
 import GAListener from '@/components/GAListener'
 import Script from 'next/script'
 import NextTopLoader from 'nextjs-toploader'
+import AdsenseScript from '@/components/drama/ads/AdsenseScript'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://mytools.web.id'),
@@ -38,11 +39,6 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
-        {/* ✅ GOOGLE ADSENSE */}
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4762845598503420"
-          crossOrigin="anonymous"
-        />
         {/* 🔥 MONETAG IN-PAGE PUSH — WAJIB DI HEAD */}
         {/* <Script
           id="monetag-inpage-push"
@@ -68,6 +64,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-gray-50 text-gray-900">
+        <AdsenseScript />
         <Navbar />
         <NextTopLoader
           color="#9333ea" // Warna ungu purple-600 agar match dengan tema kamu

@@ -5,7 +5,7 @@ import { Play, Star, Calendar, Monitor, Sparkles } from "lucide-react"
 
 export default function DramaCard({ drama }: { drama: DramaCardItem }) {
   return (
-    <Link href={`/drama/korea/${drama.endpoint}`} className="block group">
+    <Link href={`/drama/korea/detail/${drama.endpoint}`} className="block group">
       <div className="relative bg-white rounded-[1rem] overflow-hidden border border-zinc-100 transition-all duration-500 flex flex-col h-full 
         group-hover:border-pink-200 group-hover:shadow-[0_30px_60px_-15px_rgba(236,72,153,0.15)] group-hover:-translate-y-2">
         {/* THUMBNAIL AREA */}

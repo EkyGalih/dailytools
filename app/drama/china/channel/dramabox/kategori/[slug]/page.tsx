@@ -38,46 +38,59 @@ export default async function DramaCategoryPage({
     <div className="bg-[#fafafa] min-h-screen pb-20">
       <AffiliateMiniPopup />
 
-      {/* HERO - Menggunakan desain Mesh Gradient Gelap dari komponen DramaHero */}
+      {/* HERO - Desain Mesh Gradient Gelap */}
       <DramaHero activeChannel="dramabox" />
 
-      {/* CONTENT - Kontainer Putih yang menumpuk ke atas Hero */}
-      <main className="max-w-7xl mx-auto px-6 -mt-10 relative z-10">
-        <div className="bg-white rounded-[40px] p-8 md:p-12 shadow-[0_30px_100px_rgba(0,0,0,0.04)] border border-zinc-100">
+      {/* CONTENT - Overlap Card Style */}
+      <main className="max-w-7xl mx-auto px-4 md:px-6 -mt-10 md:-mt-20 relative z-10">
+        <div className="bg-white rounded-[2rem] md:rounded-[40px] p-5 md:p-12 shadow-[0_30px_100px_rgba(0,0,0,0.04)] border border-zinc-100">
 
           {/* HEADER KATEGORI */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-zinc-50 pb-8">
-            <div className="space-y-2">
-              <span className="px-3 py-1 text-[9px] font-black uppercase tracking-widest bg-purple-100 text-purple-600 rounded-full">
-                Genre Category
-              </span>
-              <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-zinc-900 italic uppercase">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 md:mb-12 border-b border-zinc-50 pb-6 md:pb-8">
+            <div className="space-y-1 md:space-y-2 text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
+                <span className="w-6 h-[2px] bg-purple-600 rounded-full hidden md:block" />
+                <span className="px-2 py-0.5 text-[9px] md:text-[10px] font-black uppercase tracking-widest bg-purple-100 text-purple-600 rounded-md">
+                  Genre Category
+                </span>
+              </div>
+
+              <h1 className="text-2xl md:text-5xl font-black tracking-tighter text-zinc-900 italic uppercase leading-none">
                 Drama <span className="text-purple-600">{cat.name}</span>
               </h1>
-              <p className="text-zinc-500 font-medium text-sm md:text-base">
-                Menampilkan koleksi terbaik untuk kategori {cat.name}
+
+              <p className="text-zinc-400 font-bold text-[10px] md:text-base uppercase tracking-wide">
+                Koleksi Terbaik Kategori {cat.name}
               </p>
             </div>
 
-            {/* TOGGLE POPULER/TERBARU (Optional Enhancement) */}
-            <div className="flex bg-zinc-100 p-1.5 rounded-2xl">
+            {/* TOGGLE FILTER (Touch-Friendly) */}
+            <div className="flex bg-zinc-100 p-1 md:p-1.5 rounded-xl md:rounded-2xl w-full md:w-auto">
               <a
                 href={`?classify=terbaru`}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${mode === 'terbaru' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-zinc-600'}`}
+                className={`flex-1 md:flex-none text-center px-4 py-2 md:px-6 rounded-lg md:rounded-xl text-[11px] md:text-xs font-black uppercase tracking-wider transition-all ${mode === 'terbaru'
+                    ? 'bg-white text-black shadow-sm'
+                    : 'text-zinc-400 hover:text-zinc-600'
+                  }`}
               >
                 Terbaru
               </a>
               <a
                 href={`?classify=terpopuler`}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${mode === 'terpopuler' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-zinc-600'}`}
+                className={`flex-1 md:flex-none text-center px-4 py-2 md:px-6 rounded-lg md:rounded-xl text-[11px] md:text-xs font-black uppercase tracking-wider transition-all ${mode === 'terpopuler'
+                    ? 'bg-white text-black shadow-sm'
+                    : 'text-zinc-400 hover:text-zinc-600'
+                  }`}
               >
                 Terpopuler
               </a>
             </div>
           </div>
 
-          {/* LIST DRAMA */}
-          <DramaExplorer initialItems={items} />
+          {/* LIST DRAMA - Pastikan DramaExplorer menggunakan grid yang responsif */}
+          <div className="min-h-[400px]">
+            <DramaExplorer initialItems={items} />
+          </div>
         </div>
       </main>
     </div>

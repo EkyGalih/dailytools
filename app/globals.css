@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0b1020;   /* indigo gelap */
-  --foreground: #e6e8ee;   /* abu terang */
+  --background: #0b1020;
+  /* indigo gelap */
+  --foreground: #e6e8ee;
+  /* abu terang */
 }
 
 @theme inline {
@@ -38,4 +40,13 @@ body {
 
 .animate-live {
   animation: pulseLive 1.2s infinite;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import GAListener from '@/components/GAListener'
 import Script from 'next/script'
+import NextTopLoader from 'nextjs-toploader'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://mytools.web.id'),
@@ -67,6 +68,17 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-gray-50 text-gray-900">
+        <NextTopLoader
+          color="#9333ea" // Warna ungu purple-600 agar match dengan tema kamu
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false} // Matikan spinner bundar jika dirasa mengganggu
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #9333ea,0 0 5px #9333ea"
+        />
         <Navbar />
 
         <main className="w-full">

@@ -11,7 +11,6 @@ export default function DramaListCard({
   const eps = drama.eps
   const rating = drama.rating
   const thumbnail = drama.thumbnail
-  console.log(drama)
 
   // Convert rating angka (0-10) ke bintang (0-5)
   const starCount = rating ? Math.round(Number(rating) / 2) : 0

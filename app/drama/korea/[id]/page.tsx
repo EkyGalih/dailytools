@@ -246,18 +246,37 @@ export default async function DramaDetailPage({
         {/* ✅ WATCH SECTION */}
         {/* ================================= */}
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">
-              🎬 Tonton Sekarang
-            </h2>
+          <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-center sm:justify-between border-b border-white/5 pb-6">
+            {/* Sisi Kiri: Judul dengan Aksen */}
+            <div className="flex items-center gap-3">
+              <div className="w-1.5 h-8 bg-purple-600 rounded-full shadow-[0_0_15px_rgba(147,51,234,0.5)]" />
+              <div className="flex flex-col">
+                <h2 className="text-xl md:text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                  🎬 Tonton Sekarang
+                </h2>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">
+                  Streaming Kualitas Terbaik
+                </p>
+              </div>
+            </div>
 
+            {/* Sisi Kanan: Tombol Kembali yang Responsif */}
             <Link
               href="/drama/korea"
-              className="px-4 py-2 rounded-full text-sm font-semibold
-              bg-zinc-900 border border-white/10 text-white/80
-              hover:bg-purple-600 hover:text-white transition-all"
+              className="group flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl 
+               bg-zinc-900/50 border border-white/10 text-white/70 
+               hover:bg-purple-600 hover:text-white hover:border-purple-500
+               transition-all duration-300 active:scale-95 text-xs font-bold"
             >
-              ← Lihat Drama Lain
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4 transition-transform group-hover:-translate-x-1"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="hidden sm:inline">Kembali ke Daftar Drama</span>
+              <span className="sm:hidden">Lihat Drama Lain</span>
             </Link>
           </div>
 

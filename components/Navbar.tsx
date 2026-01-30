@@ -1,334 +1,222 @@
 'use client'
 
-import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
+import {
+  Menu, X, ChevronDown, ChevronRight,
+  Sparkles, Calculator, Play, Trophy,
+  Info, ExternalLink, Hash, Laptop
+} from 'lucide-react'
 
 export default function Navbar() {
   const [open, setOpen] = useState<string | null>(null)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileMenu, setMobileMenu] = useState<string | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
 
-  const toggle = (menu: string) => {
-    setOpen((prev) => (prev === menu ? null : menu))
-  }
+  const toggle = (menu: string) => setOpen((prev) => (prev === menu ? null : menu))
+  const toggleMobileMenu = (key: string) => setMobileMenu(prev => (prev === key ? null : key))
 
-  // ✅ Close when click outside
+  // Close when click outside
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(null)
-      }
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(null)
     }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () =>
-      document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [mobileMenu, setMobileMenu] = useState<string | null>(null)
-
-  const toggleMobileMenu = (key: string) => {
-    setMobileMenu(prev => (prev === key ? null : key))
-  }
-
-  // ✅ Close on route change
+  // Close on route change
   useEffect(() => {
     setOpen(null)
+    setMobileOpen(false)
   }, [pathname])
 
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [mobileOpen]);
+  const isActive = (path: string) => pathname === path
+
   return (
-    <header className="sticky top-0 z-50 bg-white text-indigo-950 border-b">
-      <div
-        ref={ref}
-        className="max-w-5xl mx-auto px-2 py-1 flex items-center justify-between"
-      >
-        <div className="flex items-center gap-2">
-          {/* LOGO */}
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/logo-with-text.png"
-              alt="My Tools – Kalkulator & Tools Online Gratis"
-              width={160}
-              height={48}
-              className="h-10 w-auto"
-              priority
-            />
-          </Link>
-        </div>
+    <header className="sticky top-0 z-[100] w-full border-b border-zinc-100 bg-white/80 backdrop-blur-md">
+      <div ref={ref} className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 
-        {/* MOBILE BUTTON */}
-        <button
-          onClick={() => setMobileOpen(true)}
-          className="md:hidden p-2 rounded-lg hover:bg-gray-100"
-          aria-label="Buka menu"
-        >
-          ☰
-        </button>
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-2 transition hover:opacity-80">
+          <Image
+            src="/logo-with-text.png"
+            alt="My Tools Logo"
+            width={140}
+            height={40}
+            className="h-9 w-auto object-contain"
+            priority
+          />
+        </Link>
 
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link href="/" className="text-indigo-950 hover:text-black">
+        {/* DESKTOP NAV */}
+        <nav className="hidden items-center gap-1 lg:flex">
+          <Link
+            href="/"
+            className={`px-4 py-2 text-sm font-bold transition ${isActive('/') ? 'text-purple-600' : 'text-zinc-600 hover:text-black'}`}
+          >
             Beranda
           </Link>
 
-          <DropdownMenu
+          {/* DRAMA */}
+          <DesktopDropdown
             label="Drama"
-            open={!!open && open.startsWith('drama')} // ✅ Tetap terbuka jika open adalah 'sport' atau 'sport-bola'
+            icon={<Play className="w-4 h-4" />}
+            open={open === 'drama'}
             onToggle={() => toggle('drama')}
           >
-            <NavItem href="/drama/china/channel/dramabox" label="Drama China" />
-            <NavItem href="/drama/korea" label="Drama Korea" />
-          </DropdownMenu>
-          {/* MENU UTAMA: TOOLS */}
-          <DropdownMenu
+            <NavItem href="/drama/china/channel/dramabox" label="Drama China" desc="Trending & Viral" />
+            <NavItem href="/drama/korea" label="Drama Korea" desc="Update Setiap Hari" />
+          </DesktopDropdown>
+
+          {/* TOOLS */}
+          <DesktopDropdown
             label="Tools"
-            open={!!open && open.startsWith('tools')}// ✅ Tetap terbuka jika open adalah 'tools' atau 'tools-...'
+            icon={<Laptop className="w-4 h-4" />}
+            open={open?.startsWith('tools') ?? false}
             onToggle={() => toggle('tools')}
           >
-            {/* SUB MENU: KREATOR */}
-            <DropdownMenu
+            <NestedDropdown
               label="Kreator"
-              open={open === 'tools-kreator'}
+              icon={<Sparkles className="w-3.5 h-3.5" />}
+              isOpen={open === 'tools-kreator'}
               onToggle={() => toggle('tools-kreator')}
-              direction="right"
             >
-              <NavItem href="/kreator/calculate-income" label="Penghasilan Sosial Media" />
-              <NavItem href="/kreator/hashtag" label="Generator Hashtag" />
-              <NavItem href="/kreator/caption" label="Generator Caption" />
-              <NavItem href="/kreator/video-size" label="Estimasi Ukuran Video" />
-              <NavItem href="/kreator/auto-clipper" label="Auto Clipper Video" />
-            </DropdownMenu>
+              <NavItem href="/kreator/calculate-income" label="Income Sosmed" />
+              <NavItem href="/kreator/hashtag" label="Hashtag Gen" />
+              <NavItem href="/kreator/caption" label="Caption Gen" />
+              <NavItem href="/kreator/video-size" label="Video Estimator" />
+            </NestedDropdown>
 
-            {/* SUB MENU: KALKULATOR */}
-            <DropdownMenu
+            <NestedDropdown
               label="Kalkulator"
-              open={open === 'tools-kalkulator'}
+              icon={<Calculator className="w-3.5 h-3.5" />}
+              isOpen={open === 'tools-kalkulator'}
               onToggle={() => toggle('tools-kalkulator')}
-              direction="right"
             >
               <NavItem href="/kalkulator/cicilan" label="Cicilan" />
               <NavItem href="/kalkulator/kpr" label="Simulasi KPR" />
               <NavItem href="/kalkulator/thr" label="THR" />
-              <NavItem href="/kalkulator/zakat" label="Zakat Penghasilan" />
-              <NavItem href="/kalkulator/zakat-fitrah" label="Zakat Fitrah" />
-              <NavItem href="/kalkulator/pph21" label="PPh 21" />
-              <NavItem href="/kalkulator/take-home-pay" label="Gaji Bersih" />
-            </DropdownMenu>
+              <NavItem href="/kalkulator/zakat" label="Zakat" />
+            </NestedDropdown>
+          </DesktopDropdown>
 
-            {/* SUB MENU: KONVERTER */}
-            <DropdownMenu
-              label="Konverter"
-              open={open === 'tools-konverter'}
-              onToggle={() => toggle('tools-konverter')}
-              direction="right"
-            >
-              <NavItem href="/konverter/image" label="Gambar" />
-            </DropdownMenu>
-
-            {/* SUB MENU: KOMPRESS */}
-            <DropdownMenu
-              label="Kompress"
-              open={open === 'tools-kompress'}
-              onToggle={() => toggle('tools-kompress')}
-              direction="right"
-            >
-              <NavItem href="/kompress/gambar" label="Gambar" />
-              <NavItem href="/kompress/pdf" label="PDF" />
-            </DropdownMenu>
-          </DropdownMenu>
-          {/* Ganti kondisi open pada menu induk yang punya sub-menu */}
-          <DropdownMenu
+          {/* SPORT */}
+          <DesktopDropdown
             label="Sport"
-            open={!!open && open.startsWith('sport')} // ✅ Tetap terbuka jika open adalah 'sport' atau 'sport-bola'
+            icon={<Trophy className="w-4 h-4" />}
+            open={open === 'sport'}
             onToggle={() => toggle('sport')}
           >
-            <DropdownMenu
-              label="Sepak Bola"
-              open={open === 'sport-bola'}
-              onToggle={() => toggle('sport-bola')}
-              direction="right"
-            >
-              <NavItem href="/bola/livescore" label="Live Score" />
-              {/* <NavItem href="/bola/liga" label="Liga Dunia" />
-              <NavItem href="/bola/jadwal" label="Jadwal" /> */}
-            </DropdownMenu>
-          </DropdownMenu>
+            <NavItem href="/bola/livescore" label="Live Score" desc="Skor Real-time Liga Dunia" />
+          </DesktopDropdown>
 
-          <Link
+          <Link href="/about" className="px-4 py-2 text-sm font-bold text-zinc-600 hover:text-black">About</Link>
+
+          {/* CTA TRAKTEER */}
+          <a
             href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open"
             target="_blank"
-            rel="noopener sponsored nofollow"
-            className="ml-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow hover:opacity-90 transition"
-            aria-label="Dukung kami lewat Trakteer"
+            className="ml-4 flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-[13px] font-black text-white transition hover:bg-purple-600 active:scale-95 shadow-xl shadow-purple-500/10"
           >
             ☕ Traktir Kopi
-          </Link>
-
-          <Link href="/about" className="text-gray-600 hover:text-black">
-            About
-          </Link>
+          </a>
         </nav>
+
+        {/* MOBILE TRIGGER */}
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="rounded-xl p-2.5 text-zinc-600 hover:bg-zinc-100 lg:hidden"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
       </div>
 
+      {/* MOBILE MENU OVERLAY */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-[100] bg-white overflow-y-auto">
-          {/* HEADER */}
-          <div className="flex items-center justify-between px-4 py-3 border-b">
-            <span className="font-semibold">Menu</span>
+        <div className="fixed inset-0 min-h-screen h-[50dvh] z-[200] bg-white lg:hidden flex flex-col animate-in slide-in-from-right duration-300">
+
+          {/* 1. Header Menu (Tinggi Konsisten) */}
+          <div className="flex items-center justify-between px-8 py-6 border-b border-zinc-50 bg-white">
+            <div className="flex flex-col">
+              <span className="text-xl font-black italic tracking-tighter text-purple-600 leading-none">MY TOOLS.</span>
+              <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-[0.2em] mt-1">Digital Ecosystem</span>
+            </div>
             <button
               onClick={() => setMobileOpen(false)}
-              className="text-xl"
-              aria-label="Tutup menu"
+              className="p-3 bg-zinc-100 text-zinc-600 rounded-2xl hover:bg-zinc-200 transition-all active:scale-90"
             >
-              ✕
+              <X className="w-6 h-6" />
             </button>
           </div>
 
-          <div className="px-4 py-4 text-sm space-y-1">
+          {/* 2. Scrollable Content (Tinggi Maksimal / flex-1) */}
+          <div className="flex-1 overflow-y-auto px-8 py-10 bg-white custom-scrollbar">
+            <div className="flex flex-col min-h-full"> {/* Gunakan min-h-full agar footer bisa didorong ke bawah */}
 
-            {/* BERANDA */}
-            <Link href="/" onClick={() => setMobileOpen(false)} className="block py-2">
-              Beranda
-            </Link>
+              <div className="space-y-8 flex-1">
+                <MobileLink href="/" icon={<Info className="w-5 h-5" />} label="Beranda" />
 
-            {/* DRAMA */}
-            <button
-              onClick={() => toggleMobileMenu('drama')}
-              className="flex w-full justify-between items-center py-2 font-medium"
-            >
-              Drama
-              <span>{mobileMenu === 'drama' ? '▲' : '▼'}</span>
-            </button>
-
-            {mobileMenu === 'drama' && (
-              <div className="ml-4 border-l pl-4">
-                <Link
-                  href="/drama/china/channel/dramabox"
-                  onClick={() => setMobileOpen(false)}
-                  className="block py-2"
-                >
-                  Drama China
-                </Link>
-                <Link
-                  href="/drama/korea"
-                  onClick={() => setMobileOpen(false)}
-                  className="block py-2"
-                >
-                  Drama Korea
-                </Link>
-              </div>
-            )}
-
-            {/* TOOLS */}
-            <button
-              onClick={() => toggleMobileMenu('tools')}
-              className="flex w-full justify-between items-center py-2 font-medium"
-            >
-              Tools
-              <span>{mobileMenu === 'tools' ? '▲' : '▼'}</span>
-            </button>
-
-            {mobileMenu === 'tools' && (
-              <div className="ml-4 border-l pl-4 space-y-1">
-
-                {/* KREATOR */}
-                <button
-                  onClick={() => toggleMobileMenu('kreator')}
-                  className="flex w-full justify-between py-2"
-                >
-                  Kreator
-                  <span>{mobileMenu === 'tools' ? '▲' : '▼'}</span>
-                </button>
-
-                {mobileMenu === 'tools' && (
-                  <div className="ml-4 border-l pl-4 space-y-1">
-                    <NavLinkMobile href="/kreator/calculate-income" close={setMobileOpen}>
-                      Penghasilan Sosial Media
-                    </NavLinkMobile>
-                    <NavLinkMobile href="/kreator/hashtag" close={setMobileOpen}>
-                      Generator Hashtag
-                    </NavLinkMobile>
-                    <NavLinkMobile href="/kreator/caption" close={setMobileOpen}>
-                      Generator Caption
-                    </NavLinkMobile>
-                    <NavLinkMobile href="/kreator/video-size" close={setMobileOpen}>
-                      Estimasi Ukuran Video
-                    </NavLinkMobile>
-                    <NavLinkMobile href="/kreator/auto-clipper" close={setMobileOpen}>
-                      Auto Clipper Video
-                    </NavLinkMobile>
+                <MobileCollapse label="Drama Asia" isOpen={mobileMenu === 'drama'} onToggle={() => toggleMobileMenu('drama')}>
+                  <div className="mt-4 space-y-4 border-l-2 border-purple-100 ml-3 pl-5">
+                    <MobileLink href="/drama/china/channel/dramabox" label="Drama China" sub />
+                    <MobileLink href="/drama/korea" label="Drama Korea" sub />
                   </div>
-                )}
+                </MobileCollapse>
 
-                {/* KALKULATOR */}
-                <button
-                  onClick={() => toggleMobileMenu('kalkulator')}
-                  className="flex w-full justify-between py-2"
-                >
-                  Kalkulator
-                  <span>{mobileMenu === 'tools' ? '▲' : '▼'}</span>
-                </button>
-
-                {mobileMenu === 'tools' && (
-                  <div className="ml-4 border-l pl-4 space-y-1">
-                    <NavLinkMobile href="/kalkulator/cicilan" close={setMobileOpen}>Cicilan</NavLinkMobile>
-                    <NavLinkMobile href="/kalkulator/kpr" close={setMobileOpen}>Simulasi KPR</NavLinkMobile>
-                    <NavLinkMobile href="/kalkulator/thr" close={setMobileOpen}>THR</NavLinkMobile>
-                    <NavLinkMobile href="/kalkulator/zakat" close={setMobileOpen}>Zakat Penghasilan</NavLinkMobile>
-                    <NavLinkMobile href="/kalkulator/zakat-fitrah" close={setMobileOpen}>Zakat Fitrah</NavLinkMobile>
-                    <NavLinkMobile href="/kalkulator/pph21" close={setMobileOpen}>PPh 21</NavLinkMobile>
-                    <NavLinkMobile href="/kalkulator/take-home-pay" close={setMobileOpen}>Gaji Bersih</NavLinkMobile>
+                <MobileCollapse label="Smart Tools" isOpen={mobileMenu === 'tools'} onToggle={() => toggleMobileMenu('tools')}>
+                  <div className="mt-4 space-y-8 border-l-2 border-purple-100 ml-3 pl-5">
+                    <div>
+                      <p className="text-[10px] font-black text-purple-400 uppercase tracking-widest mb-3">Kreator</p>
+                      <div className="space-y-3">
+                        <MobileLink href="/kreator/calculate-income" label="Income Sosmed" sub />
+                        <MobileLink href="/kreator/hashtag" label="Hashtag Generator" sub />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black text-purple-400 uppercase tracking-widest mb-3">Kalkulator</p>
+                      <div className="space-y-3">
+                        <MobileLink href="/kalkulator/cicilan" label="Simulasi Cicilan" sub />
+                        <MobileLink href="/kalkulator/kpr" label="Kalkulator KPR" sub />
+                      </div>
+                    </div>
                   </div>
-                )}
+                </MobileCollapse>
 
-                {/* KONVERTER */}
-                <NavLinkMobile href="/konverter/image" close={setMobileOpen}>
-                  Konverter Gambar
-                </NavLinkMobile>
+                <MobileCollapse label="Sports Center" isOpen={mobileMenu === 'sport'} onToggle={() => toggleMobileMenu('sport')}>
+                  <div className="mt-4 border-l-2 border-purple-100 ml-3 pl-5">
+                    <MobileLink href="/bola/livescore" label="Live Score Bola" sub />
+                  </div>
+                </MobileCollapse>
 
-                {/* KOMPRESS */}
-                <NavLinkMobile href="/kompress/gambar" close={setMobileOpen}>
-                  Kompress Gambar
-                </NavLinkMobile>
-                <NavLinkMobile href="/kompress/pdf" close={setMobileOpen}>
-                  Kompress PDF
-                </NavLinkMobile>
+                <MobileLink href="/about" label="Tentang Kami" />
               </div>
-            )}
 
-            {/* SPORT */}
-            <button
-              onClick={() => toggleMobileMenu('sport')}
-              className="flex w-full justify-between items-center py-2 font-medium"
-            >
-              Sport
-              <span>{mobileMenu === 'sport' ? '▲' : '▼'}</span>
-            </button>
-
-            {mobileMenu === 'sport' && (
-              <div className="ml-4 border-l pl-4">
-                <NavLinkMobile href="/bola/livescore" close={setMobileOpen}>
-                  Live Score
-                </NavLinkMobile>
+              {/* 3. Footer Menu (Nempel di bawah kalau konten sedikit) */}
+              <div className="mt-12 pt-8 border-t border-zinc-100">
+                <p className="text-center text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-6">Support Our Project</p>
+                <a
+                  href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open"
+                  target="_blank"
+                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-zinc-950 py-5 font-black text-white shadow-[0_20px_40px_rgba(0,0,0,0.2)] active:scale-95 transition-all"
+                >
+                  <span className="text-xl">☕</span> Traktir Kopi
+                </a>
+                <p className="text-center text-[9px] text-zinc-400 mt-6 font-medium">© 2026 My Tools Indonesia. v2.1.0</p>
               </div>
-            )}
-
-            {/* ABOUT */}
-            <Link href="/about" onClick={() => setMobileOpen(false)} className="block py-2">
-              About
-            </Link>
-
-            {/* TRAKTEER */}
-            <a
-              href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open"
-              target="_blank"
-              rel="noopener sponsored nofollow"
-              className="mt-6 flex items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-pink-500 py-3 font-semibold text-white"
-            >
-              ☕ Traktir Kopi
-            </a>
+            </div>
           </div>
         </div>
       )}
@@ -336,82 +224,72 @@ export default function Navbar() {
   )
 }
 
-function DropdownMenu({
-  label,
-  open,
-  onToggle,
-  children,
-  direction = 'down', // Default ke bawah
-}: {
-  label: string
-  open: boolean
-  onToggle: () => void
-  children: React.ReactNode
-  direction?: 'down' | 'right'
-}) {
-  const isRight = direction === 'right';
+/* ===============================
+   REUSABLE SUB-COMPONENTS
+=============================== */
 
+function DesktopDropdown({ label, icon, open, onToggle, children }: any) {
   return (
-    <div className={isRight ? "relative w-full" : "relative"}>
+    <div className="relative group">
       <button
-        onClick={(e) => {
-          e.stopPropagation(); // ✅ Penting: Agar klik sub-menu tidak mentrigger parent
-          onToggle();
-        }}
-        className={`w-full text-left cursor-pointer text-gray-600 hover:text-black flex items-center justify-between gap-1 px-4 py-2 ${isRight ? "hover:bg-gray-100" : ""
-          }`}
-        aria-expanded={open}
+        onClick={onToggle}
+        className={`flex items-center gap-1.5 px-4 py-2 text-sm font-bold transition-all rounded-lg hover:bg-zinc-50 ${open ? 'text-purple-600 bg-zinc-50' : 'text-zinc-600'}`}
       >
-        <span className="flex items-center gap-1">
-          {label}
-        </span>
-        <span className="text-[10px]">{isRight ? '▶' : '▾'}</span>
+        {icon} {label}
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
       </button>
-
       {open && (
-        <div
-          className={`absolute z-[60] min-w-52 bg-white border rounded-xl shadow-lg 
-            ${isRight
-              ? 'left-full top-0 -mt-2 ml-1' // ✅ Posisi ke samping kanan
-              : 'right-0 mt-2'               // Posisi standar ke bawah
-            }`}
-        >
-          <ul className="py-2">{children}</ul>
+        <div className="absolute left-0 mt-2 w-64 bg-white border border-zinc-100 rounded-2xl shadow-2xl p-2 animate-in fade-in zoom-in-95 duration-200">
+          {children}
         </div>
       )}
     </div>
   )
 }
 
-function NavItem({ href, label }: { href: string; label: string }) {
+function NestedDropdown({ label, icon, isOpen, onToggle, children }: any) {
   return (
-    <li>
-      <Link
-        href={href}
-        className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
+    <div className="relative">
+      <button
+        onClick={(e) => { e.stopPropagation(); onToggle(); }}
+        className="flex w-full items-center justify-between px-4 py-2 text-[13px] font-bold text-zinc-600 hover:bg-zinc-50 rounded-lg"
       >
-        {label}
-      </Link>
-    </li>
+        <span className="flex items-center gap-2">{icon} {label}</span>
+        <ChevronRight className="w-3.5 h-3.5" />
+      </button>
+      {isOpen && (
+        <div className="absolute left-full top-0 ml-1 w-56 bg-white border border-zinc-100 rounded-2xl shadow-2xl p-2 z-50 animate-in slide-in-from-left-2 duration-200">
+          {children}
+        </div>
+      )}
+    </div>
   )
 }
 
-function NavLinkMobile({
-  href,
-  children,
-  close,
-}: {
-  href: string
-  children: React.ReactNode
-  close: (v: boolean) => void
-}) {
+function NavItem({ href, label, desc }: any) {
   return (
-    <Link
-      href={href}
-      onClick={() => close(false)}
-      className="block py-2 text-gray-600 hover:text-black"
-    >
-      {children}
+    <Link href={href} className="block px-4 py-2.5 rounded-xl hover:bg-purple-50 group transition-all">
+      <p className="text-[13px] font-bold text-zinc-900 group-hover:text-purple-700">{label}</p>
+      {desc && <p className="text-[10px] text-zinc-400 font-medium">{desc}</p>}
+    </Link>
+  )
+}
+
+function MobileCollapse({ label, isOpen, onToggle, children }: any) {
+  return (
+    <div className="border-b border-zinc-50 pb-2">
+      <button onClick={onToggle} className="flex w-full items-center justify-between py-3 text-lg font-black text-zinc-900">
+        {label} <ChevronDown className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      {isOpen && <div className="mt-2 space-y-1">{children}</div>}
+    </div>
+  )
+}
+
+function MobileLink({ href, label, sub }: any) {
+  return (
+    <Link href={href} className={`block py-3 font-bold ${sub ? 'pl-4 text-zinc-500 text-sm' : 'text-lg text-zinc-900'}`}>
+      {label}
     </Link>
   )
 }

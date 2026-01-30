@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import DramaHero from '@/components/drama/dramabox/DramaHero'
 import DramaExplorer from '@/components/drama/dramabox/DramaExplorer'
-import { SectionHeader } from '@/components/ui/SectionHeader' // Pastikan ini reusable
 
 export const metadata: Metadata = {
   title: 'Drama China Viral & Trending Hari Ini | My Tools',

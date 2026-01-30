@@ -3,91 +3,61 @@
 import { useState } from "react"
 import { getEpisodeResolutions } from "@/libs/drama/drakor/drama"
 
-type EpisodeItem = {
-    title: string
-    episode_id: string
-    tag: string
-}
-
 export default function EpisodePlayer({
     episodes,
 }: {
-    episodes: EpisodeItem[]
+    episodes: any[]
 }) {
-    const [activeEpisode, setActiveEpisode] = useState<EpisodeItem | null>(null)
+    const [active, setActive] = useState<any>(null)
     const [loading, setLoading] = useState(false)
-    const [resolutions, setResolutions] = useState<any[]>([])
 
-    async function handlePlay(ep: EpisodeItem) {
-        setActiveEpisode(ep)
+    async function handlePlay(ep: any) {
         setLoading(true)
 
-        try {
-            // ✅ Ambil resolusi pakai episode_id + tag dari episode itu sendiri
-            const data = await getEpisodeResolutions(ep.episode_id, ep.tag)
+        const data = await getEpisodeResolutions(
+            ep.episode_id,
+            ep.tag // ✅ tag dari episode itu sendiri
+        )
 
-            if (data?.resolutions) {
-                setResolutions(data.resolutions)
-            }
-        } catch (err) {
-            console.error("Episode load error:", err)
-        }
-
+        setActive(data)
         setLoading(false)
     }
 
     return (
-        <div className="space-y-6">
-            {/* ============================ */}
-            {/* EPISODE LIST */}
-            {/* ============================ */}
+        <div className="space-y-4">
+            {/* Episode Buttons */}
             <div className="flex flex-wrap gap-2">
                 {episodes.map((ep) => (
                     <button
                         key={ep.episode_id}
                         onClick={() => handlePlay(ep)}
-                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition
-              ${activeEpisode?.episode_id === ep.episode_id
-                                ? "bg-purple-600 text-white"
-                                : "bg-zinc-800 text-white/70 hover:bg-purple-700"
-                            }
-            `}
+                        className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-purple-600 transition"
                     >
                         Episode {ep.title}
                     </button>
                 ))}
             </div>
 
-            {/* ============================ */}
-            {/* LOADING */}
-            {/* ============================ */}
+            {/* Loading */}
             {loading && (
-                <div className="text-sm text-purple-400 animate-pulse">
-                    ⏳ Loading video...
-                </div>
+                <p className="text-sm text-zinc-400 animate-pulse">
+                    Loading episode...
+                </p>
             )}
 
-            {/* ============================ */}
-            {/* VIDEO LINKS */}
-            {/* ============================ */}
-            {!loading && resolutions.length > 0 && (
-                <div className="space-y-3">
-                    <h3 className="text-lg font-bold">Pilih Resolusi:</h3>
-
-                    <div className="flex flex-wrap gap-3">
-                        {resolutions.map((r) => (
-                            <a
-                                key={r.resolution}
-                                href={r.src}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-4 py-2 rounded-lg bg-zinc-900 border border-white/10
-                hover:bg-purple-600 transition text-sm"
-                            >
-                                {r.resolution}
-                            </a>
-                        ))}
-                    </div>
+            {/* Resolutions */}
+            {active?.resolutions && (
+                <div className="space-y-2">
+                    {active.resolutions.map((r: any) => (
+                        <a
+                            key={r.resolution}
+                            href={r.src}
+                            target="_blank"
+                            className="block px-4 py-2 rounded-lg bg-zinc-900 hover:bg-purple-700"
+                        >
+                            ▶ {r.resolution}
+                        </a>
+                    ))}
                 </div>
             )}
         </div>

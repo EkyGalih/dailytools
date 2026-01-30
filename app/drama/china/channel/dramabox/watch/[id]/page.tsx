@@ -1,250 +1,57 @@
+// app/drama/china/channel/dramabox/watch/[id]/page.tsx
+
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import { getDramaByCategory, getDramaDetail, getDramaEpisodes } from '@/libs/drama/dramabox/dramabox'
-import VideoPlayer from '@/components/drama/dramabox/VideoPlayer'
-import DramaBookList from '@/components/drama/dramabox/RelatedVideo'
-import AffiliateProductCard from '@/components/drama/ads/AffiliateProductCard'
-import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
-import AffiliatePopup from '@/components/drama/ads/AffiliatePopup'
-import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
-import DramaShareIcons from '@/components/drama/dramabox/DramaShareIcon'
+import { getDramaDetail, getDramaEpisodes, getDramaByCategory } from '@/libs/drama/dramabox/dramabox'
 import DramaHero from '@/components/drama/dramabox/DramaHero'
+import DramaBookGrid from '@/components/drama/dramabox/DramaBoxGrid'
+import DramaboxPlayer from '@/components/drama/dramabox/VideoPlayer'
 
-export const dynamic = 'force-dynamic'
-
-function pickVideoUrl(ep: any) {
-    const cdn = ep.cdnList?.find((c: any) => c.isDefault) || ep.cdnList?.[0]
-    const video =
-        cdn?.videoPathList?.find((v: any) => v.isDefault) ||
-        cdn?.videoPathList?.[0]
-    return video?.videoPath || ''
-}
-
-export default async function DramaWatchPage({
+export default async function WatchPage({
     params,
-    searchParams,
+    searchParams
 }: {
-    params: Promise<{ id: string }>
-    searchParams: Promise<{ ep?: string; mode?: string }>
+    params: Promise<{ id: string }>,
+    searchParams: Promise<{ ep?: string }>
 }) {
     const { id } = await params
-    const { ep, mode } = await searchParams
+    const { ep } = await searchParams
+    const initialIndex = Math.max(Number(ep ?? 1) - 1, 0)
 
-    const episodeIndex = Math.max(Number(ep ?? 1) - 1, 0)
-    const isVertical = mode === 'vertical'
-
-    const [detail, episodes] = await Promise.all([
+    const [detail, episodes, related] = await Promise.all([
         getDramaDetail(id),
         getDramaEpisodes(id),
+        getDramaByCategory('trending')
     ])
 
     if (!detail || episodes.length === 0) notFound()
 
-    const current = episodes[episodeIndex]
-    if (!current) notFound()
-
-    const videoUrl = pickVideoUrl(current)
-
-    const baseUrl = `/drama/china/channel/dramabox/watch/${id}`
-
-    const nextUrl =
-        episodeIndex + 1 < episodes.length
-            ? `${baseUrl}?ep=${episodeIndex + 2}${isVertical ? '&mode=vertical' : ''
-            }`
-            : undefined
-
-    const prevUrl =
-        episodeIndex > 0
-            ? `${baseUrl}?ep=${episodeIndex}${isVertical ? '&mode=vertical' : ''
-            }`
-            : undefined
-
-    const toggleModeUrl = isVertical
-        ? `${baseUrl}?ep=${episodeIndex + 1}`
-        : `${baseUrl}?ep=${episodeIndex + 1}&mode=vertical`
-
-    const related = await getDramaByCategory('trending')
-    const products = getAffiliateProducts(detail.tags)
-    const popupProduct = getAffiliatePopup()
-    const site = process.env.NEXT_PUBLIC_SITE_URL!
-
     return (
-        <article className="space-y-10">
-            {popupProduct && (
-                <AffiliatePopup
-                    product={popupProduct}
-                    episode={episodeIndex + 1}
+        <div className="bg-[#fafafa] min-h-screen pb-20">
+            <DramaHero activeChannel="dramabox" />
+
+            <main className="max-w-7xl mx-auto px-4 md:px-6 -mt-10 md:-mt-32 relative z-20">
+                {/* CLIENT PLAYER */}
+                <DramaboxPlayer
+                    detail={detail}
+                    episodes={episodes}
+                    initialIndex={initialIndex}
                 />
-            )}
-            <DramaHero />
-            {/* HEADER */}
-            <header className="flex items-start justify-between gap-4 px-8">
-                {/* LEFT */}
-                <div className="space-y-1">
-                    <p className="text-xs uppercase tracking-wide text-gray-100">
-                        Drama China
-                    </p>
 
-                    <h1 className="text-xl md:text-2xl font-bold leading-tight">
-                        {detail.bookName}
-                    </h1>
-
-                    <p className="text-sm text-gray-100">
-                        Episode {episodeIndex + 1}
-                        {current.chapterName && ` • ${current.chapterName}`}
-                        {current.chargeChapter && (
-                            <span className="ml-2 rounded-full bg-yellow-100 px-2 py-0.5 text-xs text-yellow-800">
-                                Premium
-                            </span>
-                        )}
-                    </p>
-                </div>
-
-                {/* RIGHT: BACK BUTTON */}
-                <Link
-                    href={`/drama/china/channel/dramabox/detail/${detail.bookId}`}
-                    aria-label="Kembali ke detail drama"
-                    className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs bg-gradient-to-r from-purple-950 via-indigo-950 to-indigo-950 text-white hover:bg-gray-50 transition"
-                >
-                    <span className="text-sm">←</span>
-                    <span className="hidden sm:inline">Kembali</span>
-                </Link>
-            </header>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-8">
-                {/* LEFT: PLAYER */}
-                <div className="md:col-span-2 space-y-4">
-                    {/* PLAYER */}
-                    <section
-                        className={`mx-auto rounded-2xl overflow-hidden bg-black shadow-lg ${isVertical
-                            ? 'max-w-[420px] aspect-[9/16]'
-                            : 'w-full aspect-video'
-                            }`}
-                    >
-                        {videoUrl ? (
-                            <VideoPlayer
-                                src={videoUrl}
-                                nextUrl={nextUrl}
-                                bookId={id}
-                                episode={episodeIndex + 1}
-                            />
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-white">
-                                Video tidak tersedia
-                            </div>
-                        )}
-                    </section>
-
-                    {/* MODE TOGGLE */}
-                    <div className="flex justify-end">
-                        <Link
-                            href={toggleModeUrl}
-                            className="inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs text-gray-600 hover:bg-gray-50"
-                        >
-                            {isVertical ? '🖥️ Horizontal' : '📱 Vertikal'}
-                        </Link>
+                {/* RELATED SECTION */}
+                <section className="mt-20 space-y-10">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
+                        <div className="space-y-2">
+                            <h2 className="text-3xl font-black tracking-tighter text-zinc-900 uppercase italic">
+                                Drama <span className="text-purple-600">Terpopuler</span>
+                            </h2>
+                            <p className="text-zinc-500 font-medium text-sm">Rekomendasi trending untuk Anda</p>
+                        </div>
                     </div>
-
-                    {/* NAVIGATION + SHARE */}
-                    <nav className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
-
-                        {/* EPISODE NAV */}
-                        <div className="flex flex-1 gap-3">
-                            <Link
-                                href={prevUrl || '#'}
-                                className={`flex-1 text-center text-sm font-medium px-4 py-2.5 rounded-full border transition
-        ${prevUrl
-                                        ? 'hover:bg-indigoe-95'
-                                        : 'pointer-events-none opacity-40'
-                                    }`}
-                            >
-                                ← Sebelumnya
-                            </Link>
-
-                            <Link
-                                href={nextUrl || '#'}
-                                className={`flex-1 text-center text-sm font-semibold px-4 py-2.5 rounded-full transition
-        ${nextUrl
-                                        ? 'bg-gradient-to-r from-purple-950 via-indigo-950 to-indigo-950 text-white hover:bg-gray-900 shadow'
-                                        : 'pointer-events-none opacity-40 border'
-                                    }`}
-                            >
-                                Selanjutnya →
-                            </Link>
-                        </div>
-
-                        {/* SHARE */}
-                        <div className="flex justify-end">
-                            <div className="
-                            flex items-center
-                            rounded-full
-                            bg-white/70
-                            backdrop-blur-md
-                            border
-                            px-3 py-2
-                            shadow-sm
-                            ">
-                                <DramaShareIcons
-                                    title={detail.bookName}
-                                    url={`${site}/drama/china/channel/dramabox/watch/${id}?ep=${episodeIndex + 1}`}
-                                    tags={detail.tags}
-                                />
-                            </div>
-                        </div>
-                    </nav>
-                    <aside className="space-y-3">
-                        <h2 className="text-xl font-bold">Drama Terpopuler</h2>
-                        <DramaBookList
-                            items={related.slice(0, 8)}
-                            variant="grid"
-                        />
-                    </aside>
-                </div>
-                {/* EPISODE LIST */}
-                <section className="space-y-3">
-                    <h2 className="text-lg font-semibold">Daftar Episode</h2>
-
-                    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
-                        {episodes.map((epItem: any, i: number) => {
-                            const isActive = i === episodeIndex
-                            const isLocked = epItem.chargeChapter
-
-                            return (
-                                <Link
-                                    key={epItem.chapterId}
-                                    href={`${baseUrl}?ep=${i + 1}${isVertical ? '&mode=vertical' : ''
-                                        }`}
-                                    aria-label={`Tonton episode ${i + 1}`}
-                                    className={`relative text-xs text-center rounded-lg px-2 py-1.5 border transition ${isActive
-                                        ? 'bg-black text-white border-black'
-                                        : isLocked
-                                            ? 'bg-gray-100 text-gray-400'
-                                            : 'hover:bg-gray-50'
-                                        }`}
-                                >
-                                    Ep {i + 1}
-                                    {isLocked && (
-                                        <span className="absolute -top-1 -right-1 text-[10px]">
-                                            🔒
-                                        </span>
-                                    )}
-                                </Link>
-                            )
-                        })}
+                    <div className="px-4">
+                        <DramaBookGrid items={related.slice(0, 10)} />
                     </div>
-                    <section className="mt-8 space-y-3">
-                        <h3 className="text-sm font-semibold">
-                            Rekomendasi Produk yang Cocok Buat Kamu 🎁
-                        </h3>
-
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            {products.map((p) => (
-                                <AffiliateProductCard key={p.link} product={p} />
-                            ))}
-                        </div>
-                    </section>
                 </section>
-            </div>
-        </article>
+            </main>
+        </div>
     )
 }

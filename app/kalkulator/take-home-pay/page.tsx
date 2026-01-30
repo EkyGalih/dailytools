@@ -4,6 +4,7 @@ import TakeHomePayCalculator from '@/components/kalkulator/TakeHomePayCalculator
 import Link from 'next/link'
 import MarketStockTrend from '@/components/MarketStockComponent'
 import { Wallet, TrendingUp, ShieldCheck, ArrowRight, HelpCircle, Zap } from 'lucide-react'
+import { Suspense } from 'react'
 
 export const metadata: Metadata = {
     title: 'Kalkulator Gaji Bersih (Take Home Pay) Online 2026 | My Tools',
@@ -50,7 +51,9 @@ export default function TakeHomePayPage() {
                                 </div>
                                 <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-zinc-900">Net Salary Calculator</h2>
                             </div>
-                            <TakeHomePayCalculator />
+                            <Suspense fallback={<p className="text-sm text-zinc-400">Loading calculator...</p>}>
+                                <TakeHomePayCalculator />
+                            </Suspense>
                         </div>
 
                         {/* SEO CONTENT CARD */}

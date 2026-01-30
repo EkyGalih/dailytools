@@ -20,13 +20,15 @@ export default function DramaListCard({
   const epsText = eps ? eps.replace(/^E/i, "") : null
 
   return (
-    <Link href={`/drama/korea/${drama.id}`}>
+    <Link href={`/drama/korea/${drama.endpoint}`}>
       <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-zinc-900/40 hover:bg-zinc-800/60 transition">
         {/* Poster kecil */}
         <div className="w-[48px] h-[70px] flex-shrink-0 overflow-hidden rounded-md bg-zinc-800">
           <Image
             src={thumbnail || "/placeholder.jpg"}
             alt={title}
+            width={48}
+            height={70}
             className="w-full h-full object-cover"
           />
         </div>

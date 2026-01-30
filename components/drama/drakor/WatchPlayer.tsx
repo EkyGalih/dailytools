@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import "plyr/dist/plyr.css"
 import Hls from "hls.js"
 import { getAffiliateProducts } from "@/libs/ads/getAffiliateProducts"
+import { getEpisodeResolutions } from "@/libs/drama/drakor/drama"
 
 export default function WatchPlayer({
     episodes,
@@ -46,6 +47,13 @@ export default function WatchPlayer({
             videoRef.current.load()
         }
     }
+
+    useEffect(() => {
+        if (episodes?.length > 0) {
+            setActiveEpisode(episodes[0])
+            setActiveSource(episodes[0]?.resolutions?.[0] ?? null)
+        }
+    }, [])
 
     // ===============================
     // INIT PLAYER ONLY WHEN UNLOCKED
@@ -98,6 +106,7 @@ export default function WatchPlayer({
     // SPONSOR CLICK HANDLER
     // ===============================
     const handleSponsorGate = async () => {
+        // Klik 1–2 = affiliate popup
         if (clickCount < 2) {
             const product =
                 affiliateProducts[clickCount % affiliateProducts.length]
@@ -108,13 +117,43 @@ export default function WatchPlayer({
             return
         }
 
-        // ✅ Unlock Player
+        // ===============================
+        // ✅ Klik ke-3 → Load Video
+        // ===============================
+
+        // Kalau episode belum punya resolutions → fetch dulu
+        if (activeEpisode.resolutions.length === 0) {
+            const res = await getEpisodeResolutions(
+                activeEpisode.episode_id,
+                activeEpisode.tag
+            )
+
+            if (res?.resolutions?.length > 0) {
+                // inject resolutions ke activeEpisode
+                const updatedEpisode = {
+                    ...activeEpisode,
+                    resolutions: res.resolutions,
+                }
+
+                setActiveEpisode(updatedEpisode)
+
+                // set source pertama
+                setActiveSource(res.resolutions[0])
+            } else {
+                alert("Video source gagal dimuat")
+                return
+            }
+        }
+
+        // ===============================
+        // ✅ Unlock Player Setelah Source Ready
+        // ===============================
         setUnlocked(true)
 
-        // ✅ Play AFTER unlock + delay
+        // Play setelah Plyr siap
         setTimeout(() => {
             playerRef.current?.play().catch(() => { })
-        }, 300)
+        }, 400)
     }
 
     // ===============================
@@ -127,7 +166,13 @@ export default function WatchPlayer({
         setClickCount(0)
 
         setActiveEpisode(ep)
-        setActiveSource(ep.resolutions[0])
+
+        // ❌ Jangan setActiveSource kalau resolutions belum ada
+        if (ep.resolutions.length > 0) {
+            setActiveSource(ep.resolutions[0])
+        } else {
+            setActiveSource(null)
+        }
     }
 
     return (
@@ -176,27 +221,29 @@ export default function WatchPlayer({
                 </div>
 
                 {/* Resolution Buttons */}
-                <div className="flex gap-2">
-                    {activeEpisode.resolutions.map((r: any) => (
-                        <button
-                            key={r.resolution}
-                            onClick={() => {
-                                if (activeSource.resolution === r.resolution) return
+                {activeEpisode.resolutions.length > 0 && (
+                    <div className="flex gap-2">
+                        {activeEpisode.resolutions.map((r: any) => (
+                            <button
+                                key={r.resolution}
+                                onClick={() => {
+                                    if (activeSource.resolution === r.resolution) return
 
-                                cleanup()
-                                setUnlocked(false)
-                                setClickCount(0)
-                                setActiveSource(r)
-                            }}
-                            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${activeSource.resolution === r.resolution
-                                ? "bg-purple-600 text-white shadow-lg shadow-purple-600/20"
-                                : "bg-zinc-900 text-zinc-400 hover:bg-zinc-800"
-                                }`}
-                        >
-                            {r.resolution}
-                        </button>
-                    ))}
-                </div>
+                                    cleanup()
+                                    setUnlocked(false)
+                                    setClickCount(0)
+                                    setActiveSource(r)
+                                }}
+                                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${activeSource.resolution === r.resolution
+                                    ? "bg-purple-600 text-white shadow-lg shadow-purple-600/20"
+                                    : "bg-zinc-900 text-zinc-400 hover:bg-zinc-800"
+                                    }`}
+                            >
+                                {r.resolution}
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* =============================== */}
@@ -233,7 +280,7 @@ export default function WatchPlayer({
                                             {String(i + 1).padStart(2, "0")}
                                         </span>
                                         <span className="font-medium truncate">
-                                           Episode {ep.title}
+                                            Episode {ep.title}
                                         </span>
                                     </div>
                                 </button>

@@ -1,11 +1,18 @@
 import { apiFetch } from "@/libs/fetchApi"
 
-const BASE_URL = process.env.BASE_URL_API
+// ✅ Base API URL (must be exposed to client)
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_API
 
-const REVALIDATE_HOME = 300
-const REVALIDATE_LIST = 120
-const REVALIDATE_DETAIL = 600
-const REVALIDATE_SEARCH = 60
+if (!BASE_URL) {
+    throw new Error("NEXT_PUBLIC_BASE_URL_API belum di set di .env")
+}
+
+// ✅ These should match backend Redis TTL
+const REVALIDATE_HOME = 86400       // 1 hari
+const REVALIDATE_LIST = 21600       // 6 jam
+const REVALIDATE_DETAIL = 3600      // 1 jam
+const REVALIDATE_SEARCH = 600       // 10 menit
+const REVALIDATE_EPISODE = 3600     // 1 jam
 
 /**
  * ✅ Ambil semua series (default homepage)
@@ -18,15 +25,11 @@ export async function getHomePage() {
             REVALIDATE_HOME
         );
 
-        if (!BASE_URL) {
-            throw new Error("BASE_URL_API belum di set di .env");
-        }
-
         if (!res.ok) {
             console.error("Homepage fetch failed:", res.status);
             return null;
         }
-        console.log("res", res);
+
         return res.json();
     } catch (err) {
         console.error("getHomePage error:", err);
@@ -44,10 +47,6 @@ export async function getSeries(page: number = 1) {
             `${BASE_URL}/drakorkita/series?page=${page}`,
             REVALIDATE_LIST
         )
-
-        if (!BASE_URL) {
-            throw new Error("BASE_URL_API belum di set di .env");
-        }
 
         if (!res.ok) return null
         return res.json()
@@ -67,10 +66,6 @@ export async function getOngoingSeries(page: number = 1) {
             REVALIDATE_LIST
         )
 
-        if (!BASE_URL) {
-            throw new Error("BASE_URL_API belum di set di .env");
-        }
-
         if (!res.ok) return null
         return res.json()
     } catch (err) {
@@ -86,10 +81,6 @@ export async function getOngoingSeries(page: number = 1) {
 export async function getUpdatedSeries(page: number = 1) {
     try {
         const res = await apiFetch(`${BASE_URL}/drakorkita/series/updated?page=${page}`, REVALIDATE_LIST)
-
-        if (!BASE_URL) {
-            throw new Error("BASE_URL_API belum di set di .env");
-        }
 
         if (!res.ok) return null
         return res.json()
@@ -124,13 +115,16 @@ export async function getCompletedSeries(page: number = 1) {
  */
 export async function getDramaDetail(slug: string) {
     try {
-        const res = await apiFetch(`${BASE_URL}/drakorkita/detail/${slug}`, REVALIDATE_DETAIL)
+        const res = await apiFetch(
+            `${BASE_URL}/drakorkita/detail/${slug}`,
+            REVALIDATE_DETAIL
+        )
 
-        if (!BASE_URL) {
-            throw new Error("BASE_URL_API belum di set di .env");
+        if (!res.ok) {
+            console.error("Detail fetch failed:", res.status)
+            return null
         }
 
-        if (!res.ok) return null
         return res.json()
     } catch (err) {
         console.error("getDramaDetail error:", err)
@@ -145,10 +139,6 @@ export async function getDramaDetail(slug: string) {
 export async function getMovies(page: number = 1) {
     try {
         const res = await apiFetch(`${BASE_URL}/drakorkita/movie?page=${page}`, REVALIDATE_LIST)
-
-        if (!BASE_URL) {
-            throw new Error("BASE_URL_API belum di set di .env");
-        }
 
         if (!res.ok) return null
         return res.json()
@@ -166,10 +156,6 @@ export async function getNewestMovies(page: number = 1) {
     try {
         const res = await apiFetch(`${BASE_URL}/drakorkita/movie/newest?page=${page}`, REVALIDATE_LIST)
 
-        if (!BASE_URL) {
-            throw new Error("BASE_URL_API belum di set di .env");
-        }
-
         if (!res.ok) return null
         return res.json()
     } catch (err) {
@@ -185,10 +171,6 @@ export async function getNewestMovies(page: number = 1) {
 export async function getGenres() {
     try {
         const res = await apiFetch(`${BASE_URL}/drakorkita/genres`, REVALIDATE_HOME)
-
-        if (!BASE_URL) {
-            throw new Error("BASE_URL_API belum di set di .env");
-        }
 
         if (!res.ok) return null
         return res.json()
@@ -215,10 +197,6 @@ export async function getDramaByGenre(
             REVALIDATE_HOME
         )
 
-        if (!BASE_URL) {
-            throw new Error("BASE_URL_API belum di set di .env");
-        }
-
         if (!res.ok) return null
         return res.json()
     } catch (err) {
@@ -240,14 +218,44 @@ export async function searchDrama(query: string, page: number = 1) {
             REVALIDATE_SEARCH
         )
 
-        if (!BASE_URL) {
-            throw new Error("BASE_URL_API belum di set di .env");
-        }
-
         if (!res.ok) return null
         return res.json()
     } catch (err) {
         console.error("searchDrama error:", err)
         return null
     }
+}
+
+/**
+ * ✅ Ambil resolusi video per episode (lazy load)
+ * GET /episode/:id?tag=tv
+ */
+export async function getEpisodeResolutions(
+    episodeId: string,
+    tag: string
+) {
+    if (!episodeId || !tag) return null
+
+    // ✅ Fetch ke API frontend sendiri (NO CORS)
+    const res = await fetch(
+        `/api/drakorkita/episode/${episodeId}?tag=${encodeURIComponent(tag)}`
+    )
+
+    if (!res.ok) return null
+
+    return res.json()
+}
+
+/**
+ * ✅ Safe episode loader (prevents flooding requests)
+ * Only call this when user clicks Play.
+ */
+export async function loadEpisodeOnce(
+    episodeId: string,
+    tag: string,
+    alreadyLoaded: boolean
+) {
+    if (alreadyLoaded) return null
+
+    return getEpisodeResolutions(episodeId, tag)
 }

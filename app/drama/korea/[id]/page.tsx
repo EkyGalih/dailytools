@@ -1,8 +1,8 @@
 import AffiliateMiniPopup from "@/components/drama/ads/AffiliateMiniPopup"
 import DramaCard from "@/components/drama/drakor/DramaCard"
 import DramaHero from "@/components/drama/drakor/DramaHero"
+import EpisodePlayer from "@/components/drama/drakor/EpisodePlayer"
 import RefreshButton from "@/components/drama/drakor/RefreshButton"
-import WatchPlayer from "@/components/drama/drakor/WatchPlayer"
 
 import { getDramaByGenre, getDramaDetail } from "@/libs/drama/drakor/drama"
 import Image from "next/image"
@@ -54,18 +54,33 @@ export default async function DramaDetailPage({
   const { id } = await params
 
   const raw = await getDramaDetail(id)
+  console.log(raw)
 
   if (!raw?.data) {
     return (
-      <main className="p-6 max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold mb-2">
+      <main className="p-6 max-w-3xl mx-auto space-y-4">
+        <h1 className="text-2xl font-bold">
           Drama detail unavailable
         </h1>
+
         <p className="text-zinc-400">
-          Data tidak bisa dimuat. Silakan refresh atau coba lagi nanti.
+          Data tidak bisa dimuat untuk endpoint:
+          <span className="text-purple-400 font-semibold"> {id}</span>
+        </p>
+
+        <p className="text-zinc-500 text-sm">
+          Kemungkinan provider sedang down atau endpoint salah.
+          Silakan refresh atau coba lagi nanti.
         </p>
 
         <RefreshButton />
+
+        <Link
+          href="/drama/korea"
+          className="inline-block text-sm text-purple-400 hover:underline"
+        >
+          ← Kembali ke daftar drama
+        </Link>
       </main>
     )
   }
@@ -246,7 +261,10 @@ export default async function DramaDetailPage({
             </Link>
           </div>
 
-          <WatchPlayer episodes={drama.episodes} genres={drama.genres[0]} />
+          <EpisodePlayer
+            episodes={drama.episodes}
+            tag={drama?.episodes[0]?.tag}
+          />
         </section>
 
         {/* ================================= */}

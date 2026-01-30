@@ -16,11 +16,16 @@ import {
 import { DramaCardItem, GenreItem } from "@/libs/types/drakor"
 import Link from "next/link"
 
+function unwrap(res: any) {
+  return res?.data ?? res
+}
+
 export default async function HomePage({
   searchParams,
 }: {
   searchParams?: Promise<{ q?: string; page?: string; tab?: string; genre?: string }>
 }) {
+
   // ✅ unwrap dulu
   const sp = await searchParams
   const activeGenre = sp?.genre || ""
@@ -46,12 +51,12 @@ export default async function HomePage({
   const isFilterMode = isSearchMode || isGenreMode
 
   // SERIES + MOVIES
-  const homeRes = await getHomePage();
- 
-  const latestEps = homeRes?.data?.latest_eps
-  const seriesRes = homeRes?.data?.latest_series
-  const movieRes = homeRes?.data?.latest_movies
-  const genreRes = await getGenres()
+  const homeRes = unwrap(await getHomePage());
+  const genreRes = unwrap(await getGenres())
+
+  const latestEps = homeRes?.latest_eps
+  const seriesRes = homeRes?.latest_series
+  const movieRes = homeRes?.latest_movies
 
   const series = seriesRes ?? []
   const movies = movieRes ?? []

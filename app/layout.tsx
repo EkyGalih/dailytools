@@ -7,6 +7,7 @@ import GAListener from '@/components/GAListener'
 import Script from 'next/script'
 import NextTopLoader from 'nextjs-toploader'
 import AdsenseScript from '@/components/drama/ads/AdsenseScript'
+import CoffeePopup from '@/components/drama/ads/CoffePopup'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://mytools.web.id'),
@@ -80,6 +81,7 @@ export default function RootLayout({
 
         <main className="w-full">
           {children}
+          <CoffeePopup />
         </main>
 
         <footer className="border-t bg-white mt-12">

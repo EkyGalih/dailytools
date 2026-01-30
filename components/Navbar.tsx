@@ -89,7 +89,7 @@ export default function Navbar() {
           </DesktopDropdown>
 
           <Link href="/about" className="px-4 py-2 text-sm font-bold text-zinc-600 hover:text-black">About</Link>
-          <a href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open" target="_blank" className="ml-4 flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-[13px] font-black text-white transition hover:bg-purple-600 active:scale-95 shadow-xl shadow-purple-500/10">☕ Traktir Kopi</a>
+          <a href="https://trakteer.id/god_suru/showcase?menu=open" target="_blank" className="ml-4 flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-[13px] font-black text-white transition hover:bg-purple-600 active:scale-95 shadow-xl shadow-purple-500/10">☕ Traktir Kopi</a>
         </nav>
 
         {/* MOBILE TRIGGER */}
@@ -184,7 +184,7 @@ export default function Navbar() {
 
               {/* Footer Mobile Menu */}
               <div className="mt-12 pt-8 border-t border-zinc-100">
-                <a href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open" target="_blank" className="flex w-full items-center justify-center gap-3 rounded-2xl bg-zinc-900 py-5 font-black text-white active:scale-95 transition-all">
+                <a href="https://trakteer.id/god_suru/showcase?menu=open" target="_blank" className="flex w-full items-center justify-center gap-3 rounded-2xl bg-zinc-900 py-5 font-black text-white active:scale-95 transition-all">
                   <Coffee className="w-5 h-5 text-amber-400" /> Traktir Kopi
                 </a>
               </div>

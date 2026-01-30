@@ -27,7 +27,7 @@ export default function AffiliateMiniPopup() {
     <div
       className={`fixed bottom-4 ${
         POSITION === 'right' ? 'right-4' : 'left-4'
-      } z-[110]`}
+      } z-[1000]`}
     >
       <div className="relative w-72 rounded-2xl bg-white border shadow-xl p-3">
 

@@ -4,9 +4,9 @@ export const runtime = "nodejs"
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
-    const { id } = params
+    const { id } = await params
 
     const tag = req.nextUrl.searchParams.get("tag")
 
@@ -17,16 +17,25 @@ export async function GET(
         )
     }
 
-    // 🔥 Forward ke backend asli (port 3000 / vercel API)
-    const backendUrl = `${process.env.NEXT_PUBLIC_BASE_URL_API}/drakorkita/episode/${id}?tag=${encodeURIComponent(tag)}`
+    // ✅ Backend URL (port 3000 / vercel backend)
+    const backendUrl = `${process.env.NEXT_PUBLIC_BASE_URL_API}/drakorkita/episode/${id}?tag=${encodeURIComponent(
+        tag
+    )}`
 
-    const res = await fetch(backendUrl, {
-        headers: {
-            "x-api-key": process.env.API_KEY!,
-        },
-    })
+    try {
+        const res = await fetch(backendUrl, {
+            headers: {
+                "x-api-key": process.env.API_KEY!,
+            },
+        })
 
-    const data = await res.json()
+        const data = await res.json()
 
-    return NextResponse.json(data)
+        return NextResponse.json(data)
+    } catch (err) {
+        return NextResponse.json(
+            { message: "error", error: "Backend fetch failed" },
+            { status: 500 }
+        )
+    }
 }

@@ -81,7 +81,17 @@ export default function EpisodePlayer({ episodes }: { episodes: any[] }) {
                                     <p className="text-white font-bold tracking-widest text-lg uppercase">
                                         Klik Untuk Memulai
                                     </p>
-                                    <p className="text-zinc-400 text-sm mt-2 font-medium">Support kami dengan traktir kopi, agar server tetap hidup.</p>
+                                    <p className="text-zinc-400 text-[10px] md:text-sm mt-1 md:mt-2 font-medium leading-relaxed px-6">
+                                        Support kami dengan{" "}
+                                        <a
+                                            href="https://trakteer.id/eky_galih_gunanda/showcase?menu=open"
+                                            target="_blank"
+                                            className="text-purple-400 hover:text-purple-300 underline decoration-purple-400/30 underline-offset-2 transition-colors"
+                                        >
+                                            traktir kopi
+                                        </a>
+                                        , agar server tetap hidup.
+                                    </p>
                                 </div>
                             )}
                         </>

@@ -68,6 +68,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-gray-50 text-gray-900">
+        <Navbar />
         <NextTopLoader
           color="#9333ea" // Warna ungu purple-600 agar match dengan tema kamu
           initialPosition={0.08}
@@ -79,7 +80,6 @@ export default function RootLayout({
           speed={200}
           shadow="0 0 10px #9333ea,0 0 5px #9333ea"
         />
-        <Navbar />
 
         <main className="w-full">
           {children}

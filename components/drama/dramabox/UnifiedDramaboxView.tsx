@@ -163,31 +163,34 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
                                 </div>
                             </div>
 
-                            {/* BARIS 2: TOMBOL AKSI */}
-                            <div className="flex items-center justify-between gap-2 md:gap-3 pt-4 border-t border-zinc-50/50">
-                                {/* TOMBOL SHARE: Sekarang di pojok kiri karena justify-between */}
-                                <div className="p-2 md:p-2.5 bg-zinc-100 rounded-lg md:rounded-xl border border-zinc-200/50 shadow-sm flex-shrink-0">
-                                    <DramaShareIcons title={detail.bookName} url={typeof window !== 'undefined' ? window.location.href : ''} />
-                                </div>
+                            {/* BARIS 2: TOMBOL AKSI - Responsive Layout */}
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-3 pt-5 border-t border-zinc-50/50">
 
-                                {/* GROUP NAVIGASI: Didorong otomatis ke pojok kanan */}
-                                <div className="flex items-center gap-2">
+                                {/* GROUP NAVIGASI: Baris 1 di Mobile, Pojok Kanan di Desktop */}
+                                <div className="flex items-center gap-2 w-full md:w-auto order-1 md:order-2">
                                     <Link
                                         href="/drama/china/channel/dramabox"
-                                        className="flex items-center gap-1.5 px-3 py-2 md:px-5 md:py-2.5 bg-zinc-100 text-zinc-600 text-[9px] md:text-[10px] font-black uppercase rounded-lg md:rounded-xl hover:bg-zinc-200 transition-all border border-zinc-200/50 shadow-sm"
+                                        className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-3.5 md:px-5 md:py-2.5 bg-zinc-100 text-zinc-700 text-[10px] md:text-[11px] font-black uppercase rounded-xl md:rounded-2xl border border-zinc-200/50 shadow-sm active:scale-95 transition-all shadow-sm"
                                     >
-                                        <ArrowLeft className="w-3 h-3 md:w-4 md:h-4" />
-                                        <span className="hidden xs:inline">Daftar Drama</span>
-                                        <span className="xs:hidden">Daftar Drama</span>
+                                        <ArrowLeft className="w-3.5 h-3.5 text-purple-600" />
+                                        <span>Daftar Drama</span>
                                     </Link>
 
                                     <button
                                         onClick={() => setIsVertical(!isVertical)}
-                                        className="flex items-center gap-1.5 px-3 py-2 md:px-5 md:py-2.5 bg-zinc-100 text-zinc-600 text-[9px] md:text-[10px] font-black uppercase rounded-lg md:rounded-xl hover:bg-zinc-200 transition-all border border-zinc-200/50 shadow-sm"
+                                        className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-3.5 md:px-5 md:py-2.5 bg-zinc-100 text-zinc-700 text-[10px] md:text-[11px] font-black uppercase rounded-xl md:rounded-2xl border border-zinc-200/50 shadow-sm active:scale-95 transition-all shadow-sm"
                                     >
-                                        {isVertical ? <Monitor className="w-3.5 h-3.5 md:w-4 md:h-4" /> : <Smartphone className="w-3.5 h-3.5 md:w-4 md:h-4" />}
-                                        <span className="hidden xs:inline">{isVertical ? 'Mode TV' : 'Mode HP'}</span>
+                                        {isVertical ? <Monitor className="w-3.5 h-3.5 text-purple-600" /> : <Smartphone className="w-3.5 h-3.5 text-purple-600" />}
+                                        <span>{isVertical ? 'Mode TV' : 'Mode HP'}</span>
                                     </button>
+                                </div>
+
+                                {/* TOMBOL SHARE: Baris 2 di Mobile (Center), Pojok Kiri di Desktop */}
+                                <div className="w-full md:w-auto flex justify-center md:justify-start p-2.5 md:p-3 bg-zinc-100 rounded-xl md:rounded-2xl border border-zinc-200/50 shadow-sm order-2 md:order-1 active:scale-[0.98] transition-all">
+                                    <DramaShareIcons
+                                        title={detail.bookName}
+                                        url={typeof window !== 'undefined' ? window.location.href : ''}
+                                    />
                                 </div>
                             </div>
                         </div>

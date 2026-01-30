@@ -35,7 +35,6 @@ export default async function ReelShortUnifiedPage({ params }: { params: Promise
 
     if (!detail?.success) notFound()
 
-    // Ambil related dari homepage
     const related = homepage?.data?.lists
         ?.flatMap((block: any) => Array.isArray(block.banners) ? block.banners : [])
         ?.filter((b: any) => b?.jump_param?.book_id && b.jump_param.book_id !== id)
@@ -45,20 +44,22 @@ export default async function ReelShortUnifiedPage({ params }: { params: Promise
         <div className="bg-[#fafafa] min-h-screen pb-20">
             <DramaHero activeChannel="reelshort" />
 
-            <main className="max-w-7xl mx-auto px-4 md:px-6 -mt-20 md:-mt-32 relative z-20">
+            {/* Overlap Card: -mt-10 di mobile, -mt-32 di desktop */}
+            <main className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 -mt-10 md:-mt-32 relative z-20">
                 <UnifiedReelshortView detail={detail} id={id} />
 
                 {/* RELATED SECTION */}
-                <section className="mt-20 space-y-10">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
-                        <div className="space-y-2">
-                            <h2 className="text-3xl font-black tracking-tighter text-zinc-900 uppercase italic">
+                <section className="mt-12 md:mt-20 space-y-8 px-2 md:px-0">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div className="space-y-1 md:space-y-2">
+                            <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-zinc-900 uppercase italic leading-none">
                                 Rekomendasi <span className="text-purple-600">Lainnya</span>
                             </h2>
-                            <p className="text-zinc-500 font-medium text-sm font-bold">Drama pendek pilihan yang sedang populer</p>
+                            <p className="text-zinc-400 font-bold text-[10px] md:text-sm uppercase tracking-wide">Drama pendek pilihan yang sedang populer</p>
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8 px-4">
+                    {/* Grid responsif: 2 kolom di mobile */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-8">
                         {related.map((b: any) => (
                             <ReelShortCard
                                 key={b.b_id}

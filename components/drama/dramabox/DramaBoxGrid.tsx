@@ -83,8 +83,10 @@ export default function DramaBookGrid({ items, limit }: { items: DramaBookItem[]
 
                             {/* Sinopsis disembunyikan di Mobile untuk menghemat ruang */}
                             {b.introduction && (
-                                <p className="mt-3 text-[10px] md:text-[11px] text-zinc-400 line-clamp-2 leading-relaxed font-medium hidden md:block">
-                                    {b.introduction}
+                                <p className="mt-2 text-[10px] md:text-[11px] text-zinc-400 line-clamp-1 leading-relaxed font-medium hidden md:block opacity-80">
+                                    {b.introduction.length > 60
+                                        ? `${b.introduction.substring(0, 60)}...`
+                                        : b.introduction}
                                 </p>
                             )}
 

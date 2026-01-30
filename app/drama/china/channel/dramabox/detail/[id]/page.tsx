@@ -4,6 +4,8 @@ import { Metadata } from 'next'
 import DramaHero from '@/components/drama/dramabox/DramaHero'
 import DramaBookGrid from '@/components/drama/dramabox/DramaBoxGrid'
 import UnifiedDramaboxView from '@/components/drama/dramabox/UnifiedDramaboxView'
+import AffiliateShelf from '@/components/drama/ads/AffiliateShelf'
+import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,7 +14,6 @@ export async function generateMetadata({ params }: { params: any }): Promise<Met
   const detail = await getDramaDetail(id)
   if (!detail) return {}
   const site = process.env.NEXT_PUBLIC_SITE_URL!
-
   return {
     title: `Nonton ${detail.bookName} Subtitle Indonesia | My Tools`,
     description: detail.introduction?.slice(0, 160),
@@ -25,6 +26,7 @@ export async function generateMetadata({ params }: { params: any }): Promise<Met
 
 export default async function DramaChinaUnifiedPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+  const produk = getAffiliateProducts()
 
   const [detail, episodes, related] = await Promise.all([
     getDramaDetail(id),
@@ -55,6 +57,7 @@ export default async function DramaChinaUnifiedPage({ params }: { params: Promis
           </div>
           {/* Grid drama biasanya sudah responsif */}
           <DramaBookGrid items={related.slice(0, 10)} />
+          <AffiliateShelf products={produk} />
         </section>
       </main>
     </div>

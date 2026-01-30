@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Play, Lock, Smartphone, Monitor, Calendar, Info, ChevronLeft, Star, ArrowLeft } from 'lucide-react'
 import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 import DramaShareIcons from '@/components/drama/dramabox/DramaShareIcon'
+import AffiliateShelf from '../ads/AffiliateShelf'
 
 export default function UnifiedDramaboxView({ detail, episodes }: { detail: any, episodes: any[] }) {
     const [isPlaying, setIsPlaying] = useState(false)

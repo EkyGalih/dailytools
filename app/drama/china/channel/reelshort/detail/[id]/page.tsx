@@ -4,6 +4,8 @@ import { getReelShortDetail, getReelShortHomepage } from '@/libs/drama/reelshort
 import DramaHero from '@/components/drama/reelshort/DramaHero'
 import ReelShortCard from '@/components/drama/reelshort/ReelShortCard'
 import UnifiedReelshortView from '@/components/drama/reelshort/UnifiedReelshortView'
+import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
+import AffiliateShelf from '@/components/drama/ads/AffiliateShelf'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,6 +29,8 @@ export async function generateMetadata({ params }: { params: any }): Promise<Met
 
 export default async function ReelShortUnifiedPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
+    const produk = getAffiliateProducts()
+
 
     const [detail, homepage] = await Promise.all([
         getReelShortDetail(id),
@@ -72,6 +76,7 @@ export default async function ReelShortUnifiedPage({ params }: { params: Promise
                             />
                         ))}
                     </div>
+                    <AffiliateShelf products={produk} />
                 </section>
             </main>
         </div>

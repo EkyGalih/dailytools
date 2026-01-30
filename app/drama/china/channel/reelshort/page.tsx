@@ -1,8 +1,10 @@
 import DramaBookSkeleton from '@/components/common/DramaBoxSkleton'
 import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
+import AffiliateShelf from '@/components/drama/ads/AffiliateShelf'
 import DramaHero from '@/components/drama/reelshort/DramaHero'
 import ReelShortCard from '@/components/drama/reelshort/ReelShortCard'
 import ReelShortSearch from '@/components/drama/reelshort/ReelShortSearch'
+import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 import { getReelShortHomepage, searchReelShort } from '@/libs/drama/reelshort/reelshort'
 import { Metadata } from 'next'
 
@@ -19,6 +21,8 @@ export default async function ReelShortPage({
 }) {
   const { q } = await searchParams
   const keyword = q?.trim()
+  const produk = getAffiliateProducts()
+
 
   let items: any[] = []
   let sectionTitle = 'Populer'
@@ -89,6 +93,7 @@ export default async function ReelShortPage({
               ))}
             </div>
           )}
+          <AffiliateShelf products={produk} />
         </div>
       </main>
     </div>

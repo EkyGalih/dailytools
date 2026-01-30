@@ -7,6 +7,8 @@ import DramaHero from '@/components/drama/dramabox/DramaHero'
 import DramaExplorer from '@/components/drama/dramabox/DramaExplorer'
 import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
 import { Metadata } from 'next'
+import AffiliateShelf from '@/components/drama/ads/AffiliateShelf'
+import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
@@ -33,6 +35,8 @@ export default async function DramaCategoryPage({
 
   const mode = classify === 'terpopuler' ? 'terpopuler' : 'terbaru'
   const items = await getDramaByCategory(cat.slug, { classify: mode })
+  const products = getAffiliateProducts()
+
 
   return (
     <div className="bg-[#fafafa] min-h-screen pb-20">
@@ -69,8 +73,8 @@ export default async function DramaCategoryPage({
               <a
                 href={`?classify=terbaru`}
                 className={`flex-1 md:flex-none text-center px-4 py-2 md:px-6 rounded-lg md:rounded-xl text-[11px] md:text-xs font-black uppercase tracking-wider transition-all ${mode === 'terbaru'
-                    ? 'bg-white text-black shadow-sm'
-                    : 'text-zinc-400 hover:text-zinc-600'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-600'
                   }`}
               >
                 Terbaru
@@ -78,8 +82,8 @@ export default async function DramaCategoryPage({
               <a
                 href={`?classify=terpopuler`}
                 className={`flex-1 md:flex-none text-center px-4 py-2 md:px-6 rounded-lg md:rounded-xl text-[11px] md:text-xs font-black uppercase tracking-wider transition-all ${mode === 'terpopuler'
-                    ? 'bg-white text-black shadow-sm'
-                    : 'text-zinc-400 hover:text-zinc-600'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-600'
                   }`}
               >
                 Terpopuler
@@ -90,6 +94,7 @@ export default async function DramaCategoryPage({
           {/* LIST DRAMA - Pastikan DramaExplorer menggunakan grid yang responsif */}
           <div className="min-h-[400px]">
             <DramaExplorer initialItems={items} />
+            <AffiliateShelf products={products} />
           </div>
         </div>
       </main>

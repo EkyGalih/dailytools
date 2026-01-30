@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import DramaHero from '@/components/drama/dramabox/DramaHero'
 import DramaExplorer from '@/components/drama/dramabox/DramaExplorer'
+import AffiliateShelf from '@/components/drama/ads/AffiliateShelf'
+import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 
 export const metadata: Metadata = {
   title: 'Drama China Viral & Trending Hari Ini | My Tools',
@@ -27,6 +29,7 @@ async function getTrendingDramaBox() {
 export default async function DramaChinaPage() {
   const items = await getTrendingDramaBox()
   const safeItems = Array.isArray(items) ? items : []
+  const products = getAffiliateProducts()
 
   if (safeItems.length === 0) {
     return (
@@ -70,6 +73,7 @@ export default async function DramaChinaPage() {
 
           {/* Grid Drama (DramaExplorer biasanya sudah menangani grid-cols internal) */}
           <DramaExplorer initialItems={safeItems} />
+          <AffiliateShelf products={products} />
         </div>
       </main>
 

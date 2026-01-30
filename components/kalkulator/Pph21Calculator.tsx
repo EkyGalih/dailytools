@@ -1,121 +1,184 @@
-import type { Metadata } from 'next'
-import MarketInfo from '@/components/MarketInfo'
-import Pph21Calculator from '@/components/kalkulator/Pph21Calculator'
-import Link from 'next/link'
-import MarketStockTrend from '@/components/MarketStockComponent'
-import { ShieldCheck, TrendingUp, HelpCircle, ArrowRight, Zap, Info } from 'lucide-react'
+'use client'
 
-export const metadata: Metadata = {
-    title: 'Kalkulator PPh 21 Online 2026 – Hitung Pajak Penghasilan | My Tools',
-    description: 'Hitung estimasi PPh 21 karyawan berdasarkan gaji dan status PTKP terbaru. Akurat, gratis, dan sesuai tarif pajak progresif Indonesia.',
-    alternates: { canonical: 'https://mytools.web.id/kalkulator/pph21' }
+import { useState } from 'react'
+import { formatRupiah, parseNumber } from '@/libs/format'
+import { useRouter } from 'next/navigation'
+import { Zap, Calculator, Info, Wallet } from 'lucide-react'
+
+const PTKP_MAP: Record<string, number> = {
+    TK0: 54000000,
+    K0: 58500000,
+    K1: 63000000,
+    K2: 67500000,
+    K3: 72000000,
 }
 
-export default function Pph21Page() {
+const PTKP_OPTIONS = [
+    { label: 'TK/0 (Lajang)', value: 'TK0' },
+    { label: 'K/0 (Menikah)', value: 'K0' },
+    { label: 'K/1', value: 'K1' },
+    { label: 'K/2', value: 'K2' },
+    { label: 'K/3', value: 'K3' },
+]
+
+export default function Pph21Calculator() {
+    const [salaryDisplay, setSalaryDisplay] = useState('10.000.000')
+    const [ptkpKey, setPtkpKey] = useState('TK0')
+    const [loading, setLoading] = useState(false)
+    const [result, setResult] = useState<any>(null)
+    const router = useRouter()
+
+    // Formatter: Ribuan (titik) & Desimal (koma)
+    const formatInput = (value: string) => {
+        if (!value) return ''
+        const cleanValue = value.replace(/[^0-9,]/g, '')
+        const parts = cleanValue.split(',')
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+        return parts.length > 1 ? `${parts[0]},${parts[1].slice(0, 2)}` : parts[0]
+    }
+
+    const calculateProgressiveTax = (pkp: number) => {
+        let tax = 0
+        let remaining = pkp
+        const layers = [
+            { limit: 60000000, rate: 0.05 },
+            { limit: 190000000, rate: 0.15 },
+            { limit: 250000000, rate: 0.25 },
+            { limit: 4500000000, rate: 0.3 },
+            { limit: Infinity, rate: 0.35 },
+        ]
+        for (const layer of layers) {
+            if (remaining <= 0) break
+            const taxable = Math.min(remaining, layer.limit)
+            tax += taxable * layer.rate
+            remaining -= taxable
+        }
+        return Math.round(tax)
+    }
+
+    const calculate = () => {
+        const salaryMonthly = parseNumber(salaryDisplay)
+        if (!salaryMonthly) return
+        setLoading(true)
+
+        setTimeout(() => {
+            const salaryYearly = salaryMonthly * 12
+            const jobCost = Math.min(salaryYearly * 0.05, 6000000)
+            const netIncome = salaryYearly - jobCost
+            const ptkp = PTKP_MAP[ptkpKey]
+            const pkp = Math.max(netIncome - ptkp, 0)
+            const yearlyTax = pkp > 0 ? calculateProgressiveTax(pkp) : 0
+
+            setResult({
+                yearlyTax,
+                monthlyTax: Math.round(yearlyTax / 12),
+                salaryYearly, jobCost, netIncome, ptkp, pkp
+            })
+            setLoading(false)
+        }, 600)
+    }
+
+    const taxString = result?.monthlyTax?.toLocaleString('id-ID') || '0'
+    const getFontSize = (length: number) => {
+        if (length > 13) return 'text-2xl md:text-4xl lg:text-6xl'
+        return 'text-4xl md:text-6xl lg:text-8xl'
+    }
+
     return (
-        <div className="bg-[#fafafa] min-h-screen pb-20">
-            {/* HERO SECTION - Dark Mesh Design */}
-            <header className="relative overflow-hidden bg-[#050505] pt-16 pb-24 md:pt-24 md:pb-48">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full opacity-30">
-                    <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-indigo-900/40 blur-[100px] rounded-full" />
-                    <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-purple-900/30 blur-[100px] rounded-full" />
-                </div>
-
-                <div className="relative max-w-7xl mx-auto px-6">
-                    <div className="flex flex-col items-start gap-4 md:gap-6">
-                        <span className="px-4 py-1.5 text-[10px] font-black tracking-[0.3em] uppercase bg-white/5 border border-white/10 text-indigo-400 rounded-full backdrop-blur-md">
-                            Tax Compliance Tool
-                        </span>
-                        <h1 className="text-4xl md:text-8xl font-black text-white italic tracking-tighter leading-none uppercase">
-                            PPh 21 <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Calculator</span>
-                        </h1>
-                        <p className="max-w-2xl text-zinc-400 text-base md:text-xl font-medium leading-relaxed">
-                            Hitung kewajiban pajak Anda secara transparan. Simulasi pajak progresif berdasarkan
-                            <span className="text-white font-bold"> Penghasilan Kena Pajak (PKP)</span> dan
-                            <span className="text-white font-bold"> Status PTKP</span> terbaru.
-                        </p>
-                    </div>
-                </div>
-            </header>
-
-            {/* MAIN CONTENT - Overlap Grid */}
-            <main className="max-w-7xl mx-auto px-4 md:px-6 -mt-12 md:-mt-32 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-                    {/* CALCULATOR AREA */}
-                    <div className="lg:col-span-2 space-y-8">
-                        <div className="bg-white rounded-[2.5rem] md:rounded-[40px] p-6 md:p-10 shadow-[0_40px_100px_rgba(0,0,0,0.06)] border border-zinc-100">
-                            <div className="flex items-center gap-3 mb-8 ml-2">
-                                <div className="p-2 bg-indigo-50 rounded-xl text-indigo-600">
-                                    <ShieldCheck className="w-5 h-5" />
-                                </div>
-                                <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">Tax Estimation</h2>
-                            </div>
-                            <Pph21Calculator />
+        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* INPUT GRID */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                    <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 ml-1">
+                        <Zap className="w-3 h-3 text-indigo-500" /> Tax Parameters
+                    </label>
+                    <div className="grid gap-5">
+                        <div className="relative group">
+                            <input
+                                type="text" inputMode="decimal" value={salaryDisplay}
+                                onChange={(e) => setSalaryDisplay(formatInput(e.target.value))}
+                                className="w-full bg-white border border-zinc-200 rounded-2xl px-5 py-4 text-zinc-900 font-bold focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 transition-all shadow-sm"
+                            />
+                            <label className="absolute -top-2.5 left-5 px-2 bg-white text-[9px] font-black uppercase text-zinc-400">Gaji Bulanan (Gross)</label>
                         </div>
-
-                        {/* SEO CONTENT CARD */}
-                        <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-zinc-100 space-y-12">
-                            <div className="grid md:grid-cols-2 gap-10">
-                                <div className="space-y-4">
-                                    <div className="flex items-center gap-2 text-indigo-600 font-black text-[10px] uppercase tracking-widest">
-                                        <TrendingUp className="w-4 h-4" /> Dasar Perpajakan
-                                    </div>
-                                    <h2 className="text-2xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">Cara Hitung PPh</h2>
-                                    <p className="text-zinc-500 text-sm leading-relaxed text-justify italic">
-                                        PPh 21 dihitung dari penghasilan bruto setahun dikurangi Biaya Jabatan (maks. 6jt) dan PTKP. Sisanya disebut PKP, yang dikenakan tarif progresif mulai dari 5%.
-                                    </p>
-                                </div>
-                                <div className="space-y-4">
-                                    <div className="flex items-center gap-2 text-purple-600 font-black text-[10px] uppercase tracking-widest">
-                                        <Zap className="w-4 h-4" /> Next Step
-                                    </div>
-                                    <h3 className="text-2xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">Gaji Bersih</h3>
-                                    <div className="grid gap-3">
-                                        <Link href="/kalkulator/take-home-pay" className="flex items-center justify-between p-3 bg-zinc-50 rounded-xl border border-zinc-100 hover:border-indigo-300 transition-all group shadow-sm">
-                                            <span className="text-[10px] font-black uppercase italic text-zinc-600">Hitung Take Home Pay (THP)</span>
-                                            <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-indigo-600 group-hover:translate-x-1" />
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* FAQ SECTION */}
-                            <div className="pt-10 border-t border-zinc-50">
-                                <div className="flex items-center gap-2 mb-8">
-                                    <HelpCircle className="w-5 h-5 text-indigo-600" />
-                                    <h3 className="text-lg font-black uppercase italic tracking-tighter">Pertanyaan Umum</h3>
-                                </div>
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    {[
-                                        { q: "Apa itu PTKP?", a: "Penghasilan Tidak Kena Pajak adalah batas penghasilan yang tidak dikenakan pajak, tergantung status pernikahan." },
-                                        { q: "PPh 21 ditarik bulanan?", a: "Ya, perusahaan biasanya memotong estimasi tahunan yang dibagi ke dalam 12 bulan pembayaran." }
-                                    ].map((f, i) => (
-                                        <div key={i} className="p-5 bg-zinc-50 rounded-2xl border border-zinc-100 hover:bg-white hover:border-indigo-200 transition-all">
-                                            <h4 className="text-xs font-black uppercase tracking-tight text-zinc-900 mb-2">{f.q}</h4>
-                                            <p className="text-[11px] leading-relaxed text-zinc-500">{f.a}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+                        <div className="relative group">
+                            <select
+                                value={ptkpKey}
+                                onChange={(e) => setPtkpKey(e.target.value)}
+                                className="w-full bg-white border border-zinc-200 rounded-2xl px-5 py-4 text-zinc-900 font-bold focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 transition-all shadow-sm appearance-none"
+                            >
+                                {PTKP_OPTIONS.map((opt) => (
+                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                ))}
+                            </select>
+                            <label className="absolute -top-2.5 left-5 px-2 bg-white text-[9px] font-black uppercase text-zinc-400">Status PTKP</label>
                         </div>
                     </div>
-
-                    {/* SIDEBAR AREA */}
-                    <aside className="space-y-8">
-                        <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-zinc-100">
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6 flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> Live Market Info
-                            </h4>
-                            <MarketInfo />
-                        </div>
-                        <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-zinc-100">
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6 uppercase">Global Economy</h4>
-                            <MarketStockTrend />
-                        </div>
-                    </aside>
                 </div>
-            </main>
+
+                <div className="flex flex-col justify-end">
+                    <button
+                        onClick={calculate} disabled={loading}
+                        className="w-full py-5 bg-zinc-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-indigo-600 transition-all active:scale-95 shadow-xl shadow-zinc-200 disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                        {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Calculator className="w-4 h-4" />}
+                        {loading ? 'Analyzing...' : 'Calculate Tax Payout'}
+                    </button>
+                </div>
+            </div>
+
+            {/* RESULT BOX */}
+            {result && (
+                <div className="relative overflow-hidden rounded-[2.5rem] bg-[#0c0c0c] p-8 md:p-12 border border-white/5 shadow-2xl flex flex-col justify-center">
+                    <div className="absolute -top-20 -right-20 w-64 h-64 bg-indigo-600/20 blur-[100px] rounded-full" />
+
+                    <div className="relative z-10 space-y-6">
+                        <header className="flex items-center justify-between">
+                            <span className="text-indigo-400 text-[10px] font-black uppercase tracking-[0.3em]">Monthly Tax Estimator</span>
+                            <div className="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-[8px] font-black text-zinc-500 uppercase">Progressive Rate</div>
+                        </header>
+
+                        <div className="flex flex-col py-2">
+                            <span className="text-xs font-medium text-zinc-600 uppercase tracking-widest mb-1">PPh 21 Per Bulan</span>
+                            <div className="flex items-baseline gap-2 md:gap-3">
+                                <span className="text-xl md:text-2xl font-medium text-zinc-500 italic">Rp</span>
+                                <h2 className={`font-black text-white italic tracking-tighter leading-none transition-all duration-500 ${getFontSize(taxString.length)}`}>
+                                    {taxString}
+                                </h2>
+                            </div>
+                        </div>
+
+                        {/* DETAIL GRID */}
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-8 border-t border-white/5">
+                            <div>
+                                <p className="text-[8px] font-black text-zinc-500 uppercase mb-1">Biaya Jabatan</p>
+                                <p className="text-[11px] font-bold text-zinc-300">{formatRupiah(result.jobCost)}</p>
+                            </div>
+                            <div>
+                                <p className="text-[8px] font-black text-zinc-500 uppercase mb-1">PTKP ({ptkpKey})</p>
+                                <p className="text-[11px] font-bold text-zinc-300">{formatRupiah(result.ptkp)}</p>
+                            </div>
+                            <div>
+                                <p className="text-[8px] font-black text-indigo-400 uppercase mb-1">Total PKP</p>
+                                <p className="text-[11px] font-bold text-zinc-300">{formatRupiah(result.pkp)}</p>
+                            </div>
+                        </div>
+
+                        <div className="pt-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+                            <div className="flex items-center gap-2 text-zinc-600">
+                                <Info className="w-3 h-3 text-indigo-500" />
+                                <p className="text-[9px] font-bold uppercase tracking-widest italic">Estimasi mengikuti tarif Pasal 17 UU PPh</p>
+                            </div>
+                            <button
+                                onClick={() => router.push(`/kalkulator/take-home-pay?pph=${result.monthlyTax}`)}
+                                className="flex items-center gap-2 px-6 py-2.5 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-zinc-300 hover:bg-white/10 hover:text-white transition-all"
+                            >
+                                <Wallet className="w-3.5 h-3.5" /> Hitung Gaji Bersih (THP)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

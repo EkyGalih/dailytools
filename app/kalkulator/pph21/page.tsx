@@ -3,7 +3,7 @@ import MarketInfo from '@/components/MarketInfo'
 import Pph21Calculator from '@/components/kalkulator/Pph21Calculator'
 import Link from 'next/link'
 import MarketStockTrend from '@/components/MarketStockComponent'
-import { ShieldCheck, TrendingUp, HelpCircle, ArrowRight, Zap, Info } from 'lucide-react'
+import { ShieldCheck, TrendingUp, HelpCircle, ArrowRight, Zap } from 'lucide-react'
 
 export const metadata: Metadata = {
     title: 'Kalkulator PPh 21 Online 2026 – Hitung Pajak Penghasilan | My Tools',

@@ -1,192 +1,132 @@
 import type { Metadata } from 'next'
+import ThrCalculator from '@/components/kalkulator/ThrCalculator'
 import MarketInfo from '@/components/MarketInfo'
-import ThrCalculator from '@/components/ThrCalculator'
-import Link from 'next/link'
 import MarketStockTrend from '@/components/MarketStockComponent'
+import Link from 'next/link'
+import { Wallet, TrendingUp, HelpCircle, ArrowRight, Zap, ShieldCheck } from 'lucide-react'
 
 export const metadata: Metadata = {
-    title: 'Kalkulator THR Online – Hitung Tunjangan Hari Raya',
-    description:
-        'Hitung THR karyawan berdasarkan gaji dan masa kerja sesuai ketentuan di Indonesia. Gratis dan mudah digunakan.',
-    other: {
-        // WebApplication + FAQ schema
-        'application/ld+json': JSON.stringify([
-            {
-                '@context': 'https://schema.org',
-                '@type': 'WebApplication',
-                name: 'Kalkulator THR',
-                applicationCategory: 'FinanceApplication',
-                operatingSystem: 'All',
-                offers: {
-                    '@type': 'Offer',
-                    price: '0',
-                    priceCurrency: 'IDR',
-                },
-            },
-            {
-                '@context': 'https://schema.org',
-                '@type': 'FAQPage',
-                mainEntity: [
-                    {
-                        '@type': 'Question',
-                        name: 'Apakah karyawan kontrak berhak menerima THR?',
-                        acceptedAnswer: {
-                            '@type': 'Answer',
-                            text:
-                                'Ya, karyawan kontrak berhak menerima THR selama telah bekerja minimal satu bulan secara terus menerus.',
-                        },
-                    },
-                    {
-                        '@type': 'Question',
-                        name: 'Apakah THR dihitung dari gaji pokok?',
-                        acceptedAnswer: {
-                            '@type': 'Answer',
-                            text:
-                                'THR umumnya dihitung berdasarkan gaji pokok dan tunjangan tetap.',
-                        },
-                    },
-                    {
-                        '@type': 'Question',
-                        name: 'Kapan THR harus dibayarkan?',
-                        acceptedAnswer: {
-                            '@type': 'Answer',
-                            text:
-                                'THR wajib dibayarkan paling lambat 7 hari sebelum hari raya keagamaan.',
-                        },
-                    },
-                ],
-            },
-        ]),
-    },
+    title: 'Kalkulator THR Online 2026 – Hitung Tunjangan Hari Raya | My Tools',
+    description: 'Hitung estimasi THR karyawan berdasarkan gaji dan masa kerja sesuai regulasi terbaru. Gratis, akurat, dan mobile-friendly.',
+    alternates: { canonical: 'https://mytools.web.id/kalkulator/thr' }
 }
 
 export default function ThrPage() {
     return (
-        <section className="space-y-16">
-            {/* MAIN */}
-            {/* HEADER */}
-            <header className="max-w-2xl">
-                <h1 className="text-3xl font-bold tracking-tight">
-                    Kalkulator THR
-                </h1>
+        <div className="bg-[#fafafa] min-h-screen pb-20">
+            {/* HERO SECTION - Dark Mesh Design */}
+            <header className="relative overflow-hidden bg-[#050505] pt-16 pb-24 md:pt-24 md:pb-48">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full opacity-30">
+                    <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-indigo-900/40 blur-[100px] rounded-full" />
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-purple-900/30 blur-[100px] rounded-full" />
+                </div>
 
-                <p className="mt-3 text-gray-600">
-                    Kalkulator THR online untuk menghitung Tunjangan Hari Raya
-                    berdasarkan gaji bulanan dan masa kerja sesuai ketentuan umum
-                    yang berlaku di Indonesia.
-                </p>
+                <div className="relative max-w-7xl mx-auto px-6">
+                    <div className="flex flex-col items-start gap-4 md:gap-6">
+                        <span className="px-4 py-1.5 text-[10px] font-black tracking-[0.3em] uppercase bg-white/5 border border-white/10 text-purple-400 rounded-full backdrop-blur-md">
+                            Employee Benefits Tool
+                        </span>
+                        <h1 className="text-4xl md:text-8xl font-black text-white italic tracking-tighter leading-none uppercase">
+                            THR <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">Calculator</span>
+                        </h1>
+                        <p className="max-w-2xl text-zinc-400 text-base md:text-lg font-medium leading-relaxed">
+                            Hitung hak Tunjangan Hari Raya Anda secara transparan. Sesuai dengan
+                            <span className="text-white font-bold"> Permenaker</span> untuk karyawan tetap maupun kontrak.
+                        </p>
+                    </div>
+                </div>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div className="md:col-span-2 space-y-6">
-                    {/* CALCULATOR */}
-                    <div className="bg-white border rounded-2xl p-6 shadow-sm">
-                        <ThrCalculator />
-                    </div>
-
-                    {/* INTERNAL LINKS */}
-                    <div className="text-sm text-gray-600">
-                        <p>
-                            Perlu menghitung{' '}
-                            <Link
-                                href="/kalkulator/take-home-pay"
-                                className="text-black underline"
-                            >
-                                gaji bersih (take home pay)
-                            </Link>{' '}
-                            atau{' '}
-                            <Link
-                                href="/kalkulator/zakat"
-                                className="text-black underline"
-                            >
-                                zakat penghasilan
-                            </Link>
-                            ? Gunakan kalkulator lainnya di My Tools.
-                        </p>
-                    </div>
-                </div>
-                {/* SIDEBAR */}
-                <aside>
-                    <MarketInfo />
-                </aside>
-            </div>
-
-            {/* SEO CONTENT */}
-            <section className="max-w-5xl space-y-6 text-gray-700 text-sm">
+            {/* MAIN CONTENT - Overlap Card */}
+            <main className="max-w-7xl mx-auto px-4 md:px-6 -mt-12 md:-mt-32 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* KONTEN UTAMA */}
-                    <div className="lg:col-span-2 space-y-4">
-                        <h2 className="text-lg font-semibold text-gray-900">
-                            Cara Menghitung THR
-                        </h2>
 
-                        <p>
-                            Tunjangan Hari Raya (THR) merupakan hak karyawan yang telah
-                            bekerja minimal satu bulan secara terus menerus. Besaran THR
-                            dihitung berdasarkan gaji bulanan dan lama masa kerja.
-                        </p>
+                    {/* CALCULATOR AREA */}
+                    <div className="lg:col-span-2 space-y-8">
+                        <div className="bg-white rounded-[2.5rem] md:rounded-[40px] p-6 md:p-10 shadow-[0_40px_100px_rgba(0,0,0,0.06)] border border-zinc-100">
+                            <div className="flex items-center gap-3 mb-8 ml-2">
+                                <div className="p-2 bg-purple-100 rounded-xl text-purple-600">
+                                    <Wallet className="w-5 h-5" />
+                                </div>
+                                <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-zinc-900">THR Estimation</h2>
+                            </div>
+                            <ThrCalculator />
+                        </div>
 
-                        <p>
-                            Karyawan dengan masa kerja 12 bulan atau lebih berhak menerima
-                            THR sebesar satu bulan gaji. Sedangkan karyawan dengan masa
-                            kerja kurang dari 12 bulan akan menerima THR secara
-                            proporsional sesuai masa kerjanya.
-                        </p>
+                        {/* SEO CONTENT CARD */}
+                        <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-zinc-100 space-y-12">
+                            <div className="grid md:grid-cols-2 gap-10">
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 text-purple-600 font-black text-[10px] uppercase tracking-widest">
+                                        <TrendingUp className="w-4 h-4" /> Regulasi Ketenagakerjaan
+                                    </div>
+                                    <h2 className="text-2xl font-black italic uppercase tracking-tighter text-zinc-900">Hak THR Karyawan</h2>
+                                    <p className="text-zinc-500 text-sm leading-relaxed text-justify">
+                                        THR wajib diberikan kepada karyawan yang telah bekerja minimal <strong>1 bulan</strong>. Jika masa kerja sudah 12 bulan atau lebih, THR senilai 1 bulan gaji. Jika kurang, dihitung secara proporsional.
+                                    </p>
+                                </div>
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 text-purple-600 font-black text-[10px] uppercase tracking-widest">
+                                        <ShieldCheck className="w-4 h-4" /> Keuangan Syariah
+                                    </div>
+                                    <h3 className="text-2xl font-black italic uppercase tracking-tighter text-zinc-900">Zakat & Pajak</h3>
+                                    <div className="grid gap-3">
+                                        <Link href="/kalkulator/zakat" className="flex items-center justify-between p-3 bg-zinc-50 rounded-xl border border-zinc-100 hover:border-purple-300 transition-all group shadow-sm">
+                                            <span className="text-[10px] font-black uppercase italic text-zinc-600">Hitung Zakat Penghasilan</span>
+                                            <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-purple-600 group-hover:translate-x-1" />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <p>
-                            Kalkulator THR ini membantu memberikan estimasi perhitungan THR
-                            dengan cepat dan mudah sebelum hari raya tiba.
-                        </p>
+                            {/* FAQ SECTION */}
+                            <div className="pt-10 border-t border-zinc-50">
+                                <div className="flex items-center gap-2 mb-8">
+                                    <HelpCircle className="w-5 h-5 text-purple-600" />
+                                    <h3 className="text-lg font-black uppercase italic tracking-tighter">FAQ Terpopuler</h3>
+                                </div>
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    {[
+                                        { q: "Kontrak dapat THR?", a: "Ya, PKWT (kontrak) maupun PKWTT (tetap) berhak menerima THR proporsional." },
+                                        { q: "Kapan THR cair?", a: "Paling lambat 7 hari (H-7) sebelum hari raya keagamaan tiba." }
+                                    ].map((f, i) => (
+                                        <div key={i} className="p-5 bg-zinc-50 rounded-2xl border border-zinc-100 hover:bg-white hover:border-purple-200 transition-all">
+                                            <h4 className="text-xs font-black uppercase tracking-tight text-zinc-900 mb-2">{f.q}</h4>
+                                            <p className="text-[11px] leading-relaxed text-zinc-500">{f.a}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                     {/* SIDEBAR */}
-                    <aside className="lg:col-span-1">
-                        <MarketStockTrend />
+                    <aside className="space-y-8">
+                        <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-zinc-100">
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6 flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> Live Market Info
+                            </h4>
+                            <MarketInfo />
+                        </div>
+                        <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-zinc-100">
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6">Stock Momentum</h4>
+                            <MarketStockTrend />
+                        </div>
                     </aside>
                 </div>
-            </section>
+            </main>
 
-            {/* FAQ VISUAL */}
-            <section className="space-y-4">
-                <h3 className="font-semibold text-gray-900">
-                    Pertanyaan yang Sering Diajukan
-                </h3>
-
-                <ul className="space-y-3 text-sm text-gray-600">
-                    <li>
-                        <strong>
-                            Apakah karyawan kontrak dapat THR?
-                        </strong>
-                        <p>
-                            Ya, selama telah bekerja minimal satu bulan secara terus
-                            menerus.
-                        </p>
-                    </li>
-
-                    <li>
-                        <strong>
-                            Apakah THR dihitung dari gaji pokok?
-                        </strong>
-                        <p>
-                            Umumnya dihitung dari gaji pokok dan tunjangan tetap.
-                        </p>
-                    </li>
-
-                    <li>
-                        <strong>
-                            Kapan THR harus dibayarkan?
-                        </strong>
-                        <p>
-                            Paling lambat 7 hari sebelum hari raya keagamaan.
-                        </p>
-                    </li>
-                </ul>
-            </section>
-
-            {/* DISCLAIMER */}
-            <p className="text-xs text-gray-500">
-                💡 Catatan: Hasil perhitungan bersifat estimasi dan mengikuti
-                ketentuan umum yang berlaku.
-            </p>
-        </section>
+            {/* SCHEMA DATA */}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'WebApplication',
+                    name: 'Kalkulator THR Online',
+                    url: 'https://mytools.web.id/kalkulator/thr',
+                    applicationCategory: 'FinanceApplication',
+                    operatingSystem: 'All'
+                })
+            }} />
+        </div>
     )
 }

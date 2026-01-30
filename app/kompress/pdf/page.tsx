@@ -1,129 +1,112 @@
 import type { Metadata } from 'next'
 import PdfCompressor from '@/components/konverter/PdfCompressor'
 import MarketInfo from '@/components/MarketInfo'
-import Link from 'next/link'
 import MarketStockTrend from '@/components/MarketStockComponent'
+import Link from 'next/link'
+import { FileText, ShieldCheck, Zap, ArrowRight, Info, Lock } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Kompres PDF Online – Perkecil Ukuran File PDF',
-  description:
-    'Kompres PDF online untuk memperkecil ukuran file dengan aman langsung di browser. Cocok untuk upload dokumen dan formulir.',
-  other: {
-    'application/ld+json': JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      name: 'Kompres PDF Online',
-      applicationCategory: 'UtilitiesApplication',
-      operatingSystem: 'All',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'IDR',
-      },
-    }),
-  },
+  title: 'Kompres PDF Online – Perkecil Ukuran PDF Aman | My Tools',
+  description: 'Kompres file PDF secara instan langsung di browser. Privasi 100% terjaga karena dokumen tidak diunggah ke server. Cepat, gratis, dan tanpa registrasi.',
+  alternates: { canonical: 'https://mytools.web.id/konverter/pdf-compress' }
 }
 
 export default function PdfCompressPage() {
   return (
-    <section className="space-y-16">
-      {/* HEADER */}
-      <header className="max-w-2xl">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Kompres PDF Online
-        </h1>
-        <p className="mt-3 text-gray-600">
-          Tools kompres PDF online untuk memperkecil ukuran file PDF
-          secara cepat dan aman langsung di browser. Cocok untuk upload
-          formulir, dokumen administrasi, dan kebutuhan sehari-hari.
-        </p>
+    <div className="bg-[#fafafa] min-h-screen pb-20">
+      {/* HERO SECTION - Optimized Dark Mesh */}
+      <header className="relative overflow-hidden bg-[#050505] pt-16 pb-24 md:pt-24 md:pb-48">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full opacity-20 pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-indigo-900/40 blur-[80px] rounded-full transform-gpu will-change-transform" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-900/30 blur-[80px] rounded-full transform-gpu will-change-transform" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-6">
+          <div className="flex flex-col items-start gap-4 md:gap-6 text-left">
+            <span className="px-4 py-1.5 text-[10px] font-black tracking-[0.3em] uppercase bg-white/5 border border-white/10 text-indigo-400 rounded-full backdrop-blur-md flex items-center gap-2">
+              <Lock className="w-3 h-3" /> Secure Local Processing
+            </span>
+            <h1 className="text-4xl md:text-8xl font-black text-white italic tracking-tighter leading-none uppercase">
+              PDF <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">Compressor</span>
+            </h1>
+            <p className="max-w-2xl text-zinc-400 text-base md:text-xl font-medium leading-relaxed">
+              Kecilkan ukuran dokumen tanpa kompromi. Proses
+              <span className="text-white font-bold"> Client-Side</span> memastikan data sensitif Anda tetap berada di perangkat Anda.
+            </p>
+          </div>
+        </div>
       </header>
 
-      {/* CONTENT */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {/* MAIN */}
-        <div className="md:col-span-2 space-y-6">
-          <div className="bg-white border rounded-2xl p-6 shadow-sm max-w-2xl">
-            <PdfCompressor />
-          </div>
-
-          {/* INTERNAL LINK */}
-          <div className="text-sm text-gray-600 max-w-2xl">
-            <p>
-              Perlu memperkecil file lain? Gunakan{' '}
-              <Link
-                href="/kompress/gambar"
-                className="text-black underline"
-              >
-                kompres gambar
-              </Link>{' '}
-              atau{' '}
-              <Link
-                href="/konverter/image"
-                className="text-black underline"
-              >
-                image converter
-              </Link>{' '}
-              untuk kebutuhan format gambar.
-            </p>
-          </div>
-
-          {/* NOTE */}
-          <p className="text-xs text-gray-500 max-w-2xl">
-            💡 Catatan: Proses kompresi dilakukan langsung di browser
-            Anda dan file tidak dikirim ke server, sehingga privasi
-            dokumen tetap terjaga.
-          </p>
-        </div>
-
-        {/* SIDEBAR */}
-        <aside>
-          <MarketInfo />
-        </aside>
-      </div>
-
-      {/* SEO CONTENT */}
-      <section className="max-w-5xl space-y-6 text-gray-700 text-sm">
+      {/* MAIN CONTENT - Overlap Grid */}
+      <main className="max-w-7xl mx-auto px-4 md:px-6 -mt-12 md:-mt-32 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* KONTEN UTAMA */}
-          <div className="lg:col-span-2 space-y-4">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Tentang Kompres PDF Online
-            </h2>
 
-            <p>
-              Kompres PDF adalah proses memperkecil ukuran file PDF agar lebih
-              mudah diunggah dan dibagikan. File PDF dengan ukuran besar sering
-              menjadi kendala saat upload ke sistem pendaftaran, email, atau
-              portal administrasi.
-            </p>
+          {/* TOOL AREA */}
+          <div className="lg:col-span-2 space-y-8">
+            <div className="bg-white rounded-[2.5rem] md:rounded-[40px] p-6 md:p-10 shadow-[0_40px_100px_rgba(0,0,0,0.06)] border border-zinc-100">
+              <div className="flex items-center gap-3 mb-8 ml-2">
+                <div className="p-2 bg-indigo-50 rounded-xl text-indigo-600">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-zinc-900">Document Optimizer</h2>
+              </div>
+              <PdfCompressor />
+            </div>
 
-            <p>
-              Dengan tools kompres PDF berbasis browser, pengguna dapat
-              memperkecil ukuran file PDF tanpa perlu menginstal aplikasi
-              tambahan. Proses dilakukan secara lokal sehingga lebih aman
-              dan cepat.
-            </p>
-
-            <p>
-              Tools ini cocok digunakan untuk mahasiswa, pekerja, maupun
-              pengguna umum yang membutuhkan file PDF dengan ukuran lebih
-              kecil tanpa mengurangi keterbacaan dokumen.
-            </p>
+            {/* SEO CONTENT CARD */}
+            <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-zinc-100 space-y-12">
+              <div className="grid md:grid-cols-2 gap-10 text-justify text-sm">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-indigo-600 font-black text-[10px] uppercase tracking-widest leading-none">
+                    <ShieldCheck className="w-4 h-4" /> Privacy-First Architecture
+                  </div>
+                  <h2 className="text-2xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">Keamanan Dokumen</h2>
+                  <p className="text-zinc-500 leading-relaxed italic">
+                    Kami memahami pentingnya privasi. File PDF Anda diproses menggunakan <strong>WebAssembly</strong> langsung di browser. Tidak ada data yang dikirim ke internet.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-indigo-600 font-black text-[10px] uppercase tracking-widest leading-none">
+                    <Zap className="w-4 h-4" /> Multi-Tool Ecosystem
+                  </div>
+                  <h3 className="text-2xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">Konversi Lainnya</h3>
+                  <div className="grid gap-3">
+                    <Link href="/kompress/gambar" className="flex items-center justify-between p-3 bg-zinc-50 rounded-xl border border-zinc-100 hover:border-indigo-300 transition-all group shadow-sm">
+                      <span className="text-[10px] font-black uppercase italic text-zinc-600">Kompres Gambar Online</span>
+                      <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-indigo-600 group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* SIDEBAR */}
-          <aside className="lg:col-span-1">
-            <MarketStockTrend />
+          {/* SIDEBAR AREA */}
+          <aside className="space-y-8">
+            <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-zinc-100">
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> Market Analytics
+              </h4>
+              <MarketInfo />
+            </div>
+            <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-zinc-100">
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6 uppercase">Stock Trends</h4>
+              <MarketStockTrend />
+            </div>
           </aside>
         </div>
-      </section>
+      </main>
 
-      {/* DISCLAIMER */}
-      <p className="text-xs text-gray-500 max-w-3xl">
-        💡 Catatan: Hasil kompresi dapat berbeda tergantung struktur,
-        jumlah halaman, dan isi file PDF asli.
-      </p>
-    </section>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: 'Kompres PDF Online',
+          url: 'https://mytools.web.id/konverter/pdf-compress',
+          applicationCategory: 'UtilitiesApplication',
+          operatingSystem: 'All'
+        })
+      }} />
+    </div>
   )
 }

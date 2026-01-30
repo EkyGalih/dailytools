@@ -7,8 +7,9 @@ import { usePathname } from 'next/navigation'
 import {
   Menu, X, ChevronDown, ChevronRight,
   Sparkles, Calculator, Play, Trophy,
-  Info, ExternalLink, Hash, Laptop
+  Info, Laptop
 } from 'lucide-react'
+import { BsFileZip } from 'react-icons/bs'
 
 export default function Navbar() {
   const [open, setOpen] = useState<string | null>(null)
@@ -101,6 +102,16 @@ export default function Navbar() {
             </NestedDropdown>
 
             <NestedDropdown
+              label="Konversi"
+              icon={<BsFileZip className="w-3.5 h-3.5" />}
+              isOpen={open === 'tools-konversi'}
+              onToggle={() => toggle('tools-konversi')}
+            >
+              <NavItem href="/kompress/gambar" label="Gambar" />
+              <NavItem href="/kompress/pdf" label="PDF" />
+            </NestedDropdown>
+
+            <NestedDropdown
               label="Kalkulator"
               icon={<Calculator className="w-3.5 h-3.5" />}
               isOpen={open === 'tools-kalkulator'}
@@ -109,7 +120,11 @@ export default function Navbar() {
               <NavItem href="/kalkulator/cicilan" label="Cicilan" />
               <NavItem href="/kalkulator/kpr" label="Simulasi KPR" />
               <NavItem href="/kalkulator/thr" label="THR" />
-              <NavItem href="/kalkulator/zakat" label="Zakat" />
+              <NavItem href="/kalkulator/zakat-fitrah" label="Zakat Fitrah" />
+              <NavItem href="/kalkulator/zakat" label="Zakat Mall" />
+              <NavItem href="/kalkulator/take-home-pay" label="Gaji Bersih" />
+              <NavItem href="/kalkulator/pph21" label="PPH 21" />
+              <NavItem href="/kalkulator/fidya" label="Fidya" />
             </NestedDropdown>
           </DesktopDropdown>
 

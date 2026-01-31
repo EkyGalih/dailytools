@@ -20,10 +20,15 @@ export default function AnimeSearch({ onSearchResult }: Props) {
 
         setLoading(true)
         const res = await searchAnime(query)
-        onSearchResult(res?.data || [], query)
+        onSearchResult(res?.data?.anime_list || [], query)
         setLoading(false)
     }
 
+    const handleReset = () => {
+        setQuery('')
+        onSearchResult(null, '')
+    }
+    
     return (
         <div className="mb-8">
             <form onSubmit={handleSearch} className="relative group">

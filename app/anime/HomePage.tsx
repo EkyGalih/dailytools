@@ -5,7 +5,6 @@ import AnimeCard from "@/components/anime/AnimeCard";
 import AnimeHero from "@/components/anime/AnimeHero";
 import GenreSidebar from "@/components/anime/GenreSidebar";
 import AnimeSearch from "@/components/anime/AnimeSearch";
-import AnimeCardGenre from '@/components/anime/AnimeCardGenre';
 
 export default function HomePageClient({ initialData, genres }: { initialData: any, genres: any }) {
     const [searchResults, setSearchResults] = useState<any[] | null>(null)
@@ -27,20 +26,24 @@ export default function HomePageClient({ initialData, genres }: { initialData: a
                                     <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-widest border-l-4 border-orange-600 pl-4">
                                         Hasil Pencarian: <span className="text-orange-500">{searchQuery}</span>
                                     </h2>
-                                    <button
-                                        onClick={() => { setSearchResults(null); setSearchQuery('') }}
-                                        className="text-xs font-bold text-orange-500 hover:underline"
-                                    >
-                                        Bersihkan
-                                    </button>
+                                    <AnimeSearch onSearchResult={(data, query) => {
+                                        setSearchResults(data)
+                                        setSearchQuery(query)
+                                    }} />
                                 </div>
 
                                 {searchResults && searchResults.length > 0 ? (
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                                        {searchResults?.anime_list?.map((anime: any) => (
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 mb-16">
+                                        {searchResults?.map((anime: any) => (
                                             <AnimeCard
                                                 key={anime.endpoint}
-                                                {...anime}
+                                                title={anime.title}
+                                                thumbnail={anime.thumbnail}
+                                                endpoint={anime.endpoint}
+                                                episode={anime.status}
+                                                info={anime.rating !== "-" ? `⭐ ${anime.rating}` : "N/A"}
+                                                update={anime.genres?.[0] || ""}
+                                                link=""
                                             />
                                         ))}
                                     </div>
@@ -84,10 +87,6 @@ export default function HomePageClient({ initialData, genres }: { initialData: a
 
                     {/* RIGHT CONTENT: SEARCH & SIDEBAR */}
                     <div className="col-span-12 lg:col-span-3">
-                        <AnimeSearch onSearchResult={(data, query) => {
-                            setSearchResults(data)
-                            setSearchQuery(query)
-                        }} />
                         <GenreSidebar genres={genres} activeSlug="" />
                     </div>
 

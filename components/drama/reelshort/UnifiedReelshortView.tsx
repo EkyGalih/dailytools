@@ -50,8 +50,11 @@ export default function UnifiedReelshortView({ detail, id }: { detail: any, id: 
         const epNum = index + 1
         if (!isPlaying) setIsPlaying(true)
 
+        // GAP iklan tiap 10 episode tetap jalan
         if (isAdGap) {
-            openAd(); setIsAdGap(false)
+            openAd()
+            setIsAdGap(false)
+
             setTimeout(() => videoRef.current?.play(), 500)
             return
         }
@@ -59,17 +62,16 @@ export default function UnifiedReelshortView({ detail, id }: { detail: any, id: 
         const count = (clickCount[index] || 0) + 1
         setClickCount(prev => ({ ...prev, [index]: count }))
 
+        // ✅ Klik pertama → iklan + load episode
         if (count === 1) {
             openAd()
             setCurrentIndex(index)
             await fetchEpisode(epNum)
             return
         }
-        if (count === 2) {
-            openAd()
-            return
-        }
-        if (count >= 3 && videoRef.current) {
+
+        // ✅ Klik kedua → play langsung
+        if (count >= 2 && videoRef.current) {
             videoRef.current.play()
         }
     }
@@ -129,7 +131,7 @@ export default function UnifiedReelshortView({ detail, id }: { detail: any, id: 
                                     {loading ? (
                                         <div className="absolute inset-0 flex items-center justify-center text-white font-black uppercase text-[10px] tracking-widest animate-pulse">Loading Source...</div>
                                     ) : videoUrl ? (
-                                        <video ref={videoRef} src={videoUrl} controls onEnded={handleVideoEnded} className="w-full h-full object-contain" autoPlay={(clickCount[currentIndex] || 0) >= 3} />
+                                        <video ref={videoRef} src={videoUrl} controls onEnded={handleVideoEnded} className="w-full h-full object-contain" autoPlay={(clickCount[currentIndex] || 0) >= 2} />
                                     ) : (
                                         <div className="absolute inset-0 flex items-center justify-center text-zinc-500 text-[10px] font-black uppercase tracking-widest text-center px-4">
                                             Video Tidak Tersedia atau Sedang Maintenance
@@ -137,7 +139,7 @@ export default function UnifiedReelshortView({ detail, id }: { detail: any, id: 
                                     )}
 
                                     {/* Overlay 3x Klik */}
-                                    {(clickCount[currentIndex] || 0) < 3 && !isAdGap && !loading && (
+                                    {(clickCount[currentIndex] || 0) < 2 && !isAdGap && !loading && (
                                         <div onClick={() => handleAction(currentIndex)} className="absolute inset-0 z-30 bg-zinc-950/90 backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer p-4 text-center">
                                             <div className="w-14 h-14 md:w-16 md:h-16 bg-purple-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-purple-500/50">
                                                 <Play className="w-6 h-6 md:w-8 md:h-8 text-white fill-current ml-1" />
@@ -151,7 +153,7 @@ export default function UnifiedReelshortView({ detail, id }: { detail: any, id: 
                                     {/* Overlay Ad Gap */}
                                     {isAdGap && (
                                         <div onClick={() => handleAction(currentIndex)} className="absolute inset-0 z-40 bg-purple-900/95 backdrop-blur-3xl flex flex-col items-center justify-center cursor-pointer text-center p-6">
-                                            <div className="w-16 h-16 md:w-20 md:h-20 bg-white text-purple-600 rounded-full flex items-center justify-center mb-6 animate-bounce shadow-2xl font-black text-xl md:text-2xl">10+</div>
+                                            <div className="w-16 h-16 md:w-20 md:h-20 bg-white text-purple-600 flex items-center justify-center mb-6 animate-bounce shadow-2xl font-black text-xl md:text-2xl">10+</div>
                                             <h2 className="text-white text-lg md:text-2xl font-black italic uppercase tracking-tighter leading-tight">Support & Lanjut</h2>
                                             <p className="text-purple-200 text-[10px] md:text-xs mt-2 font-bold uppercase tracking-widest leading-none">Klik untuk Lanjut Episode {currentIndex + 1}</p>
                                         </div>
@@ -250,7 +252,22 @@ export default function UnifiedReelshortView({ detail, id }: { detail: any, id: 
                                 return (
                                     <button
                                         key={i}
-                                        onClick={() => { setIsAdGap(false); handleAction(i) }}
+                                        onClick={async () => {
+                                            setIsAdGap(false)
+                                            setIsPlaying(true)
+                                            setCurrentIndex(i)
+
+                                            // langsung fetch episode tanpa iklan
+                                            await fetchEpisode(i + 1)
+
+                                            // langsung play setelah load
+                                            setTimeout(() => {
+                                                videoRef.current?.play()
+                                            }, 400)
+
+                                            // tandai sudah play
+                                            setClickCount(prev => ({ ...prev, [i]: 2 }))
+                                        }}
                                         className={`relative flex flex-col items-center justify-center p-3 md:p-4 rounded-xl md:rounded-2xl border transition-all duration-300 ${isActive
                                             ? 'bg-purple-600 border-purple-600 text-white shadow-lg scale-95 shadow-purple-500/30'
                                             : 'bg-white border-zinc-200/60 text-zinc-400 hover:border-purple-300 active:bg-zinc-50'

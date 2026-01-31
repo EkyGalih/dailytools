@@ -13,42 +13,63 @@ export default function EpisodePlayer({ episodes }: { episodes: any[] }) {
 
     const openAd = () => {
         const products = getAffiliateProducts(["DEFAULT"])
-        if (products?.length > 0) {
-            const random = products[Math.floor(Math.random() * products.length)]
-            if (random?.link) window.open(random.link, "_blank")
+        const random = products[Math.floor(Math.random() * products.length)]
+
+        if (random?.link) {
+            const a = document.createElement("a")
+            a.href = random.link
+            a.target = "_blank"
+            a.rel = "noopener noreferrer"
+            a.click()
         }
     }
 
-    async function handleEpisodeClick(ep: any) {
-        const currentCount = (clickCount[ep.episode_id] || 0) + 1
+    function handleOverlayClick() {
+        if (!active) return;
 
+        const episodeId = active.episode_id;
+        const currentCount = (clickCount[episodeId] || 0) + 1;
+
+        // ✅ KLIK KE-1: PAKSA BUKA IKLAN DULUAN
         if (currentCount === 1) {
-            setClickCount(prev => ({ ...prev, [ep.episode_id]: 1 }))
-            openAd()
-            if (active?.episode_id !== ep.episode_id) {
-                setLoading(true)
-                const data = await getEpisodeResolutions(ep.episode_id, ep.tag)
-                if (data?.resolutions?.length > 0) {
-                    setActive(data)
-                    setSelectedResolution(data.resolutions[0])
-                }
-                setLoading(false)
-            }
-            return
+            openAd(); // Panggil secara sinkronus agar tidak diblokir browser
+
+            // Update state setelah window.open dipanggil
+            setClickCount(prev => ({
+                ...prev,
+                [episodeId]: currentCount
+            }));
+            return;
         }
 
-        if (currentCount === 2) {
-            setClickCount(prev => ({ ...prev, [ep.episode_id]: 2 }))
-            openAd()
-            return
-        }
+        // ✅ KLIK KE-2: PLAY VIDEO
+        if (currentCount >= 2) {
+            setClickCount(prev => ({
+                ...prev,
+                [episodeId]: currentCount
+            }));
 
-        if (currentCount >= 3) {
-            setClickCount(prev => ({ ...prev, [ep.episode_id]: 3 }))
             if (videoRef.current) {
-                videoRef.current.play().catch(() => console.log("Play interrupted"))
+                videoRef.current.play().catch(() => console.log("Play interrupted"));
             }
         }
+    }
+
+    async function handleEpisodeSelect(ep: any) {
+        setLoading(true);
+        const data = await getEpisodeResolutions(ep.episode_id, ep.tag);
+
+        if (data?.resolutions?.length > 0) {
+            setActive(data);
+            setSelectedResolution(data.resolutions[0]);
+
+            // Set ke 0 agar overlay muncul dan klik pertama wajib iklan
+            setClickCount(prev => ({
+                ...prev,
+                [ep.episode_id]: 0
+            }));
+        }
+        setLoading(false);
     }
 
     return (
@@ -72,7 +93,7 @@ export default function EpisodePlayer({ episodes }: { episodes: any[] }) {
                             {/* Overlay 3x Click */}
                             {(clickCount[active.episode_id] || 0) < 3 && (
                                 <div
-                                    onClick={() => handleEpisodeClick(active)}
+                                    onClick={handleOverlayClick}
                                     className="absolute inset-0 bg-zinc-900/80 backdrop-blur-md flex flex-col items-center justify-center cursor-pointer z-20 transition-all hover:bg-zinc-900/70"
                                 >
                                     <div className="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(147,51,234,0.5)] mb-4 animate-pulse">
@@ -170,7 +191,7 @@ export default function EpisodePlayer({ episodes }: { episodes: any[] }) {
                         return (
                             <button
                                 key={ep.episode_id}
-                                onClick={() => handleEpisodeClick(ep)}
+                                onClick={() => handleEpisodeSelect(ep)}
                                 className={`w-full group flex items-center justify-between p-3 rounded-xl border transition-all duration-300 ${isActive
                                     ? "bg-purple-600/10 border-purple-500/50 shadow-[inset_0_0_20px_rgba(147,51,234,0.1)]"
                                     : "bg-zinc-900/40 border-white/5 hover:border-white/20 hover:bg-zinc-800/60"
@@ -197,9 +218,9 @@ export default function EpisodePlayer({ episodes }: { episodes: any[] }) {
                                     </div>
                                 )}
 
-                                {!isActive && count > 0 && count < 3 && (
+                                {!isActive && count > 0 && count < 2 && (
                                     <span className="text-[9px] bg-zinc-700 text-zinc-300 px-1.5 py-0.5 rounded font-black">
-                                        {count}/3
+                                        {count}/2
                                     </span>
                                 )}
                             </button>

@@ -1,4 +1,3 @@
-import AffiliateMiniPopup from "@/components/drama/ads/AffiliateMiniPopup"
 import DramaCard from "@/components/drama/drakor/DramaCard"
 import DramaHero from "@/components/drama/drakor/DramaHero"
 import EpisodePlayer from "@/components/drama/drakor/EpisodePlayer"
@@ -6,7 +5,7 @@ import RefreshButton from "@/components/drama/drakor/RefreshButton"
 import { getDramaByGenre, getDramaDetail } from "@/libs/drama/drakor/drama"
 import Image from "next/image"
 import Link from "next/link"
-import { Sparkles, Star, Calendar, Globe, Film, ChevronRight, PlayCircle, User2, Download, MonitorPlay, ArrowLeft } from "lucide-react"
+import { Sparkles, Star, Calendar, Globe, Film, ChevronRight, PlayCircle, ArrowLeft } from "lucide-react"
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -49,7 +48,6 @@ export default async function DramaDetailPage({ params }: { params: Promise<{ id
 
   return (
     <main className="bg-[#fafafa] min-h-screen pb-20">
-      <AffiliateMiniPopup />
       <div className="max-w-7xl mx-auto px-4 md:px-6 space-y-12">
         <DramaHero />
 

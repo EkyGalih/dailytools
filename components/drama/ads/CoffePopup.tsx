@@ -2,21 +2,20 @@
 
 import { useState, useEffect } from 'react'
 
-export default function CoffeePopupTop() {
+export default function CoffeePopupBottom() {
     const [mounted, setMounted] = useState(false)
     const [isVisible, setIsVisible] = useState(true)
-    const TRAKTEER_URL = 'https://trakteer.id/god_suru/showcase?menu=open' // Ganti dengan URL kamu
+    const TRAKTEER_URL = 'https://trakteer.id/god_suru/showcase?menu=open'
 
     useEffect(() => {
-        // Langsung set mounted ke true agar muncul seketika di browser
         setMounted(true)
     }, [])
 
-    // Cegah render di server-side untuk menghindari hydration mismatch
     if (!mounted || !isVisible) return null
 
     return (
-        <div className="fixed top-6 right-6 z-[1000] animate-in fade-in slide-in-from-top-4 duration-500">
+        // PERUBAHAN: Dari top-6 ke bottom-6, dan slide-in dari bottom
+        <div className="fixed bottom-6 right-6 z-[1000] animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="relative group">
 
                 {/* Tombol Close */}
@@ -41,6 +40,11 @@ export default function CoffeePopupTop() {
                     {/* Ikon Kopi */}
                     <div className="relative w-11 h-11 bg-gradient-to-br from-orange-100 to-amber-50 rounded-xl flex items-center justify-center shrink-0 group-hover:rotate-12 transition-transform">
                         <span className="text-2xl" role="img" aria-label="Coffee">☕</span>
+                        {/* Efek Ping di Ikon agar lebih menarik perhatian di pojok bawah */}
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                        </span>
                     </div>
 
                     {/* Teks */}

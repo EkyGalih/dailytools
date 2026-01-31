@@ -34,16 +34,30 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
 
     const handleAction = (index: number) => {
         if (!isPlaying) setIsPlaying(true)
+
+        // Kalau lagi adGap (per 10 episode)
         if (isAdGap) {
-            openAd(); setIsAdGap(false)
+            openAd()
+            setIsAdGap(false)
+
             setTimeout(() => videoRef.current?.play(), 500)
             return
         }
+
         const count = (clickCount[index] || 0) + 1
         setClickCount(prev => ({ ...prev, [index]: count }))
-        if (count === 1) { openAd(); setCurrentIndex(index); return }
-        if (count === 2) { openAd(); return }
-        if (count >= 3 && videoRef.current) videoRef.current.play()
+
+        // ✅ Klik pertama → iklan
+        if (count === 1) {
+            openAd()
+            setCurrentIndex(index)
+            return
+        }
+
+        // ✅ Klik kedua → play
+        if (count >= 2 && videoRef.current) {
+            videoRef.current.play()
+        }
     }
 
     const handleVideoEnded = () => {
@@ -60,7 +74,7 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
     }
 
     useEffect(() => {
-        if (isPlaying && !isAdGap && (clickCount[currentIndex] || 0) >= 3) {
+        if (isPlaying && !isAdGap && (clickCount[currentIndex] || 0) >= 2) {
             const timer = setTimeout(() => {
                 videoRef.current?.play().catch(() => console.log("Autoplay blocked"))
             }, 500)
@@ -111,7 +125,7 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
                                     <video ref={videoRef} src={videoUrl} controls onEnded={handleVideoEnded} className="w-full h-full object-contain" />
 
                                     {/* Overlays 3x Klik */}
-                                    {(clickCount[currentIndex] || 0) < 3 && !isAdGap && (
+                                    {(clickCount[currentIndex] || 0) < 2 && !isAdGap && (
                                         <div onClick={() => handleAction(currentIndex)} className="absolute inset-0 z-30 bg-zinc-950/90 backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer p-4 text-center">
                                             <div className="w-12 h-12 md:w-16 md:h-16 bg-purple-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-purple-500/50">
                                                 <Play className="w-6 h-6 md:w-8 md:h-8 text-white fill-current ml-1" />
@@ -234,11 +248,23 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
                         <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-2 gap-2 md:gap-3 pb-10">
                             {episodes.map((ep, i) => {
                                 const isActive = i === currentIndex
-                                const isWatched = (clickCount[i] || 0) >= 3
+                                const isWatched = (clickCount[i] || 0) >= 2
                                 return (
                                     <button
                                         key={ep.chapterId}
-                                        onClick={() => { setIsAdGap(false); handleAction(i) }}
+                                        onClick={() => {
+                                            setIsAdGap(false)
+                                            setIsPlaying(true)
+                                            setCurrentIndex(i)
+
+                                            // langsung play tanpa iklan
+                                            setTimeout(() => {
+                                                videoRef.current?.play()
+                                            }, 300)
+
+                                            // tandai sudah ditonton
+                                            setClickCount(prev => ({ ...prev, [i]: 2 }))
+                                        }}
                                         className={`relative flex flex-col items-center justify-center p-3 md:p-4 rounded-xl md:rounded-2xl border transition-all duration-300 ${isActive
                                             ? 'bg-purple-600 border-purple-600 text-white shadow-xl shadow-purple-500/30 scale-95'
                                             : 'bg-white border-zinc-200/60 text-zinc-400 hover:border-purple-300 hover:text-zinc-600'

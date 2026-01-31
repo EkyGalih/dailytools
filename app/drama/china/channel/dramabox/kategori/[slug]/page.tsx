@@ -40,7 +40,7 @@ export default async function DramaCategoryPage({
 
   return (
     <div className="bg-[#fafafa] min-h-screen pb-20">
-      <AffiliateMiniPopup />
+      {/* <AffiliateMiniPopup /> */}
 
       {/* HERO - Desain Mesh Gradient Gelap */}
       <DramaHero activeChannel="dramabox" />

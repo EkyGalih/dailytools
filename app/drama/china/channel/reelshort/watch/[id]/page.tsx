@@ -9,8 +9,8 @@ import DramaShareIcons from '@/components/drama/dramabox/DramaShareIcon'
 import ReelShortPlayer from '@/components/drama/reelshort/ReelShortPlayer'
 import AffiliateProductCard from '@/components/drama/ads/AffiliateProductCard'
 import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
-import AffiliatePopup from '@/components/drama/ads/AffiliatePopup'
-import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
+// import AffiliatePopup from '@/components/drama/ads/AffiliatePopup'
+// import { getAffiliatePopup } from '@/libs/ads/getAffiliatePopup'
 import ReelShortListItem from '@/components/drama/reelshort/ReelShortListItem'
 import DramaHero from '@/components/drama/dramabox/DramaHero'
 
@@ -56,17 +56,17 @@ export default async function ReelShortWatchPage({
             ?.slice(0, 8) ?? []
 
     const site = process.env.NEXT_PUBLIC_SITE_URL!
-    const popupProduct = getAffiliatePopup()
+    // const popupProduct = getAffiliatePopup()
 
 
     return (
         <article className="space-y-10">
-            {popupProduct && (
+            {/* {popupProduct && (
                 <AffiliatePopup
                     product={popupProduct}
                     episode={episodeNumber + 1}
                 />
-            )}
+            )} */}
 
             <DramaHero />
 

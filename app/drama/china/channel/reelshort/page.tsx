@@ -1,5 +1,5 @@
 import DramaBookSkeleton from '@/components/common/DramaBoxSkleton'
-import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
+// import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
 import AffiliateShelf from '@/components/drama/ads/AffiliateShelf'
 import DramaHero from '@/components/drama/reelshort/DramaHero'
 import ReelShortCard from '@/components/drama/reelshort/ReelShortCard'
@@ -46,7 +46,7 @@ export default async function ReelShortPage({
 
   return (
     <div className="bg-[#fafafa] min-h-screen pb-20">
-      <AffiliateMiniPopup />
+      {/* <AffiliateMiniPopup /> */}
       <DramaHero activeChannel="reelshort" />
 
       {/* Kontainer Utama: px-4 di mobile, px-6 di desktop */}

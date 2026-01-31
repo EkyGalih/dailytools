@@ -2,134 +2,93 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Tentang MyTools – Tools Online Gratis',
-  description:
-    'MyTools adalah platform tools online gratis untuk kebutuhan finansial dan teknis.',
-  other: {
-    'application/ld+json': JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: 'MyTools',
-      url: 'https://mytools.web.id',
-    }),
-  },
+  title: 'Tentang MyTools – Solusi Online Gratis & Praktis',
+  description: 'Kenali lebih dekat MyTools, platform penyedia alat bantu finansial, pajak, dan produktivitas gratis untuk masyarakat Indonesia.',
 }
 
 export default function AboutPage() {
   return (
-    <section className="space-y-16">
-      {/* HEADER */}
-      <header className="max-w-3xl">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Tentang MyTools
-        </h1>
+    <main className="min-h-screen bg-[#fafafa] text-zinc-900 pb-20 selection:bg-orange-100 selection:text-orange-700">
 
-        <p className="mt-4 text-gray-600">
-          MyTools adalah platform penyedia berbagai tools online gratis
-          yang dirancang untuk membantu kebutuhan harian masyarakat
-          Indonesia, mulai dari perhitungan finansial hingga konversi
-          dan kompresi file secara cepat, mudah, dan praktis.
-        </p>
-      </header>
+      {/* 1. HERO SECTION - Clean & Airy */}
+      <section className="relative pt-24 pb-20 px-6 lg:px-20 bg-white border-b border-zinc-100 overflow-hidden">
+        {/* Dekorasi Halus */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-orange-50/50 to-transparent -z-10" />
 
-      {/* MAIN CONTENT */}
-      <section className="max-w-3xl space-y-6 text-gray-700">
-        <p>
-          Di MyTools, pengguna dapat menemukan berbagai alat bantu
-          seperti{' '}
-          <Link href="/kalkulator/thr" className="underline text-black">
-            kalkulator THR
-          </Link>
-          ,{' '}
-          <Link href="/kalkulator/zakat" className="underline text-black">
-            zakat penghasilan
-          </Link>{' '}
-          dan{' '}
-          <Link
-            href="/kalkulator/zakat-fitrah"
-            className="underline text-black"
-          >
-            zakat fitrah
-          </Link>
-          ,{' '}
-          <Link href="/kalkulator/pph21" className="underline text-black">
-            PPh 21
-          </Link>
-          ,{' '}
-          <Link
-            href="/kalkulator/take-home-pay"
-            className="underline text-black"
-          >
-            gaji bersih (take home pay)
-          </Link>
-          , simulasi cicilan, serta tools non-finansial seperti{' '}
-          <Link href="/kompress/gambar" className="underline text-black">
-            kompres gambar
-          </Link>{' '}
-          dan{' '}
-          <Link href="/kompress/pdf" className="underline text-black">
-            kompres PDF
-          </Link>
-          .
-        </p>
-
-        <p>
-          Seluruh tools di MyTools dapat digunakan langsung tanpa
-          registrasi dan tanpa instalasi aplikasi tambahan. Kami
-          berfokus pada kemudahan penggunaan, performa ringan, serta
-          hasil yang mudah dipahami oleh pengguna.
-        </p>
-
-        <p>
-          MyTools dikembangkan dengan pendekatan modern, responsif,
-          dan mobile-friendly agar dapat diakses dengan nyaman di
-          berbagai perangkat, baik desktop maupun ponsel.
-        </p>
-      </section>
-
-      {/* VALUES */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
-        <div className="border rounded-xl p-6 bg-white">
-          <p className="text-lg font-semibold">Mudah Digunakan</p>
-          <p className="text-sm text-gray-600 mt-2">
-            Dirancang agar dapat digunakan oleh siapa saja tanpa
-            keahlian teknis atau proses yang rumit.
-          </p>
-        </div>
-
-        <div className="border rounded-xl p-6 bg-white">
-          <p className="text-lg font-semibold">
-            Praktis & Transparan
-          </p>
-          <p className="text-sm text-gray-600 mt-2">
-            Menyajikan hasil perhitungan dengan logika yang jelas dan
-            mudah dipahami.
-          </p>
-        </div>
-
-        <div className="border rounded-xl p-6 bg-white">
-          <p className="text-lg font-semibold">Gratis & Aksesibel</p>
-          <p className="text-sm text-gray-600 mt-2">
-            Semua tools dapat digunakan tanpa biaya, tanpa registrasi,
-            dan dapat diakses kapan saja.
+        <div className="max-w-4xl mx-auto text-center space-y-8">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-orange-50 border border-orange-100 text-orange-600 text-[10px] md:text-xs font-black uppercase tracking-[0.2em]">
+            Digital Productivity Hub
+          </span>
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.85] text-zinc-900 uppercase">
+            Sederhana. <br />
+            <span className="text-orange-500">Bermanfaat.</span>
+          </h1>
+          <p className="text-zinc-500 text-sm md:text-xl max-w-2xl mx-auto leading-relaxed font-medium">
+            MyTools lahir untuk menghilangkan kerumitan. Kami menyediakan ekosistem tools yang membantu Anda fokus pada hasil, bukan pada cara menghitungnya.
           </p>
         </div>
       </section>
 
-      {/* DISCLAIMER */}
-      <section className="max-w-3xl border rounded-xl p-6 bg-gray-50">
-        <h2 className="text-lg font-semibold">
-          Catatan Penting
-        </h2>
-        <p className="mt-3 text-sm text-gray-600">
-          Seluruh perhitungan dan proses yang ditampilkan di MyTools
-          bersifat estimasi dan tidak menggantikan perhitungan resmi
-          dari instansi pemerintah, lembaga keuangan, lembaga zakat,
-          atau kebijakan perusahaan. Untuk keputusan penting yang
-          bersifat finansial, administratif, atau ibadah, disarankan
-          untuk berkonsultasi dengan pihak yang berwenang.
-        </p>
+      {/* 2. CORE MISSION - Two Columns */}
+      <section className="max-w-6xl mx-auto px-6 lg:px-20 mt-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+          <div className="space-y-6 md:sticky md:top-24">
+            <h2 className="text-3xl font-black tracking-tight text-zinc-900">
+              Misi Kami: <br /> Gratis untuk Semua.
+            </h2>
+            <p className="text-zinc-600 leading-relaxed">
+              Kami percaya bahwa akses terhadap informasi finansial dan tools produktivitas adalah hak setiap orang. MyTools dikembangkan untuk menjadi teman setia dalam mengambil keputusan harian Anda.
+            </p>
+            <div className="flex gap-4 pt-4">
+              <div className="flex flex-col">
+                <span className="text-3xl font-black text-orange-500">10+</span>
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Online Tools</span>
+              </div>
+              <div className="w-[1px] h-10 bg-zinc-200 mx-4" />
+              <div className="flex flex-col">
+                <span className="text-3xl font-black text-orange-500">0%</span>
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Biaya Akses</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="p-8 bg-white border border-zinc-100 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-500">
+              <h3 className="text-lg font-black text-zinc-900 mb-3">🛠️ Tools Terintegrasi</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed">Dari perhitungan pajak PPh 21 hingga kompres PDF, semua tersedia di satu tempat tanpa perlu instalasi aplikasi.</p>
+            </div>
+            <div className="p-8 bg-white border border-zinc-100 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-500">
+              <h3 className="text-lg font-black text-zinc-900 mb-3">🛡️ Privasi Aman</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed">Data Anda adalah milik Anda. Kami tidak menyimpan informasi sensitif di server kami.</p>
+            </div>
+          </div>
+        </div>
       </section>
-    </section>
+
+      {/* 3. VALUE PROPOSITION */}
+      <section className="max-w-6xl mx-auto px-6 lg:px-20 mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          { icon: '🚀', title: 'Cepat & Ringan', desc: 'Dioptimalkan untuk performa tinggi di semua perangkat.' },
+          { icon: '🎯', title: 'Akurat', desc: 'Algoritma yang selalu diperbarui mengikuti regulasi terbaru.' },
+          { icon: '🔓', title: 'Tanpa Akun', desc: 'Gunakan semua fitur secara instan tanpa perlu registrasi.' }
+        ].map((item) => (
+          <div key={item.title} className="p-8 bg-zinc-100/50 border border-zinc-200/50 rounded-3xl group hover:bg-white hover:border-orange-200 transition-all">
+            <div className="text-3xl mb-4 group-hover:scale-110 transition-transform">{item.icon}</div>
+            <h4 className="font-black text-zinc-900 uppercase tracking-tight">{item.title}</h4>
+            <p className="text-xs text-zinc-500 mt-2 leading-relaxed font-medium">{item.desc}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* 4. FINAL CTA */}
+      <section className="max-w-4xl mx-auto px-6 text-center mt-32">
+        <div className="bg-orange-600 p-12 rounded-[3rem] text-white shadow-2xl shadow-orange-600/20">
+          <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tighter">SIAP MULAI <br /> SEKARANG?</h2>
+          <Link href="/" className="inline-flex items-center gap-2 bg-white text-orange-600 px-8 py-4 rounded-full font-black text-sm uppercase hover:bg-zinc-100 transition-all active:scale-95 shadow-lg">
+            Kembali Ke Dashboard
+          </Link>
+        </div>
+      </section>
+    </main>
   )
 }

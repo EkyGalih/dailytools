@@ -1,149 +1,84 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Kebijakan Privasi – MyTools',
-  description:
-    'Kebijakan privasi MyTools menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pengguna.',
+  title: 'Kebijakan Privasi – Transparansi Data MyTools',
+  description: 'Bagaimana MyTools mengelola privasi Anda dengan aman dan transparan.',
 }
 
 export default function PrivacyPolicyPage() {
   return (
-    <section className="space-y-12">
-      {/* HEADER */}
-      <header className="max-w-3xl">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Kebijakan Privasi
-        </h1>
+    <main className="min-h-screen bg-white text-zinc-900 pb-20">
 
-        <p className="mt-4 text-gray-600">
-          Kebijakan privasi ini menjelaskan bagaimana MyTools
-          mengumpulkan, menggunakan, dan melindungi informasi
-          pengguna saat mengakses situs kami.
-        </p>
+      {/* HEADER - Minimalist Light */}
+      <header className="pt-28 pb-16 px-6 lg:px-20 bg-zinc-50 border-b border-zinc-100 text-center">
+        <div className="max-w-3xl mx-auto space-y-4">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-zinc-900 uppercase">
+            PRIVASI & <span className="text-orange-500">KEAMANAN</span>
+          </h1>
+          <p className="text-zinc-500 font-medium">
+            Terakhir diperbarui: 31 Januari 2026
+          </p>
+        </div>
       </header>
 
-      {/* CONTENT */}
-      <div className="max-w-3xl space-y-8 text-gray-700">
-        <section>
-          <h2 className="text-lg font-semibold mb-2">
-            Informasi yang Kami Kumpulkan
-          </h2>
-          <p>
-            MyTools tidak mewajibkan pengguna untuk melakukan
-            pendaftaran atau memberikan informasi pribadi secara
-            langsung. Kami tidak mengumpulkan data sensitif seperti
-            nama, alamat, email, atau nomor telepon.
-          </p>
-          <p className="mt-2">
-            Informasi yang dikumpulkan bersifat non-pribadi dan
-            terbatas pada data teknis, seperti alamat IP, jenis
-            perangkat, browser, sistem operasi, serta halaman yang
-            diakses untuk keperluan analisis dan peningkatan layanan.
-          </p>
-        </section>
+      {/* CONTENT GRID */}
+      <div className="max-w-5xl mx-auto px-6 lg:px-20 mt-20 space-y-16">
 
-        <section>
-          <h2 className="text-lg font-semibold mb-2">
-            Penggunaan Informasi
-          </h2>
-          <ul className="list-disc pl-5 mt-2 space-y-1 text-sm">
-            <li>Menganalisis penggunaan situs dan performa layanan</li>
-            <li>Meningkatkan kualitas dan pengalaman pengguna</li>
-            <li>Menjaga keamanan dan stabilitas sistem</li>
-          </ul>
-        </section>
+        {/* Section Row */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+          <div className="md:col-span-4 border-l-2 border-orange-500 pl-6 h-fit">
+            <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400">01. Data</h2>
+            <h3 className="text-xl font-black text-zinc-900">Pengumpulan Informasi</h3>
+          </div>
+          <div className="md:col-span-8 space-y-4 text-zinc-600 leading-relaxed">
+            <p>Kami sangat menghargai privasi Anda. MyTools tidak mengumpulkan data identitas pribadi seperti nama atau email. Kami hanya menggunakan data teknis anonim untuk memastikan situs berjalan optimal di MacBook atau Ponsel Anda.</p>
+            <div className="flex flex-wrap gap-2">
+              {['IP Anonim', 'Browser', 'Device Type'].map(tag => (
+                <span key={tag} className="px-3 py-1 bg-zinc-100 rounded-lg text-[10px] font-black text-zinc-500 uppercase">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
 
-        <section>
-          <h2 className="text-lg font-semibold mb-2">
-            Cookie dan Teknologi Pelacakan
-          </h2>
-          <p>
-            MyTools menggunakan cookie untuk meningkatkan pengalaman
-            pengguna dan mengumpulkan data statistik kunjungan.
-            Cookie adalah file kecil yang disimpan di perangkat
-            pengguna dan tidak mengandung informasi pribadi.
-          </p>
-          <p className="mt-2">
-            Kami juga menggunakan layanan pihak ketiga, termasuk
-            Google, yang dapat menggunakan cookie atau teknologi
-            serupa untuk menampilkan iklan yang relevan kepada
-            pengguna.
-          </p>
-        </section>
+        {/* Section Row */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+          <div className="md:col-span-4 border-l-2 border-orange-500 pl-6 h-fit">
+            <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400">02. Ads</h2>
+            <h3 className="text-xl font-black text-zinc-900">Iklan & Cookies</h3>
+          </div>
+          <div className="md:col-span-8 p-8 bg-zinc-50 rounded-[2rem] border border-zinc-100 space-y-4">
+            <p className="text-sm text-zinc-600 font-medium italic">
+              "Kami menggunakan Google AdSense untuk membantu menyediakan layanan ini secara gratis."
+            </p>
+            <p className="text-sm text-zinc-600">
+              Google menggunakan cookies untuk menampilkan iklan yang relevan. Anda memiliki kontrol penuh untuk menonaktifkan ini melalui pengaturan Google.
+            </p>
+          </div>
+        </div>
 
-        <section>
-          <h2 className="text-lg font-semibold mb-2">
-            Iklan Pihak Ketiga (Google AdSense)
-          </h2>
-          <p>
-            MyTools menampilkan iklan dari pihak ketiga seperti
-            Google AdSense. Google menggunakan cookie untuk
-            menayangkan iklan berdasarkan kunjungan pengguna.
-          </p>
-          <p className="mt-2">
-            Pengguna dapat menonaktifkan iklan yang dipersonalisasi
-            melalui halaman{' '}
-            <a
-              href="https://policies.google.com/technologies/ads"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline"
-            >
-              Kebijakan Iklan Google
-            </a>.
-          </p>
-        </section>
+        {/* Section Row */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+          <div className="md:col-span-4 border-l-2 border-orange-500 pl-6 h-fit">
+            <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400">03. Policy</h2>
+            <h3 className="text-xl font-black text-zinc-900">Persetujuan</h3>
+          </div>
+          <div className="md:col-span-8">
+            <div className="p-6 bg-orange-50 border border-orange-100 rounded-2xl">
+              <p className="text-sm text-orange-800 font-bold leading-relaxed">
+                Dengan menggunakan platform MyTools, Anda secara sadar memberikan persetujuan atas kebijakan privasi yang kami terapkan demi kenyamanan bersama.
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <section>
-          <h2 className="text-lg font-semibold mb-2">
-            Privasi Anak-anak
-          </h2>
-          <p>
-            MyTools tidak secara sadar mengumpulkan informasi pribadi
-            dari anak-anak di bawah usia 13 tahun.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-semibold mb-2">
-            Persetujuan
-          </h2>
-          <p>
-            Dengan menggunakan situs MyTools, Anda dianggap telah
-            menyetujui kebijakan privasi ini.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-semibold mb-2">
-            Perubahan Kebijakan Privasi
-          </h2>
-          <p>
-            Kebijakan privasi ini dapat diperbarui sewaktu-waktu dan
-            berlaku sejak tanggal diperbarui.
-          </p>
-        </section>
+        {/* Contact Support */}
+        <div className="pt-16 border-t border-zinc-100 flex flex-col items-center">
+          <p className="text-zinc-400 text-sm font-bold uppercase tracking-widest mb-6">Butuh Bantuan?</p>
+          <a href="mailto:admin@mytools.web.id" className="px-10 py-4 bg-zinc-900 text-white rounded-full font-black text-xs uppercase hover:bg-orange-600 transition-all active:scale-95 shadow-xl">
+            Kirim Email
+          </a>
+        </div>
       </div>
-
-      {/* ✅ STRUCTURED DATA */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'WebPage',
-            name: 'Kebijakan Privasi MyTools',
-            url: 'https://mytools.web.id/privacy-policy',
-            description:
-              'Kebijakan privasi MyTools yang menjelaskan pengumpulan dan penggunaan data pengguna.',
-            isPartOf: {
-              '@type': 'WebSite',
-              name: 'MyTools',
-              url: 'https://mytools.web.id',
-            },
-          }),
-        }}
-      />
-    </section>
+    </main>
   )
 }

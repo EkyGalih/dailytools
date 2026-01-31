@@ -13,7 +13,7 @@ export default function GenreSidebar({ genres, activeSlug }: GenreSidebarProps) 
                 <div className="flex items-center gap-2 mb-6">
                     <div className="w-2 h-6 bg-orange-600 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
                     <h2 className="text-lg font-black uppercase tracking-tighter text-white">
-                        Explore Genre
+                        Pilih Genre Kamu
                     </h2>
                 </div>
 

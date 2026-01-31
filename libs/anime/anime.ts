@@ -45,7 +45,7 @@ export async function getAnimeHomePage() {
  * ✅ Detail Anime
  * GET /anime/anime/:slug
  */
-export async function getAnimeAnimeDetail(slug: string) {
+export async function getAnimeDetail(slug: string) {
     if (!slug) return null;
 
     try {
@@ -70,12 +70,10 @@ export async function getAnimeEpisodeDetail(slug: string) {
     if (!slug) return null;
 
     try {
-        const res = await apiFetch(
-            `${BASE_URL}/anime/episode/${slug}`,
-            REVALIDATE_EPISODE
-        );
+        const res = await fetch(`/api/anime/streaming/${slug}`);
 
         if (!res.ok) return null;
+
         return res.json();
     } catch (err) {
         console.error("getAnimeEpisodeDetail error:", err);
@@ -129,28 +127,22 @@ export async function getAnimeAnimeByGenre(
 }
 
 /**
- * ✅ Search Anime Otakudesu
+ * ✅ Search Anime
  * GET /anime/search?q=
  */
-export async function searchOtakudesuAnime(
-    query: string,
-    page: number = 1
-) {
-    if (!query) return null;
+export async function searchAnime(query: string, page: number = 1) {
+    if (!query) return null
 
     try {
-        const res = await apiFetch(
-            `${BASE_URL}/anime/search?q=${encodeURIComponent(
-                query
-            )}&page=${page}`,
-            REVALIDATE_SEARCH
-        );
+        const res = await fetch(
+            `/api/anime/search?q=${encodeURIComponent(query)}&page=${page}`
+        )
 
-        if (!res.ok) return null;
-        return res.json();
+        if (!res.ok) return null
+        return res.json()
     } catch (err) {
-        console.error("searchOtakudesuAnime error:", err);
-        return null;
+        console.error("searchAnime error:", err)
+        return null
     }
 }
 

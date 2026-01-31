@@ -14,7 +14,6 @@ export default async function GenrePage({ params }: { params: Promise<{ slug: st
         getAnimeAnimeByGenre(slug),
         getAnimeGenres()
     ]);
-    console.log(genreData)
 
     // 3. Safety Check: Pastikan slug ada sebelum manipulasi string
     const genreTitle = slug

@@ -20,6 +20,7 @@ export default function AnimeCard({
     thumbnail,
     endpoint
 }: AnimeCardProps) {
+    console.log('data', title)
     return (
         <Link
             href={`/anime/${endpoint}`}

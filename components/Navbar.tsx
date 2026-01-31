@@ -7,8 +7,7 @@ import { usePathname } from 'next/navigation'
 import {
   Menu, X, ChevronDown, ChevronRight,
   Sparkles, Calculator, Play, Trophy,
-  Info, Laptop, Image as ImageIcon, FileArchive,
-  Wallet, Receipt, Home as HomeIcon, Coffee
+  Info, Laptop, Home as HomeIcon, Coffee
 } from 'lucide-react'
 import { BsFileZip } from 'react-icons/bs'
 
@@ -59,6 +58,11 @@ export default function Navbar() {
           <DesktopDropdown label="Drama" icon={<Play className="w-4 h-4" />} open={open === 'drama'} onToggle={() => toggle('drama')}>
             <NavItem href="/drama/china/channel/dramabox" label="Drama China" desc="Trending & Viral" />
             <NavItem href="/drama/korea" label="Drama Korea" desc="Update Setiap Hari" />
+          </DesktopDropdown>
+
+          <DesktopDropdown label="Anime" icon={<Play className="w-4 h-4" />} open={open === 'anime'} onToggle={() => toggle('anime')}>
+            <NavItem href="/anime" label="Anime" desc="Anime" />
+            <NavItem href="/manga" label="Manga" desc="Manga" />
           </DesktopDropdown>
 
           <DesktopDropdown label="Tools" icon={<Laptop className="w-4 h-4" />} open={open?.startsWith('tools') ?? false} onToggle={() => toggle('tools')}>
@@ -120,6 +124,13 @@ export default function Navbar() {
                 <div className="mt-4 space-y-4 border-l-2 border-purple-100 ml-3 pl-5">
                   <MobileLink href="/drama/china/channel/dramabox" label="Drama China" sub />
                   <MobileLink href="/drama/korea" label="Drama Korea" sub />
+                </div>
+              </MobileCollapse>
+
+              <MobileCollapse label="Anime" icon={<Play className="w-5 h-5" />} isOpen={mobileMenu === 'anime'} onToggle={() => toggleMobileMenu('anime')}>
+                <div className="mt-4 space-y-4 border-l-2 border-purple-100 ml-3 pl-5">
+                  <MobileLink href="/anime" label="Anime" sub />
+                  <MobileLink href="/manga" label="Manga" sub />
                 </div>
               </MobileCollapse>
 

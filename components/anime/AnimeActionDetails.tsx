@@ -2,25 +2,25 @@
 
 import { useState } from 'react'
 import VideoPlayerModal from './VideoPlayerModal'
+import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 
 export default function AnimeActionDetails({ data }: { data: any }) {
     const [isEpListOpen, setIsEpListOpen] = useState(false)
     const [activeVideoSlug, setActiveVideoSlug] = useState<string | null>(null)
     const [clickCounts, setClickCounts] = useState<{ [key: string]: number }>({})
+    const products = getAffiliateProducts()
+    const random =
+        products[Math.floor(Math.random() * products.length)]
 
     // Fungsi Logika 3x Klik
-    const handleTripleClick = (endpoint: string, isBatch: boolean = false) => {
+    const handleTripleClick = (endpoint: string) => {
         const currentCount = (clickCounts[endpoint] || 0) + 1
 
-        if (currentCount >= 3) {
+        if (currentCount >= 2) {
             setClickCounts({ ...clickCounts, [endpoint]: 0 })
 
-            if (isBatch) {
-                window.open(endpoint, '_blank')
-            } else {
-                // OPEN MODAL alih-alih navigasi
-                setActiveVideoSlug(endpoint)
-            }
+            const slug = extractEpisodeSlug(endpoint)
+            setActiveVideoSlug(slug)
         } else {
             setClickCounts({ ...clickCounts, [endpoint]: currentCount })
         }
@@ -34,7 +34,14 @@ export default function AnimeActionDetails({ data }: { data: any }) {
 
                     {/* LATEST / BATCH BUTTON (Direct Download) */}
                     <button
-                        onClick={() => handleTripleClick(data.latest_eps.endpoint, true)}
+                        onClick={() => {
+                            if (!clickCounts[data?.latest_eps.endpoint]) {
+                                window.open(random.link, "_blank")
+                            }
+
+                            // lanjut logic klik ke-2
+                            handleTripleClick(data?.latest_eps.endpoint)
+                        }}
                         className="relative group overflow-hidden flex items-center justify-between p-5 bg-gradient-to-r from-orange-600 to-amber-500 rounded-3xl shadow-[0_10px_30px_rgba(249,115,22,0.3)] transition-all active:scale-95"
                     >
                         <div className="flex flex-col items-start text-left z-10">
@@ -44,9 +51,9 @@ export default function AnimeActionDetails({ data }: { data: any }) {
                             <h4 className="text-sm font-black text-white leading-tight">
                                 {data.latest_eps.title.replace('Subtitle Indonesia', '')}
                             </h4>
-                            <p className="text-[9px] text-white/70 mt-2 italic font-bold">
+                            {/* <p className="text-[9px] text-white/70 mt-2 italic font-bold">
                                 {clickCounts[data.latest_eps.endpoint] || 0}/3 Klik untuk Download
-                            </p>
+                            </p> */}
                         </div>
                         <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V40a8,8,0,0,0-16,0v84.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"></path></svg>
@@ -68,7 +75,7 @@ export default function AnimeActionDetails({ data }: { data: any }) {
                     >
                         <div className="flex flex-col items-start text-left">
                             <span className="text-[10px] font-black text-orange-500 uppercase tracking-[0.2em] mb-1">
-                                Watch Episode
+                                Daftar Episode
                             </span>
                             <h4 className="text-sm font-black text-white leading-tight">
                                 {data.first_eps.title.split(':')[1]?.trim() || "Daftar Episode"}
@@ -92,16 +99,23 @@ export default function AnimeActionDetails({ data }: { data: any }) {
                             .map((ep: any, idx: number) => (
                                 <div
                                     key={idx}
-                                    onClick={() => handleTripleClick(ep.endpoint)}
+                                    onClick={() => {
+                                        if (!clickCounts[ep.endpoint]) {
+                                            window.open(random.link, "_blank")
+                                        }
+
+                                        // lanjut logic klik ke-2
+                                        handleTripleClick(ep.endpoint)
+                                    }}
                                     className="group cursor-pointer flex items-center justify-between p-4 bg-zinc-900/80 border border-zinc-800 hover:border-orange-500 rounded-2xl transition-all relative overflow-hidden"
                                 >
                                     <div className="flex flex-col gap-1 z-10">
                                         <span className="text-xs font-bold text-zinc-100 group-hover:text-white transition-colors line-clamp-1">
                                             {ep.title}
                                         </span>
-                                        <span className="text-[9px] font-black text-zinc-500 group-hover:text-orange-300 uppercase">
+                                        {/* <span className="text-[9px] font-black text-zinc-500 group-hover:text-orange-300 uppercase">
                                             {clickCounts[ep.endpoint] || 0}/3 Click to Play
-                                        </span>
+                                        </span> */}
                                     </div>
 
                                     {/* Icon Play */}
@@ -138,4 +152,12 @@ export default function AnimeActionDetails({ data }: { data: any }) {
             />
         </>
     )
+}
+
+function extractEpisodeSlug(url: string) {
+    return url
+        .replace("https://otakudesu.best/episode/", "")
+        .replace("/episode/", "")
+        .replaceAll("/", "")
+        .trim()
 }

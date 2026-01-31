@@ -25,10 +25,12 @@ export default function HomePageClient({ initialData, genres }: { initialData: a
                                     <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-widest border-l-4 border-orange-600 pl-4">
                                         Hasil Pencarian: <span className="text-orange-500">{searchQuery}</span>
                                     </h2>
-                                    <AnimeSearch onSearchResult={(data, query) => {
-                                        setSearchResults(data)
-                                        setSearchQuery(query)
-                                    }} />
+                                    <button
+                                        onClick={() => { setSearchResults(null); setSearchQuery('') }}
+                                        className="text-xs font-bold text-orange-500 hover:underline"
+                                    >
+                                        Bersihkan
+                                    </button>
                                 </div>
 
                                 {searchResults && searchResults.length > 0 ? (
@@ -86,6 +88,10 @@ export default function HomePageClient({ initialData, genres }: { initialData: a
 
                     {/* RIGHT CONTENT: SEARCH & SIDEBAR */}
                     <div className="col-span-12 lg:col-span-3">
+                        <AnimeSearch onSearchResult={(data, query) => {
+                            setSearchResults(data)
+                            setSearchQuery(query)
+                        }} />
                         <GenreSidebar genres={genres} activeSlug="" />
                     </div>
 

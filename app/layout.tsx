@@ -6,7 +6,6 @@ import GoogleAnalytics from '@/components/GoogleAnalytics'
 import GAListener from '@/components/GAListener'
 import Script from 'next/script'
 import NextTopLoader from 'nextjs-toploader'
-import AdsenseScript from '@/components/drama/ads/AdsenseScript'
 import CoffeePopup from '@/components/drama/ads/CoffePopup'
 
 export const metadata: Metadata = {
@@ -40,56 +39,65 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
-        {/* 🔥 MONETAG IN-PAGE PUSH — WAJIB DI HEAD */}
-        {/* <Script
+        {/* ✅ FIX ADSENSE: Gunakan native script untuk script utama AdSense agar tidak ada data-nscript */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" // Ganti dengan ID Adsense kamu jika diperlukan
+          crossOrigin="anonymous"
+        ></script>
+
+        {/* 🔥 MONETAG IN-PAGE PUSH (Baru Ditambahkan) */}
+        <Script
           id="monetag-inpage-push"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(s){
-            s.dataset.zone='10524194';
-            s.src='https://nap5k.com/tag.min.js';
-          })(document.head.appendChild(document.createElement('script')));`,
+              s.dataset.zone='10524194';
+              s.src='https://nap5k.com/tag.min.js';
+            })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
           }}
-        /> */}
+        />
 
-        {/* 🔥 MONETAG VIGNETTE */}
+        {/* 🔥 MONETAG VIGNETTE - Gunakan strategy lazyOnload agar tidak menghambat loading utama */}
         <Script
           id="monetag-vignette"
-          strategy="beforeInteractive"
+          strategy="afterInteractive" // Berubah dari beforeInteractive agar DOM siap dulu
           dangerouslySetInnerHTML={{
             __html: `(function(s){
-          s.dataset.zone='10524198';
-          s.src='https://gizokraijaw.net/vignette.min.js';
-        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
+              s.dataset.zone='10524198';
+              s.src='https://gizokraijaw.net/vignette.min.js';
+            })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
           }}
         />
       </head>
       <body className="bg-gray-50 text-gray-900">
-        <AdsenseScript />
+        {/* Hapus AdsenseScript jika isinya hanya script client di atas, 
+            tapi jika isinya unit iklan (ins), biarkan tetap di sini */}
         <Navbar />
         <NextTopLoader
-          color="#9333ea" // Warna ungu purple-600 agar match dengan tema kamu
+          color="#9333ea"
           initialPosition={0.08}
           crawlSpeed={200}
           height={3}
           crawl={true}
-          showSpinner={false} // Matikan spinner bundar jika dirasa mengganggu
+          showSpinner={false}
           easing="ease"
           speed={200}
           shadow="0 0 10px #9333ea,0 0 5px #9333ea"
         />
 
-        <main className="w-full">
+        <main className="w-full min-h-[80vh]">
           {children}
           <CoffeePopup />
         </main>
 
         <footer className="border-t bg-white mt-12">
-          <div className="max-w-5xl mx-auto px-4 py-6 text-sm text-gray-500 flex justify-between">
-            <p>© {new Date().getFullYear()} My Tools</p>
-            <Link href="/privacy-policy" className="hover:text-black">
-              Privacy Policy
-            </Link>
+          <div className="max-w-5xl mx-auto px-4 py-8 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>© {new Date().getFullYear()} My Tools • Platform Produktivitas Digital</p>
+            <div className="flex gap-6">
+              <Link href="/about" className="hover:text-orange-600 transition-colors">Tentang Kami</Link>
+              <Link href="/privacy-policy" className="hover:text-orange-600 transition-colors">Privacy Policy</Link>
+            </div>
           </div>
         </footer>
         <GoogleAnalytics />

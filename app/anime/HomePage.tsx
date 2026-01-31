@@ -9,7 +9,6 @@ import AnimeSearch from "@/components/anime/AnimeSearch";
 export default function HomePageClient({ initialData, genres }: { initialData: any, genres: any }) {
     const [searchResults, setSearchResults] = useState<any[] | null>(null)
     const [searchQuery, setSearchQuery] = useState('')
-    console.log(searchResults)
 
     return (
         <main className="min-h-screen bg-[#09090b] text-zinc-100 pb-20">

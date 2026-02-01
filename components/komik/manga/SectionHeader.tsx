@@ -19,12 +19,12 @@ export default function SectionHeader({
                 {desc && <p className="text-zinc-500 text-sm mt-1">{desc}</p>}
             </div>
 
-            <Link
+            {/* <Link
                 href={link}
                 className="text-xs font-black uppercase tracking-widest text-orange-400 hover:text-orange-300 transition"
             >
                 Lihat Semua →
-            </Link>
+            </Link> */}
         </div>
     )
 }

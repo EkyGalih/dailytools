@@ -6,6 +6,7 @@ import KomikPopularMiniCard from "@/components/komik/manga/KomikPopularMiniCard"
 import KomikRecommendedCard from "@/components/komik/manga/KomikRecommendedCard"
 import KomikSearchClient from "@/components/komik/manga/KomikSearchClient"
 import SectionHeader from "@/components/komik/manga/SectionHeader"
+import MangaHero from "./MangaHero"
 
 export default function MangaClientPage({ initialRecommended, initialPopular, initialLatest }: any) {
     const [searchResults, setSearchResults] = useState<any[] | null>(null)
@@ -14,11 +15,11 @@ export default function MangaClientPage({ initialRecommended, initialPopular, in
     return (
         <main className="min-h-screen bg-[#09090b] text-white pb-20">
             {/* HERO */}
-            <header className="pt-28 pb-12 px-6 lg:px-20 border-b border-zinc-800/50 bg-[radial-gradient(circle_at_top_left,_rgba(249,115,22,0.05),_transparent)]">
-                <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter italic">
-                    Manga <span className="text-orange-500">Explorer</span>
-                </h1>
-            </header>
+            <MangaHero
+                title="Manga"
+                highlight="Explorer"
+                desc="Temukan manga terbaik, terbaru, dan terpopuler hari ini."
+            />
 
             {/* SEARCH SECTION */}
             <section className="px-6 lg:px-20 -mt-8 relative z-20">

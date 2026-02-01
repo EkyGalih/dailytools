@@ -1,7 +1,9 @@
-import { getKomikDetail } from "@/libs/komik/komik";
+import { getKomikChapterList, getKomikDetail } from "@/libs/komik/komik";
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import MangaHero from "@/components/komik/manga/MangaHero";
+import ChapterList from "@/components/komik/manga/ChapterLitst";
 
 // Pastikan animasi shimmer sudah ada di tailwind.config.js atau globals.css
 // keyframes: { shimmer: { '100%': { transform: 'translateX(100%)' } } }
@@ -10,6 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ mangaId: 
     const { mangaId } = await params;
     const res = await getKomikDetail(mangaId);
     const manga = res?.data;
+
     return {
         title: `${manga?.title || "Detail Manga"} - MyTools Komik`,
         description: manga?.description?.slice(0, 160),
@@ -19,7 +22,9 @@ export async function generateMetadata({ params }: { params: Promise<{ mangaId: 
 export default async function MangaDetailPage({ params }: { params: Promise<{ mangaId: string }> }) {
     const { mangaId } = await params;
     const res = await getKomikDetail(mangaId);
+    const chapters = await getKomikChapterList(mangaId);
     const manga = res?.data;
+    console.log(chapters)
 
     const cover = manga?.cover_portrait_url?.trim()
         ? manga.cover_portrait_url
@@ -33,9 +38,16 @@ export default async function MangaDetailPage({ params }: { params: Promise<{ ma
 
     return (
         <main className="min-h-screen bg-[#09090b] text-zinc-100 pb-20 selection:bg-orange-500/30 overflow-x-hidden">
-
+            <MangaHero
+                title="Detail"
+                highlight="Manga"
+                desc="Informasi lengkap dan daftar chapter."
+                backHref="/komik/manga"
+                backLabel="Explorer"
+                badge="MANGA INFO"
+            />
             {/* 1. IMMERSIVE HERO SECTION */}
-            <section className="relative h-[65vh] w-full overflow-hidden">
+            <section className="relative h-[45vh] w-full overflow-hidden">
                 <Image
                     src={cover}
                     alt={manga.title}
@@ -92,6 +104,43 @@ export default async function MangaDetailPage({ params }: { params: Promise<{ ma
                                 </div>
                             </div>
                         </div>
+
+                        {/* ===============================
+                            MODERN CHAPTER LIST CONTAINER
+                        =============================== */}
+                        {/* ===============================
+    MODERN CHAPTER LIST CONTAINER
+=============================== */}
+                        <div className="pt-8">
+                            <div className="relative group bg-zinc-900/30 backdrop-blur-3xl border border-white/5 rounded-[3rem] p-8 overflow-hidden shadow-2xl">
+
+                                {/* Glow Effect Background */}
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-600/10 blur-[80px] -z-10" />
+
+                                {/* --- HEADER --- */}
+                                <div className="flex items-center justify-between mb-8 px-2">
+                                    <div className="space-y-1">
+                                        <h3 className="text-lg font-black uppercase italic tracking-tighter text-white">
+                                            Daftar <span className="text-orange-500">Chapter</span>
+                                        </h3>
+                                        <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em]">
+                                            {chapters.length} Chapter Tersedia
+                                        </p>
+                                    </div>
+
+                                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM152,56V144H104V56ZM40,56H88v88H40ZM216,200H40V160H216v40Zm0-56H168V56h48Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                {/* --- SCROLLABLE LIST --- */}
+                                <div className="max-h-[500px] overflow-y-auto pr-3 space-y-3 custom-scrollbar no-scrollbar-mobile">
+                                    <ChapterList chapters={chapters} />
+                                </div>
+                            </div>
+                        </div>
                     </aside>
 
                     {/* --- MAIN INFO SECTION --- */}
@@ -140,25 +189,7 @@ export default async function MangaDetailPage({ params }: { params: Promise<{ ma
                                 </div>
                             </div>
 
-                            {/* Action CTA */}
-                            <div className="pt-6">
-                                <Link
-                                    href={`/komik/manga/read/${manga.latest_chapter_id}`}
-                                    className="group relative flex items-center justify-between p-1 shadow-2xl rounded-[2.6rem] bg-white/5 border border-white/10 hover:border-orange-500/50 transition-all duration-500 overflow-hidden"
-                                >
-                                    <div className="flex items-center gap-6 py-4 px-8">
-                                        <div className="flex flex-col">
-                                            <span className="text-[10px] font-black text-orange-500 uppercase tracking-[0.4em]">Read Latest</span>
-                                            <span className="text-2xl font-black text-white uppercase italic">Chapter {manga.latest_chapter_number}</span>
-                                        </div>
-                                    </div>
-                                    <div className="m-2 w-16 h-16 bg-orange-600 rounded-[2rem] flex items-center justify-center text-white group-hover:bg-orange-500 group-hover:scale-105 transition-all duration-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="bold" viewBox="0 0 256 256"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"></path></svg>
-                                    </div>
-                                    {/* Animated Shine */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite]" />
-                                </Link>
-                            </div>
+
                         </header>
 
                         {/* Synopsis */}

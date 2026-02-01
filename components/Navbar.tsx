@@ -7,7 +7,9 @@ import { usePathname } from 'next/navigation'
 import {
   Menu, X, ChevronDown, ChevronRight,
   Sparkles, Calculator, Play, Trophy,
-  Info, Laptop, Home as HomeIcon, Coffee
+  Info, Laptop, Home as HomeIcon, Coffee,
+  PlaySquareIcon,
+  BookOpenText
 } from 'lucide-react'
 import { BsFileZip } from 'react-icons/bs'
 
@@ -60,8 +62,16 @@ export default function Navbar() {
             <NavItem href="/drama/korea" label="Drama Korea" desc="Update Setiap Hari" />
           </DesktopDropdown>
 
-          <DesktopDropdown label="Anime" icon={<Play className="w-4 h-4" />} open={open === 'anime'} onToggle={() => toggle('anime')}>
-            <NavItem href="/anime" label="Anime" desc="Anime" />
+          <Link
+            href="/anime"
+            className="px-4 py-2 text-sm font-bold text-zinc-600 hover:text-black flex items-center gap-2 transition-colors"
+          >
+            <PlaySquareIcon className="w-4 h-4 shrink-0" />
+            <span>Anime</span>
+          </Link>
+
+          <DesktopDropdown label="Komik" icon={<BookOpenText className="w-4 h-4" />} open={open === 'komik'} onToggle={() => toggle('komik')}>
+            <NavItem href="/komik/manga" label="Manga" desc="Manga" />
             <NavItem href="/manga" label="Manga" desc="Manga" />
           </DesktopDropdown>
 
@@ -127,12 +137,14 @@ export default function Navbar() {
                 </div>
               </MobileCollapse>
 
-              <MobileCollapse label="Anime" icon={<Play className="w-5 h-5" />} isOpen={mobileMenu === 'anime'} onToggle={() => toggleMobileMenu('anime')}>
+              <MobileCollapse label="Komik" icon={<BookOpenText className="w-5 h-5" />} isOpen={mobileMenu === 'komik'} onToggle={() => toggleMobileMenu('komik')}>
                 <div className="mt-4 space-y-4 border-l-2 border-purple-100 ml-3 pl-5">
-                  <MobileLink href="/anime" label="Anime" sub />
+                  <MobileLink href="/komik/manga" label="Manga" sub />
                   <MobileLink href="/manga" label="Manga" sub />
                 </div>
               </MobileCollapse>
+
+              <MobileLink href="/anime" icon={<PlaySquareIcon className="w-5 h-5" />} label="Anime" />
 
               {/* SMART TOOLS (Divided by Categories) */}
               <MobileCollapse label="Smart Tools" icon={<Laptop className="w-5 h-5" />} isOpen={mobileMenu === 'tools'} onToggle={() => toggleMobileMenu('tools')}>

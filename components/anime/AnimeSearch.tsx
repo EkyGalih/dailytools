@@ -1,15 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { searchAnime } from '@/libs/anime/anime'
 
 interface Props {
     onSearchResult: (data: any | null, query: string) => void;
+    externalQuery: string; // Tambahkan ini
 }
-
-export default function AnimeSearch({ onSearchResult }: Props) {
+export default function AnimeSearch({ onSearchResult, externalQuery }: Props) {
     const [query, setQuery] = useState('')
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        setQuery(externalQuery)
+    }, [externalQuery])
 
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -24,21 +28,13 @@ export default function AnimeSearch({ onSearchResult }: Props) {
         setLoading(false)
     }
 
-    const handleReset = () => {
-        setQuery('')
-        onSearchResult(null, '')
-    }
-    
     return (
         <div className="mb-8">
             <form onSubmit={handleSearch} className="relative group">
                 <input
                     type="text"
                     value={query}
-                    onChange={(e) => {
-                        setQuery(e.target.value)
-                        if (!e.target.value) onSearchResult(null, '')
-                    }}
+                    onChange={(e) => setQuery(e.target.value)}
                     placeholder="Cari anime favorit..."
                     className="w-full bg-zinc-900/50 border border-zinc-800 text-white text-sm px-5 py-4 rounded-2xl focus:outline-none focus:border-orange-600 focus:ring-1 focus:ring-orange-600 transition-all placeholder:text-zinc-600 shadow-xl"
                 />

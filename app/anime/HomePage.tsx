@@ -10,6 +10,11 @@ export default function HomePageClient({ initialData, genres }: { initialData: a
     const [searchResults, setSearchResults] = useState<any[] | null>(null)
     const [searchQuery, setSearchQuery] = useState('')
 
+    const handleClearSearch = () => {
+        setSearchResults(null)
+        setSearchQuery('')
+    }
+
     return (
         <main className="min-h-screen bg-[#09090b] text-zinc-100 pb-20">
             <AnimeHero />
@@ -26,10 +31,10 @@ export default function HomePageClient({ initialData, genres }: { initialData: a
                                         Hasil Pencarian: <span className="text-orange-500">{searchQuery}</span>
                                     </h2>
                                     <button
-                                        onClick={() => { setSearchResults(null); setSearchQuery('') }}
-                                        className="text-xs font-bold text-orange-500 hover:underline"
+                                        onClick={handleClearSearch} // Gunakan fungsi reset
+                                        className="px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-[10px] font-black uppercase text-orange-500 hover:bg-orange-500 hover:text-white transition-all"
                                     >
-                                        Bersihkan
+                                        Bersihkan X
                                     </button>
                                 </div>
 

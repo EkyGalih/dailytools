@@ -42,6 +42,30 @@ export async function getAnimeHomePage() {
 }
 
 /**
+ * ✅ Full Anime List A-Z
+ * GET /anime/list
+ */
+/**
+ * ✅ Anime List (Letter + Pagination)
+ * GET /anime/list?letter=A&page=1
+ */
+export async function getAnimeList() {
+    try {
+        const res = await apiFetch(
+            `${BASE_URL}/anime/list-anime`,
+            REVALIDATE_LIST // cache 6 jam
+        );
+
+        if (!res.ok) return null;
+
+        return await res.json();
+    } catch (err) {
+        console.error("getAnimeList error:", err);
+        return null;
+    }
+}
+
+/**
  * ✅ Detail Anime
  * GET /anime/anime/:slug
  */

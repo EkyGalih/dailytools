@@ -5,14 +5,14 @@ import { searchAnime } from '@/libs/anime/anime'
 
 interface Props {
     onSearchResult: (data: any | null, query: string) => void;
-    externalQuery: string; // Tambahkan ini
+    externalQuery?: string; // Tambahkan ini
 }
 export default function AnimeSearch({ onSearchResult, externalQuery }: Props) {
     const [query, setQuery] = useState('')
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        setQuery(externalQuery)
+        setQuery(externalQuery ?? "")
     }, [externalQuery])
 
     const handleSearch = async (e: React.FormEvent) => {

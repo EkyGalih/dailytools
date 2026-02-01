@@ -66,6 +66,26 @@ export async function getAnimeList() {
 }
 
 /**
+ * ✅ Jadwal Rilis Anime Ongoing
+ * GET /anime/schedule
+ */
+export async function getAnimeSchedule() {
+    try {
+        const res = await apiFetch(
+            `${BASE_URL}/anime/jadwal`,
+            43200 // cache 12 jam
+        );
+
+        if (!res.ok) return null;
+
+        return await res.json();
+    } catch (err) {
+        console.error("getAnimeSchedule error:", err);
+        return null;
+    }
+}
+
+/**
  * ✅ Detail Anime
  * GET /anime/anime/:slug
  */

@@ -81,7 +81,7 @@ export default function AnimeHero({
 
                     {/* Tombol Jadwal Rilis (Bisa diarahkan ke page lain atau scroll ke section lain) */}
                     <button
-                        onClick={() => isHomePage ? router.push('/jadwal') : router.push('/')}
+                        onClick={() => isHomePage ? router.push('/anime/jadwal') : router.push('/anime')}
                         className="px-10 py-4 bg-zinc-900/50 backdrop-blur-xl text-white font-bold rounded-2xl border border-white/5 hover:bg-zinc-800 transition-all hover:border-orange-600/50 flex items-center gap-2"
                     >
                         {!isHomePage && (

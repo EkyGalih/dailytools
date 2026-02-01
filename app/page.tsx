@@ -7,6 +7,8 @@ import { getHomePage as getKoreaDramaHome } from '@/libs/drama/drakor/drama'
 import DramaBookGrid from '@/components/drama/dramabox/DramaBoxGrid'
 import DramaCard from '@/components/drama/drakor/DramaCard'
 import { Sparkles, Minimize2, Wallet, ArrowUpRight, LayoutGrid } from 'lucide-react'
+import { getAnimeHomePage } from '@/libs/anime/anime'
+import AnimeCard from '@/components/anime/AnimeCard'
 
 export const metadata: Metadata = {
   title: 'My Tools – Digital Hub: Kreator, Finansial & Hiburan',
@@ -14,11 +16,12 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
-  const [live, today, chinaDramas, koreaHome] = await Promise.all([
+  const [live, today, chinaDramas, koreaHome, animeHome] = await Promise.all([
     getLiveMatches(),
     getTodayFixtures(),
     getDramaByCategory('trending'),
     getKoreaDramaHome(),
+    getAnimeHomePage()
   ])
 
   const map = new Map<number, any>()
@@ -27,6 +30,8 @@ export default async function Home() {
     })
   const matches = Array.from(map.values()).slice(0, 6)
   const koreaSeries = koreaHome?.data?.latest_series?.slice(0, 5) || []
+  const animeList = animeHome?.data || []
+  console.log(animeList)
 
   return (
     <div className="space-y-24 pb-20 bg-[#fafafa]">
@@ -109,6 +114,118 @@ export default async function Home() {
           {koreaSeries.map((item: any) => (
             <DramaCard key={item.endpoint} drama={item} />
           ))}
+        </div>
+      </section>
+
+      {/*  SECTION: ANIME */}
+      {/* 🎌 SECTION: ANIME */}
+      <section className="max-w-7xl mx-auto px-6">
+        <SectionHeader
+          title="ANIME"
+          subtitle="Update Setiap Hari"
+          href="/anime"
+          badge="Anime"
+        />
+
+        <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          {animeList?.ongoing?.slice(0, 5).map((item: any) => (
+            <AnimeCard
+              key={item.endpoint}
+              endpoint={item.endpoint}
+              title={item.title}
+              thumbnail={item.thumbnail}
+              episode={`${item.episode || "?"}`}
+              info={item.info}
+              update={item.update}
+              link=''
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ========================================== */}
+      {/* 📚 SECTION: KOMIK UNIVERSE */}
+      {/* ========================================== */}
+      <section className="max-w-7xl mx-auto px-6 mt-20">
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-zinc-900">
+              Komik <span className="text-purple-600">Universe</span>
+            </h2>
+            <p className="text-zinc-500 italic mt-2 text-sm md:text-base">
+              Jelajahi manga Jepang, manhwa Korea, hingga manhua China terbaru.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+
+          {/* ✅ MANGA */}
+          <Link
+            href="/komik/manga"
+            className="group relative bg-white border border-zinc-100 rounded-[2.5rem] p-8 hover:shadow-[0_40px_80px_rgba(0,0,0,0.06)] hover:-translate-y-2 transition-all duration-500 overflow-hidden"
+          >
+            <div className="absolute -right-4 -top-4 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-700 -z-10" />
+
+            <div className="flex justify-between items-start mb-10">
+              <div className="p-4 bg-orange-100 text-orange-600 rounded-[1.25rem] group-hover:bg-orange-600 group-hover:text-white transition-colors duration-500">
+                <LayoutGrid size={28} />
+              </div>
+              <ArrowUpRight className="text-zinc-200 group-hover:text-orange-600 transition-colors" />
+            </div>
+
+            <h3 className="text-2xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">
+              Manga<br />Japan
+            </h3>
+            <p className="mt-4 text-sm text-zinc-500 font-medium">
+              Koleksi manga terbaik dengan update chapter terbaru setiap hari.
+            </p>
+          </Link>
+
+          {/* ✅ MANHUA */}
+          <Link
+            href="/komik/manhua"
+            className="group relative bg-white border border-zinc-100 rounded-[2.5rem] p-8 hover:shadow-[0_40px_80px_rgba(0,0,0,0.06)] hover:-translate-y-2 transition-all duration-500 overflow-hidden"
+          >
+            <div className="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 rounded-full group-hover:scale-150 transition-transform duration-700 -z-10" />
+
+            <div className="flex justify-between items-start mb-10">
+              <div className="p-4 bg-emerald-100 text-emerald-600 rounded-[1.25rem] group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-500">
+                <Sparkles size={28} />
+              </div>
+              <ArrowUpRight className="text-zinc-200 group-hover:text-emerald-600 transition-colors" />
+            </div>
+
+            <h3 className="text-2xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">
+              Manhua<br />China
+            </h3>
+            <p className="mt-4 text-sm text-zinc-500 font-medium">
+              Dunia kultivasi, sistem, rebirth, dan action fantasy terbaik.
+            </p>
+          </Link>
+
+          {/* ✅ MANHWA */}
+          <Link
+            href="/komik/manhwa"
+            className="group relative bg-white border border-zinc-100 rounded-[2.5rem] p-8 hover:shadow-[0_40px_80px_rgba(0,0,0,0.06)] hover:-translate-y-2 transition-all duration-500 overflow-hidden"
+          >
+            <div className="absolute -right-4 -top-4 w-24 h-24 bg-cyan-50 rounded-full group-hover:scale-150 transition-transform duration-700 -z-10" />
+
+            <div className="flex justify-between items-start mb-10">
+              <div className="p-4 bg-cyan-100 text-cyan-600 rounded-[1.25rem] group-hover:bg-cyan-600 group-hover:text-white transition-colors duration-500">
+                <Minimize2 size={28} />
+              </div>
+              <ArrowUpRight className="text-zinc-200 group-hover:text-cyan-600 transition-colors" />
+            </div>
+
+            <h3 className="text-2xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">
+              Manhwa<br />Korea
+            </h3>
+            <p className="mt-4 text-sm text-zinc-500 font-medium">
+              Webtoon Korea populer: action, romance, dungeon, hingga regression.
+            </p>
+          </Link>
+
         </div>
       </section>
 

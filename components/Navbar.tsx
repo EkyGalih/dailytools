@@ -72,7 +72,8 @@ export default function Navbar() {
 
           <DesktopDropdown label="Komik" icon={<BookOpenText className="w-4 h-4" />} open={open === 'komik'} onToggle={() => toggle('komik')}>
             <NavItem href="/komik/manga" label="Manga" desc="Manga" />
-            {/* <NavItem href="/manga" label="Manga" desc="Manga" /> */}
+            <NavItem href="/komik/manhwa" label="Manhwa" desc="Manhwa" />
+            <NavItem href="/komik/manhua" label="Manhua" desc="Manhua" />
           </DesktopDropdown>
 
           <DesktopDropdown label="Tools" icon={<Laptop className="w-4 h-4" />} open={open?.startsWith('tools') ?? false} onToggle={() => toggle('tools')}>
@@ -140,7 +141,8 @@ export default function Navbar() {
               <MobileCollapse label="Komik" icon={<BookOpenText className="w-5 h-5" />} isOpen={mobileMenu === 'komik'} onToggle={() => toggleMobileMenu('komik')}>
                 <div className="mt-4 space-y-4 border-l-2 border-purple-100 ml-3 pl-5">
                   <MobileLink href="/komik/manga" label="Manga" sub />
-                  {/* <MobileLink href="/manga" label="Manga" sub /> */}
+                  <MobileLink href="/komik/manhwa" label="Manhwa" sub />
+                  <MobileLink href="/komik/manhua" label="manhua" sub />
                 </div>
               </MobileCollapse>
 

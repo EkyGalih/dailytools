@@ -97,7 +97,7 @@ export async function getKomikDetail(mangaId: string) {
         `${BASE}/detail?manga_id=${encodeURIComponent(mangaId)}`,
         21600 // cache 6 jam
     )
-    
+
     if (!json?.data?.manga_id) return null
     return json
 }

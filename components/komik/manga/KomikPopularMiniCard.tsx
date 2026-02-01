@@ -10,7 +10,7 @@ export default function KomikPopularMiniCard({
 }) {
     return (
         <Link
-            href={`/komik/${manga.manga_id}`}
+            href={`/komik/manga/${manga.manga_id}`}
             className="flex items-center gap-3 p-2 rounded-xl bg-zinc-900/40 border border-zinc-800 hover:border-orange-500 transition group"
         >
             {/* Rank */}

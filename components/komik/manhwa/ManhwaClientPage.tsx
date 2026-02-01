@@ -1,30 +1,30 @@
 'use client'
 
 import { useState } from "react"
-import KomikLatestCard from "@/components/komik/manga/KomikLatestCard"
 import KomikPopularMiniCard from "@/components/komik/manga/KomikPopularMiniCard"
-import KomikRecommendedCard from "@/components/komik/manga/KomikRecommendedCard"
 import KomikSearchClient from "@/components/komik/manga/KomikSearchClient"
 import SectionHeader from "@/components/komik/manga/SectionHeader"
-import MangaHero from "./MangaHero"
+import ManhwaHero from "./ManhwaHero"
+import ManhwaRecommendedCard from "./ManhwaRecommendedCard"
+import ManhwaPopularMiniCard from "./ManhwaPopularMiniCard"
+import ManhwaSearchClient from "./ManhwaSearchClient"
 
-export default function MangaClientPage({ initialRecommended, initialPopular, initialLatest }: any) {
+export default function ManhwaClientPage({ initialRecommended, initialPopular, initialLatest }: any) {
     const [searchResults, setSearchResults] = useState<any[] | null>(null)
     const [searchQuery, setSearchQuery] = useState("")
 
     return (
         <main className="min-h-screen bg-[#09090b] text-white pb-20">
             {/* HERO */}
-
-            <MangaHero
-                title="Manga"
-                highlight="Explorer"
-                desc="Temukan manga terbaik, terbaru, dan terpopuler hari ini."
+            <ManhwaHero
+                title="Manhwa"
+                highlight="Trending"
+                desc="Temukan manhwa yang sedang viral, paling banyak dibaca, dan paling dicari."
             />
 
             {/* SEARCH SECTION */}
             <section className="px-6 lg:px-20 -mt-8 relative z-20">
-                <KomikSearchClient
+                <ManhwaSearchClient
                     externalQuery={searchQuery}
                     onSearchResult={(results, query) => {
                         setSearchResults(results)
@@ -43,11 +43,11 @@ export default function MangaClientPage({ initialRecommended, initialPopular, in
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                                 <div className="flex items-center justify-between mb-10 border-b border-zinc-800 pb-6">
                                     <h2 className="text-2xl font-black uppercase italic border-l-4 border-orange-600 pl-4 tracking-tight">
-                                        Hasil: <span className="text-orange-500">{searchQuery}</span>
+                                        Hasil: <span className="text-cyan-500">{searchQuery}</span>
                                     </h2>
                                     <button
                                         onClick={() => { setSearchResults(null); setSearchQuery("") }}
-                                        className="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-[10px] font-black uppercase text-orange-500 hover:bg-orange-600 hover:text-white transition-all shadow-lg"
+                                        className="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-[10px] font-black uppercase text-cyan-500 hover:bg-cyan-600 hover:text-white transition-all shadow-lg"
                                     >
                                         Bersihkan X
                                     </button>
@@ -56,7 +56,7 @@ export default function MangaClientPage({ initialRecommended, initialPopular, in
                                 {searchResults && searchResults.length > 0 ? (
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                         {searchResults.map((manga: any) => (
-                                            <KomikRecommendedCard key={manga.manga_id} manga={manga} />
+                                            <ManhwaRecommendedCard key={manga.manga_id} manhwa={manga} />
                                         ))}
                                     </div>
                                 ) : (
@@ -71,13 +71,13 @@ export default function MangaClientPage({ initialRecommended, initialPopular, in
                                 {/* 🔥 RECOMMENDED */}
                                 <section>
                                     <SectionHeader
-                                        title="🔥 Rekomendasi Manga"
-                                        desc="Pilihan terbaik berdasarkan rating & popularitas."
+                                        title="🔥 Wajib Baca"
+                                        desc="Manhwa yang wajib dibaca: rekomendasi teratas berdasar rating dan popularitas."
                                         link="/komik/recommended"
                                     />
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                        {initialRecommended.slice(0, 8).map((manga: any) => (
-                                            <KomikRecommendedCard key={manga.manga_id} manga={manga} />
+                                        {initialRecommended.slice(0, 8).map((manhwa: any) => (
+                                            <ManhwaRecommendedCard key={manhwa.manga_id} manhwa={manhwa} />
                                         ))}
                                     </div>
                                 </section>
@@ -85,13 +85,13 @@ export default function MangaClientPage({ initialRecommended, initialPopular, in
                                 {/* ⏳ TERBARU */}
                                 <section>
                                     <SectionHeader
-                                        title="⏳ Update Terbaru"
-                                        desc="Manga dengan chapter terbaru setiap harinya."
+                                        title="⏳ Manhwa Terbaru"
+                                        desc="Update chapter terbaru setiap hari, langsung dari seri favoritmu."
                                         link="/komik/latest"
                                     />
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                        {initialLatest.slice(0, 8).map((manga: any) => (
-                                            <KomikLatestCard key={manga.manga_id} manga={manga} />
+                                        {initialLatest.slice(0, 8).map((manhwa: any) => (
+                                            <ManhwaPopularMiniCard key={manhwa.manga_id} manhwa={manhwa} />
                                         ))}
                                     </div>
                                 </section>
@@ -106,10 +106,10 @@ export default function MangaClientPage({ initialRecommended, initialPopular, in
                                 <h2 className="text-lg font-black uppercase tracking-tight flex items-center gap-2">
                                     <span className="text-orange-500">⭐</span> Populer
                                 </h2>
-                                <p className="text-zinc-500 text-sm mt-1">Manga dengan rating tertinggi</p>
+                                <p className="text-zinc-500 text-sm mt-1">Manhwa Paling Banyak di Baca</p>
                                 <div className="mt-8 space-y-4">
-                                    {initialPopular.slice(0, 10).map((manga: any, i: number) => (
-                                        <KomikPopularMiniCard key={manga.manga_id} manga={manga} rank={i + 1} />
+                                    {initialPopular.slice(0, 5).map((manhwa: any, i: number) => (
+                                        <ManhwaPopularMiniCard key={manhwa.manga_id} manhwa={manhwa} />
                                     ))}
                                 </div>
                             </div>

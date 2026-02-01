@@ -2,7 +2,7 @@ import { getKomikImages, getKomikChapterList } from "@/libs/komik/komik"
 import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
-import ReadingControls from "@/components/komik/manga/ReadingControls"
+import ReadingControls from "@/components/komik/manga/ManhuaReadingControls"
 
 export async function generateMetadata({ params }: { params: Promise<{ chapterId: string }> }): Promise<Metadata> {
     const { chapterId } = await params

@@ -1,12 +1,26 @@
 import { getKomikChapterList, getKomikDetail } from "@/libs/komik/komik";
 import { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
 import MangaHero from "@/components/komik/manga/MangaHero";
 import ChapterList from "@/components/komik/manga/ChapterLitst";
 
-// Pastikan animasi shimmer sudah ada di tailwind.config.js atau globals.css
-// keyframes: { shimmer: { '100%': { transform: 'translateX(100%)' } } }
+function splitTitle(text: string) {
+    const words = text.trim().split(" ")
+
+    if (words.length === 1) {
+        return {
+            title1: words[0],
+            title2: "",
+        }
+    }
+
+    const mid = Math.ceil(words.length / 2)
+
+    return {
+        title1: words.slice(0, mid).join(" "),
+        title2: words.slice(mid).join(" "),
+    }
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ mangaId: string }> }): Promise<Metadata> {
     const { mangaId } = await params;
@@ -24,7 +38,7 @@ export default async function MangaDetailPage({ params }: { params: Promise<{ ma
     const res = await getKomikDetail(mangaId);
     const chapters = await getKomikChapterList(mangaId);
     const manga = res?.data;
-    console.log(chapters)
+    const { title1, title2 } = splitTitle(manga.title)
 
     const cover = manga?.cover_portrait_url?.trim()
         ? manga.cover_portrait_url
@@ -39,12 +53,12 @@ export default async function MangaDetailPage({ params }: { params: Promise<{ ma
     return (
         <main className="min-h-screen bg-[#09090b] text-zinc-100 pb-20 selection:bg-orange-500/30 overflow-x-hidden">
             <MangaHero
-                title="Detail"
-                highlight="Manga"
-                desc="Informasi lengkap dan daftar chapter."
+                title={title1}
+                highlight={title2}
+                desc={manga.description?.slice(0, 120) + "..."}
                 backHref="/komik/manga"
-                backLabel="Explorer"
-                badge="MANGA INFO"
+                backLabel="Kenembali ke Library"
+                badge={manga.taxonomy?.Format?.[0]?.name || "MANGA"}
             />
             {/* 1. IMMERSIVE HERO SECTION */}
             <section className="relative h-[45vh] w-full overflow-hidden">
@@ -85,59 +99,61 @@ export default async function MangaDetailPage({ params }: { params: Promise<{ ma
                             </div>
                         </div>
 
-                        {/* Meta Card */}
-                        <div className="w-full p-8 bg-zinc-900/40 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] shadow-xl">
-                            <div className="space-y-6">
-                                <div>
-                                    <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-3">Alternative Title</p>
-                                    <p className="text-xs font-medium text-zinc-400 italic leading-relaxed">{manga.alternative_title || '-'}</p>
+                        {/* META CARD: FULL INFO PANEL */}
+                        <div className="w-full p-8 bg-zinc-900/40 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
+                            {/* Subtle Ambient Glow inside Card */}
+                            <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/10 blur-[60px] pointer-events-none" />
+
+                            <div className="space-y-8 relative z-10">
+                                {/* Section 1: Alternative Title */}
+                                <div className="space-y-3">
+                                    <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                                        <span className="w-1 h-1 bg-orange-500 rounded-full" />
+                                        Judul Alternatif
+                                    </p>
+                                    <p className="text-[13px] font-medium text-zinc-300 italic leading-relaxed pl-3 border-l border-white/10">
+                                        {manga.alternative_title || '-'}
+                                    </p>
                                 </div>
-                                <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-6">
-                                    <div>
-                                        <p className="text-[9px] font-black text-zinc-500 uppercase mb-1">Year</p>
-                                        <p className="text-sm font-bold">{manga.release_year}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-[9px] font-black text-zinc-500 uppercase mb-1">Format</p>
-                                        <p className="text-sm font-bold text-orange-500">{manga.taxonomy?.Format?.[0]?.name}</p>
-                                    </div>
+
+                                {/* Section 2: Creators (Author & Artist) */}
+                                <div className="space-y-6 pt-2">
+                                    {[
+                                        { label: 'Author', data: manga.taxonomy?.Author, icon: '✍️' },
+                                        { label: 'Artist', data: manga.taxonomy?.Artist, icon: '🎨' }
+                                    ].map((creator, idx) => (
+                                        <div key={idx} className="space-y-2">
+                                            <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                                                <span className="text-[12px] grayscale group-hover:grayscale-0 transition-all">{creator.icon}</span>
+                                                {creator.label}
+                                            </p>
+                                            <div className="flex flex-wrap gap-2 pl-6">
+                                                {creator.data && creator.data.length > 0 ? (
+                                                    creator.data.map((item: any) => (
+                                                        <span key={item.taxonomy_id} className="text-sm font-black text-zinc-100 group-hover:text-orange-400 transition-colors">
+                                                            {item.name}
+                                                        </span>
+                                                    ))
+                                                ) : (
+                                                    <span className="text-sm font-bold text-zinc-600">-</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            </div>
-                        </div>
 
-                        {/* ===============================
-                            MODERN CHAPTER LIST CONTAINER
-                        =============================== */}
-                        {/* ===============================
-    MODERN CHAPTER LIST CONTAINER
-=============================== */}
-                        <div className="pt-8">
-                            <div className="relative group bg-zinc-900/30 backdrop-blur-3xl border border-white/5 rounded-[3rem] p-8 overflow-hidden shadow-2xl">
-
-                                {/* Glow Effect Background */}
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-600/10 blur-[80px] -z-10" />
-
-                                {/* --- HEADER --- */}
-                                <div className="flex items-center justify-between mb-8 px-2">
-                                    <div className="space-y-1">
-                                        <h3 className="text-lg font-black uppercase italic tracking-tighter text-white">
-                                            Daftar <span className="text-orange-500">Chapter</span>
-                                        </h3>
-                                        <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em]">
-                                            {chapters.length} Chapter Tersedia
+                                {/* Section 3: Year & Format (Grid Bottom) */}
+                                <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-8">
+                                    <div className="bg-white/[0.02] p-4 rounded-2xl border border-white/5 hover:bg-white/[0.04] transition-colors">
+                                        <p className="text-[9px] font-black text-zinc-500 uppercase mb-1 tracking-widest">Year</p>
+                                        <p className="text-sm font-black text-white">{manga.release_year}</p>
+                                    </div>
+                                    <div className="bg-white/[0.02] p-4 rounded-2xl border border-white/5 hover:bg-white/[0.04] transition-colors">
+                                        <p className="text-[9px] font-black text-zinc-500 uppercase mb-1 tracking-widest">Format</p>
+                                        <p className="text-sm font-black text-orange-500 uppercase italic">
+                                            {manga.taxonomy?.Format?.[0]?.name || 'Manga'}
                                         </p>
                                     </div>
-
-                                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                                            <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM152,56V144H104V56ZM40,56H88v88H40ZM216,200H40V160H216v40Zm0-56H168V56h48Z"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                {/* --- SCROLLABLE LIST --- */}
-                                <div className="max-h-[500px] overflow-y-auto pr-3 space-y-3 custom-scrollbar no-scrollbar-mobile">
-                                    <ChapterList chapters={chapters} />
                                 </div>
                             </div>
                         </div>
@@ -188,8 +204,6 @@ export default async function MangaDetailPage({ params }: { params: Promise<{ ma
                                     </div>
                                 </div>
                             </div>
-
-
                         </header>
 
                         {/* Synopsis */}
@@ -200,22 +214,39 @@ export default async function MangaDetailPage({ params }: { params: Promise<{ ma
                             </p>
                         </section>
 
-                        {/* Creators Section */}
-                        <footer className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-10">
-                            {[
-                                { label: 'Author / Penulis', data: manga.taxonomy?.Author },
-                                { label: 'Artist / Ilustrator', data: manga.taxonomy?.Artist }
-                            ].map((creator, idx) => (
-                                <div key={idx} className="p-8 bg-white/[0.02] border border-white/5 rounded-[2.5rem]">
-                                    <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 italic">{creator.label ?? '-'}</p>
-                                    <div className="flex flex-wrap gap-4">
-                                        {creator.data?.map((item: any) => (
-                                            <span key={item.taxonomy_id} className="text-md font-bold text-zinc-200">{item.name ?? '-'}</span>
-                                        ))}
+                        {/* ===============================
+                            MODERN CHAPTER LIST CONTAINER
+                        =============================== */}
+                        <div className="pt-8">
+                            <div className="relative group bg-zinc-900/30 backdrop-blur-3xl border border-white/5 rounded-[3rem] p-8 overflow-hidden shadow-2xl">
+
+                                {/* Glow Effect Background */}
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-600/10 blur-[80px] -z-10" />
+
+                                {/* --- HEADER --- */}
+                                <div className="flex items-center justify-between mb-8 px-2">
+                                    <div className="space-y-1">
+                                        <h3 className="text-lg font-black uppercase italic tracking-tighter text-white">
+                                            Daftar <span className="text-orange-500">Chapter</span>
+                                        </h3>
+                                        <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em]">
+                                            {chapters.length} Chapter Tersedia
+                                        </p>
+                                    </div>
+
+                                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM152,56V144H104V56ZM40,56H88v88H40ZM216,200H40V160H216v40Zm0-56H168V56h48Z"></path>
+                                        </svg>
                                     </div>
                                 </div>
-                            ))}
-                        </footer>
+
+                                {/* --- SCROLLABLE LIST --- */}
+                                <div className="max-h-[500px] overflow-y-auto pr-3 space-y-3 custom-scrollbar no-scrollbar-mobile">
+                                    <ChapterList chapters={chapters} />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

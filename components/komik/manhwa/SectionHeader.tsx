@@ -40,4 +40,5 @@ export default function SectionHeader({
                 </div>
             </div>
         </div>
+    )
 }

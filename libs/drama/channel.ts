@@ -30,12 +30,12 @@ export const DRAMA_CHANNELS: Array<{
         //     description: 'Koleksi drama China short episode dari NetShort.',
         //     icon: 'https://p16-images-comn-sg.tokopedia-static.net/tos-alisg-i-zr7vqa5nfb-sg/img/elTgOa/2025/3/24/24905721-97bb-4201-a2bc-f985f41b4cdf.png~tplv-zr7vqa5nfb-image.image',
         // },
-        // {
-        //     slug: 'melolo',
-        //     name: 'Melolo',
-        //     description: 'Drama China terbaru dari platform Melolo.',
-        //     icon: 'https://res09.bignox.com/appcenter/en/gp-game-image/97e7dad4488c9965c815b8b355b654ef',
-        // },
+        {
+            slug: 'melolo',
+            name: 'Melolo',
+            description: 'Drama China terbaru dari platform Melolo.',
+            icon: 'https://res09.bignox.com/appcenter/en/gp-game-image/97e7dad4488c9965c815b8b355b654ef',
+        },
         // {
         //     slug: 'flickreels',
         //     name: 'FlickReels',

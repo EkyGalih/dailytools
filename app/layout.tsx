@@ -47,7 +47,7 @@ export default function RootLayout({
         ></script>
 
         {/* 🔥 MONETAG IN-PAGE PUSH (Baru Ditambahkan) */}
-        {/* <Script
+        <Script
           id="monetag-inpage-push"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -56,10 +56,10 @@ export default function RootLayout({
               s.src='https://nap5k.com/tag.min.js';
             })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
           }}
-        /> */}
+        />
 
         {/* 🔥 MONETAG VIGNETTE - Gunakan strategy lazyOnload agar tidak menghambat loading utama */}
-        {/* <Script
+        <Script
           id="monetag-vignette"
           strategy="afterInteractive" // Berubah dari beforeInteractive agar DOM siap dulu
           dangerouslySetInnerHTML={{
@@ -68,7 +68,7 @@ export default function RootLayout({
               s.src='https://gizokraijaw.net/vignette.min.js';
             })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
           }}
-        /> */}
+        />
       </head>
       <body className="bg-gray-50 text-gray-900">
         {/* Hapus AdsenseScript jika isinya hanya script client di atas, 

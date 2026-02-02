@@ -44,6 +44,23 @@ export default function Navbar() {
 
   const isActive = (path: string) => pathname === path
 
+  const [isPremium, setIsPremium] = useState(false)
+
+  useEffect(() => {
+    function checkPremium() {
+      const token = localStorage.getItem("premium_token")
+      setIsPremium(!!token)
+    }
+
+    checkPremium()
+
+    window.addEventListener("premium_updated", checkPremium)
+
+    return () => {
+      window.removeEventListener("premium_updated", checkPremium)
+    }
+  }, [])
+
   return (
     <header className="sticky top-0 z-[100] w-full border-b border-zinc-100 bg-white/80 backdrop-blur-md">
       <div ref={ref} className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
@@ -104,6 +121,49 @@ export default function Navbar() {
           </DesktopDropdown>
 
           <Link href="/about" className="px-4 py-2 text-sm font-bold text-zinc-600 hover:text-black">About</Link>
+          <Link
+            href="/premium"
+            className={`group relative ml-4 flex items-center justify-center w-10 h-10 rounded-2xl transition-all duration-500 overflow-hidden
+    ${isPremium
+                ? "bg-gradient-to-tr from-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-500/30 rotate-[10deg] hover:rotate-0"
+                : "bg-white text-zinc-400 border border-zinc-100 shadow-sm hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-1"
+              }`}
+            aria-label={isPremium ? "Premium Active" : "Unlock Premium"}
+          >
+            {/* Efek Kilau / Shine (Hanya Premium) */}
+            {isPremium && (
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            )}
+
+            {isPremium ? (
+              <div className="relative">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-5 h-5 fill-current drop-shadow-md"
+                >
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                </svg>
+                {/* Red Dot Notification (Status Active) */}
+                <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                </span>
+              </div>
+            ) : (
+              <svg
+                viewBox="0 0 24 24"
+                className="w-5 h-5 fill-none stroke-current stroke-[2.5] transition-transform group-hover:scale-110"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            )}
+
+            {/* Background Glow (Outer) */}
+            <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500 -z-10
+    ${isPremium ? "bg-emerald-500" : "bg-indigo-500"}`}
+            />
+          </Link>
           <a href="https://trakteer.id/god_suru/showcase?menu=open" target="_blank" className="ml-4 flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-[13px] font-black text-white transition hover:bg-purple-600 active:scale-95 shadow-xl shadow-purple-500/10">☕ Traktir Kopi</a>
         </nav>
 
@@ -206,7 +266,62 @@ export default function Navbar() {
               </MobileCollapse>
 
               <MobileLink href="/about" icon={<Info className="w-5 h-5" />} label="Tentang Kami" />
+              <Link
+                href="/premium"
+                className={`group relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 active:scale-90
+    ${isPremium
+                    ? "bg-gradient-to-tr from-rose-500 to-orange-400 text-white shadow-lg shadow-rose-500/30"
+                    : "bg-white/80 backdrop-blur-md text-zinc-400 border border-zinc-200 shadow-sm"
+                  }`}
+                aria-label={isPremium ? "Premium Active" : "Upgrade to Premium"}
+              >
+                {/* 1. EFEK GLOW RADIUS (Latar belakang yang menyala) */}
+                <div className={`absolute inset-0 rounded-2xl opacity-0 group-active:opacity-100 transition-opacity duration-500 blur-xl -z-10
+    ${isPremium ? "bg-rose-500" : "bg-indigo-500"}`}
+                />
 
+                {/* 2. IKON STATE */}
+                {isPremium ? (
+                  <div className="relative">
+                    {/* Ikon Mahkota/Star yang Modern */}
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="w-6 h-6 fill-current drop-shadow-sm animate-in zoom-in duration-300"
+                    >
+                      <path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5ZM19 19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V18H19V19Z" />
+                    </svg>
+
+                    {/* Live Active Pulse (Indikator Premium Aktif) */}
+                    <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white border border-rose-500"></span>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="relative flex flex-col items-center">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="w-5 h-5 fill-none stroke-current stroke-[2.5] transition-all group-active:scale-110"
+                    >
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    {/* Label Kecil untuk Mobile agar User Paham */}
+                    <span className="text-[7px] font-black uppercase tracking-tighter mt-0.5 opacity-60">Pro</span>
+                  </div>
+                )}
+
+                {/* 3. SHINE ANIMATION (Hanya Premium) */}
+                {isPremium && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-[shimmer_3s_infinite] transition-transform" />
+                )}
+
+                <style jsx>{`
+    @keyframes shimmer {
+      100% { transform: translateX(100%); }
+    }
+  `}</style>
+              </Link>
               {/* Footer Mobile Menu */}
               <div className="mt-12 pt-8 border-t border-zinc-100">
                 <a href="https://trakteer.id/god_suru/showcase?menu=open" target="_blank" className="flex w-full items-center justify-center gap-3 rounded-2xl bg-zinc-900 py-5 font-black text-white active:scale-95 transition-all">

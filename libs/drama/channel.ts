@@ -36,12 +36,12 @@ export const DRAMA_CHANNELS: Array<{
             description: 'Drama China terbaru dari platform Melolo.',
             icon: 'https://res09.bignox.com/appcenter/en/gp-game-image/97e7dad4488c9965c815b8b355b654ef',
         },
-        // {
-        //     slug: 'flickreels',
-        //     name: 'FlickReels',
-        //     description: 'Drama China viral dan episode lengkap dari FlickReels.',
-        //     icon: 'https://cdn.aptoide.com/imgs/7/3/6/7366b6348805d4ed9e82005732d1213f_icon.png',
-        // },
+        {
+            slug: 'flickreels',
+            name: 'FlickReels',
+            description: 'Drama China viral dan episode lengkap dari FlickReels.',
+            icon: 'https://cdn.aptoide.com/imgs/7/3/6/7366b6348805d4ed9e82005732d1213f_icon.png',
+        },
         // {
         //     slug: 'freereels',
         //     name: 'FreeReels',

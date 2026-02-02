@@ -120,7 +120,7 @@ export default function MeloloPlayerClient({
                                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-rose-500 text-white text-[9px] font-black uppercase tracking-tighter rounded-md italic">
                                             <Flame size={10} fill="currentColor" /> Trending Series
                                         </div>
-                                        <h1 className="text-4xl md:text-7xl font-black text-white italic uppercase tracking-tighter leading-[0.85] drop-shadow-lg">
+                                        <h1 className="text-4xl md:text-4xl font-black text-white italic uppercase tracking-tighter leading-[0.85] drop-shadow-lg">
                                             {drama.series_title}
                                         </h1>
                                         <button
@@ -167,7 +167,7 @@ export default function MeloloPlayerClient({
                                             <Star size={10} fill="currentColor" className="text-amber-400" /> 4.9 Rating
                                         </span>
                                         <span className="text-zinc-300 font-bold">|</span>
-                                        <span className="text-zinc-400 text-[10px] font-black uppercase tracking-widest italic">{drama.episode_cnt} Full Chapters</span>
+                                        <span className="text-zinc-400 text-[10px] font-black uppercase tracking-widest italic">{drama.episode_cnt} Full Episode</span>
                                     </div>
                                     <h2 className="text-4xl md:text-7xl font-black italic uppercase tracking-tighter text-zinc-900 leading-[0.85]">
                                         {drama.series_title}
@@ -216,7 +216,7 @@ export default function MeloloPlayerClient({
                         <div className="p-8 border-b border-zinc-50 flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <LayoutGrid size={18} className="text-rose-500" />
-                                <h3 className="text-xs font-black uppercase tracking-widest italic text-zinc-900">Chapters</h3>
+                                <h3 className="text-xs font-black uppercase tracking-widest italic text-zinc-900">Episode</h3>
                             </div>
                             <span className="text-[10px] font-black text-zinc-300 italic uppercase">Season 1</span>
                         </div>
@@ -234,7 +234,7 @@ export default function MeloloPlayerClient({
                                                 : "bg-white border-zinc-100 text-zinc-400 hover:border-rose-400 hover:text-rose-600"
                                                 }`}
                                         >
-                                            <span className={`text-[8px] font-black uppercase mb-0.5 ${isActive ? "text-zinc-500" : "text-zinc-200"}`}>CH</span>
+                                            <span className={`text-[8px] font-black uppercase mb-0.5 ${isActive ? "text-zinc-500" : "text-zinc-200"}`}>EP</span>
                                             <span className="text-xl font-black italic tracking-tighter">{ep.vid_index}</span>
                                             {ep.disable_play && !isActive && <Lock size={10} className="absolute top-2 right-2 opacity-30" />}
                                             {isActive && <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white animate-pulse" />}

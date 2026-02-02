@@ -26,14 +26,14 @@ export default function DramaBookGrid({ items, limit }: { items: DramaBookItem[]
                         href={`/drama/china/channel/dramabox/detail/${b.bookId}`}
                         className="
                             group relative flex flex-col bg-white 
-                            rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden transition-all duration-500
+                            rounded-[0.5rem] md:rounded-[0.5rem] overflow-hidden transition-all duration-500
                             border border-zinc-100 
                             hover:border-purple-200 
                             hover:shadow-[0_20px_40px_-10px_rgba(147,51,234,0.12)]
                         "
                     >
                         {/* 1. POSTER WRAPPER */}
-                        <div className="relative aspect-[3/4] overflow-hidden m-1.5 md:m-2.5 rounded-[1.2rem] md:rounded-[2rem] bg-zinc-50">
+                        <div className="relative aspect-[3/4] overflow-hidden m-1.5 md:m-2.5 rounded-[0.2rem] md:rounded-[0.5rem] bg-zinc-50">
                             <Image
                                 src={cover}
                                 alt={`Poster ${compactTitle(b.bookName)}`}

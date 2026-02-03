@@ -3,6 +3,7 @@ import { getMeloloDetail } from "@/libs/drama/melolo/melolo"
 import { Metadata } from "next"
 import DramaHero from "@/components/drama/dramabox/DramaHero"
 import MeloloPlayerClient from "@/components/drama/melolo/MeloloPlayerClient"
+import SchemaMarkup from "@/components/SchemaMarkup"
 
 // ===============================
 // ✅ Metadata SEO
@@ -113,6 +114,8 @@ export default async function MeloloDetailPage({
     // ===============================
     return (
         <div className="bg-[#fafafa] min-h-screen pb-20">
+            {/* ✅ PASANG SCHEMA DI SINI */}
+            <SchemaMarkup data={videoData} type="TVSeries" />
             <DramaHero activeChannel="melolo" />
 
             <main className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 -mt-10 md:-mt-32 relative z-20">

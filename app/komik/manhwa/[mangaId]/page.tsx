@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import ManhwaHero from "@/components/komik/manhwa/ManhwaHero";
 import ManhwaChapterList from "@/components/komik/manhwa/ManhwaChapterLitst";
+import SchemaMarkup from "@/components/SchemaMarkup";
 
 function splitTitle(text: string) {
     const words = text.trim().split(" ")
@@ -58,6 +59,7 @@ export default async function ManhwaDetailPage({ params }: { params: Promise<{ m
 
     return (
         <main className="min-h-screen bg-[#070708] text-zinc-100 pb-20 selection:bg-cyan-500/30">
+            <SchemaMarkup data={manhwa} category="manhwa" type="Book" />
             {/* 1. DYNAMIC HERO COMPONENT */}
             <ManhwaHero
                 title={title1}

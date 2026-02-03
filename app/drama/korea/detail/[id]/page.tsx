@@ -6,18 +6,67 @@ import { getDramaByGenre, getDramaDetail } from "@/libs/drama/drakor/drama"
 import Image from "next/image"
 import Link from "next/link"
 import { Sparkles, Star, Calendar, Globe, Film, ChevronRight, PlayCircle, ArrowLeft } from "lucide-react"
+import SchemaMarkup from '@/components/SchemaMarkup'
+import { Metadata } from 'next'
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const raw = await getDramaDetail(id)
-  if (!raw?.data) return { title: "Drama Tidak Ditemukan" }
-  const drama = raw.data
-  return {
-    title: `Nonton ${drama.title} Sub Indo Full Episode | Hallyu Station`,
-    description: `Streaming & Download ${drama.title} Subtitle Indonesia. ${drama.synopsis?.slice(0, 150)}...`,
-    openGraph: {
-      images: [drama.thumbnail]
+
+  if (!raw?.data) {
+    return {
+      title: "Drama Tidak Ditemukan | Tamanto"
     }
+  }
+
+  const drama = raw.data
+  const site = 'https://tamanto.web.id'
+  const dramaTitle = drama.title || "Drama Korea"
+  const dramaDescription = drama.synopsis?.slice(0, 150) || `Streaming & Download ${dramaTitle} Subtitle Indonesia terbaru di Tamanto.`
+
+  return {
+    // Format: Nonton [Judul] Sub Indo Full Episode | Tamanto
+    title: `Nonton ${dramaTitle} Sub Indo Full Episode`,
+    description: dramaDescription,
+
+    alternates: {
+      // Sesuai rute Anda: /drama/korea/detail/[id]
+      canonical: `${site}/drama/korea/detail/${id}`,
+    },
+
+    openGraph: {
+      title: `${dramaTitle} - Streaming Drama Korea Terpopuler`,
+      description: dramaDescription,
+      url: `${site}/drama/korea/detail/${id}`,
+      siteName: 'Tamanto',
+      type: 'video.tv_show',
+      images: [
+        {
+          url: drama.thumbnail || `${site}/og-fallback.jpg`,
+          width: 800,
+          height: 1200,
+          alt: `Poster ${dramaTitle} - Tamanto`,
+        },
+      ],
+      locale: 'id_ID',
+    },
+
+    twitter: {
+      card: 'summary_large_image',
+      title: `${dramaTitle} | Sub Indo HD`,
+      description: dramaDescription,
+      images: [drama.thumbnail || `${site}/og-fallback.jpg`],
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+      },
+    },
   }
 }
 
@@ -49,6 +98,7 @@ export default async function DramaDetailPage({ params }: { params: Promise<{ id
   return (
     <main className="bg-[#fafafa] min-h-screen pb-20">
       <div className="max-w-7xl mx-auto px-4 md:px-6 space-y-12">
+        <SchemaMarkup data={drama} category='drama-korea' type="TVSeries" />
         <DramaHero />
 
         <div className="max-w-7xl mx-auto px-4 md:px-10 relative z-10 -mt-8 md:-mt-4">

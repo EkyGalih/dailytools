@@ -6,6 +6,7 @@ import ReelShortCard from '@/components/drama/reelshort/ReelShortCard'
 import UnifiedReelshortView from '@/components/drama/reelshort/UnifiedReelshortView'
 import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 import AffiliateShelf from '@/components/drama/ads/AffiliateShelf'
+import SchemaMarkup from '@/components/SchemaMarkup'
 
 export const dynamic = 'force-dynamic'
 
@@ -86,6 +87,9 @@ export default async function ReelShortUnifiedPage({ params }: { params: Promise
 
     return (
         <div className="bg-[#fafafa] min-h-screen pb-20">
+            {/* ✅ PASANG SCHEMA DI SINI */}
+            <SchemaMarkup data={detail} category='reelshort' type="TVSeries" />
+
             <DramaHero activeChannel="reelshort" />
 
             {/* Overlap Card: -mt-10 di mobile, -mt-32 di desktop */}

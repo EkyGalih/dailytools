@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import MangaHero from "@/components/komik/manga/MangaHero";
 import ChapterList from "@/components/komik/manga/ChapterLitst";
+import SchemaMarkup from "@/components/SchemaMarkup";
 
 function splitTitle(text: string) {
     const words = text.trim().split(" ")
@@ -52,6 +53,7 @@ export default async function MangaDetailPage({ params }: { params: Promise<{ ma
 
     return (
         <main className="min-h-screen bg-[#09090b] text-zinc-100 pb-20 selection:bg-orange-500/30 overflow-x-hidden">
+            <SchemaMarkup data={manga} category="manga" type="Book" />
             <MangaHero
                 title={title1}
                 highlight={title2}

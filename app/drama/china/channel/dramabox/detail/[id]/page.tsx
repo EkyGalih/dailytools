@@ -1,3 +1,4 @@
+import SchemaMarkup from "@/components/SchemaMarkup";
 import { notFound } from 'next/navigation'
 import { getDramaDetail, getDramaEpisodes, getDramaByCategory } from '@/libs/drama/dramabox/dramabox'
 import { Metadata } from 'next'
@@ -88,6 +89,7 @@ export default async function DramaChinaUnifiedPage({ params }: { params: Promis
 
   return (
     <div className="bg-[#fafafa] min-h-screen pb-20">
+      <SchemaMarkup data={detail} category="reelshort" type="TVSeries" />
       {/* HERO SECTION - Sudah mobile friendly di komponen internalnya */}
       <DramaHero activeChannel="dramabox" />
 

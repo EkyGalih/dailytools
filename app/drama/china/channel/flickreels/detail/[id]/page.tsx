@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import DramaHero from "@/components/drama/dramabox/DramaHero"
 import FlickreelsPlayerClient from "@/components/drama/flickreels/FlickreelsPlayerClient"
 import { getFlickreelsDetail } from "@/libs/drama/flickreels/flickreels" // Pastikan library ini sudah ada
+import SchemaMarkup from "@/components/SchemaMarkup"
 
 // ===============================
 // ✅ Metadata SEO
@@ -110,6 +111,8 @@ export default async function FlickreelsDetailPage({
 
     return (
         <div className="bg-[#fafafa] min-h-screen pb-20">
+            {/* ✅ PASANG SCHEMA DI SINI */}
+            <SchemaMarkup data={dramaData} type="TVSeries" />
             {/* Header Hero */}
             <DramaHero activeChannel="flickreels" />
 

@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import ChapterList from "@/components/komik/manga/ChapterLitst";
 import ManhuaHero from "@/components/komik/manhua/ManhuaHero";
+import SchemaMarkup from "@/components/SchemaMarkup";
 
 function splitTitle(text: string) {
     const words = text.trim().split(" ")
@@ -37,6 +38,8 @@ export default async function ManhuaDetailPage({ params }: { params: Promise<{ m
 
     return (
         <main className="min-h-screen bg-[#050606] text-zinc-100 pb-20 selection:bg-emerald-500/30 overflow-x-hidden">
+            <SchemaMarkup data={manga} category="manhua" type="Book" />
+
             <ManhuaHero
                 title={title1}
                 highlight={title2}

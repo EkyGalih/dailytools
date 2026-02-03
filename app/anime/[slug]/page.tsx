@@ -1,4 +1,5 @@
 import AnimeActionDetails from "@/components/anime/AnimeActionDetails";
+import SchemaMarkup from "@/components/SchemaMarkup";
 import { getAnimeDetail } from "@/libs/anime/anime";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -60,11 +61,12 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ sl
     const { slug } = await params;
     const res = await getAnimeDetail(slug);
     const data = res?.data;
-    console.log(data)
+
     if (!data) return <div className="text-white text-center py-20 font-black">ANIME TIDAK DITEMUKAN</div>;
 
     return (
         <main className="min-h-screen bg-[#09090b] text-zinc-100 pb-20 overflow-x-hidden">
+            <SchemaMarkup data={data} category="anime" type="TVSeries" />
 
             {/* 1. HERO BACKDROP SECTION */}
             <section className="relative min-h-[70vh] md:h-[80vh] w-full flex items-center pt-20 md:pt-0">

@@ -1,4 +1,4 @@
-import { Search, Filter, History } from "lucide-react"
+import { Search, Filter, History, X } from "lucide-react"
 import DramaCard from "@/components/drama/drakor/DramaCard"
 import DramaHero from "@/components/drama/drakor/DramaHero"
 import DramaListCard from "@/components/drama/drakor/DramaLists"

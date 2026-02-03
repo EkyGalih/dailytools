@@ -196,12 +196,24 @@ export default function Navbar() {
         <div className="fixed inset-0 min-h-screen z-[200] bg-white lg:hidden flex flex-col animate-in slide-in-from-right duration-300">
 
           {/* Header Mobile */}
+          {/* Header Mobile Menu */}
           <div className="flex items-center justify-between px-8 py-6 border-b border-zinc-50">
             <div className="flex flex-col">
-              <span className="text-xl font-black italic tracking-tighter text-purple-600 leading-none">MY TOOLS.</span>
-              <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-[0.2em] mt-1">Digital Ecosystem</span>
+              {/* Perbaikan Branding Tamanto: Black Italic & Uppercase */}
+              <span className="text-xl md:text-2xl font-black italic tracking-tighter uppercase leading-none text-zinc-900">
+                TAMAN<span className="text-indigo-600">TO.</span>
+              </span>
+              {/* Slogan disesuaikan dengan identitas lokal Sasak kamu */}
+              <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-[0.2em] mt-1">
+                Kita Nonton
+              </span>
             </div>
-            <button onClick={() => setMobileOpen(false)} className="p-3 bg-zinc-100 text-zinc-600 rounded-2xl active:scale-90"><X className="w-6 h-6" /></button>
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="p-3 bg-zinc-100 text-zinc-600 rounded-2xl active:scale-90 transition-transform"
+            >
+              <X className="w-6 h-6" />
+            </button>
           </div>
 
           {/* Content Mobile */}

@@ -1,7 +1,60 @@
 import AnimeActionDetails from "@/components/anime/AnimeActionDetails";
 import { getAnimeDetail } from "@/libs/anime/anime";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const res = await getAnimeDetail(slug);
+    const data = res?.data;
+
+    if (!data) {
+        return {
+            title: 'Anime Tidak Ditemukan | Tamanto',
+        };
+    }
+
+    const siteName = 'Tamanto';
+    const siteUrl = 'https://tamanto.web.id';
+    const fullTitle = `Nonton ${data.title} Sub Indo HD`;
+    const cleanDescription = data.synopsis?.slice(0, 160) || `Streaming anime ${data.title} subtitle Indonesia kualitas HD terbaru di ${siteName}.`;
+
+    return {
+        title: fullTitle,
+        description: cleanDescription,
+        alternates: {
+            canonical: `${siteUrl}/anime/${slug}`,
+        },
+        openGraph: {
+            title: `${data.title} - Tamanto Anime Universe`,
+            description: cleanDescription,
+            url: `${siteUrl}/anime/${slug}`,
+            siteName: siteName,
+            type: 'video.tv_show',
+            images: [
+                {
+                    url: data.thumbnail || `${siteUrl}/og-fallback.jpg`,
+                    width: 800,
+                    height: 1200,
+                    alt: `Nonton ${data.title} di Tamanto`,
+                },
+            ],
+            locale: 'id_ID',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: fullTitle,
+            description: cleanDescription,
+            images: [data.thumbnail || `${siteUrl}/og-fallback.jpg`],
+        },
+        robots: {
+            index: true,
+            follow: true,
+            'max-image-preview': 'large',
+        },
+    };
+}
 
 export default async function AnimeDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

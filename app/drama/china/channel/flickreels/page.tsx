@@ -4,8 +4,44 @@ import { getFlickreelsForYou, getFlickreelsHomepage, getFlickreelsLatest, search
 import FlickreelsSectionHeader from "@/components/drama/flickreels/SectionHeaderFlickreels"
 import FlickreelsRankCard from "@/components/drama/flickreels/FlickreelsRankCard"
 import FlickreelsSearchBar from "@/components/drama/flickreels/FlickreelsSearchBar"
+import { Metadata } from "next"
 
-export default async function MeloloPage({ searchParams }: { searchParams: Promise<{ query?: string }> }) {
+// app/drama/china/channel/flickreels/page.tsx
+
+export const metadata: Metadata = {
+    title: 'Nonton Drama FlickReels Sub Indo HD | Tamanto',
+    description: 'Nikmati koleksi drama pendek vertikal terbaru dari FlickReels. Streaming drama China viral genre Balas Dendam, CEO, dan Urban Subtitle Indonesia gratis.',
+    keywords: [
+        'FlickReels Indonesia', 'Nonton FlickReels Sub Indo', 'Drama Pendek FlickReels',
+        'Short Drama China Viral', 'Tamanto FlickReels', 'Streaming Drama Vertikal'
+    ],
+    alternates: {
+        canonical: 'https://tamanto.web.id/drama/china/channel/flickreels',
+    },
+    openGraph: {
+        title: 'FlickReels Media Hub - Drama Pendek Viral Hari Ini',
+        description: 'Akses ribuan episode drama pendek dari FlickReels dengan kualitas visual terbaik dan subtitle Indonesia.',
+        url: 'https://tamanto.web.id/drama/china/channel/flickreels',
+        siteName: 'Tamanto',
+        images: [
+            {
+                url: '/og-flickreels.jpg', // Opsional: Gunakan image branding Flickreels
+                width: 1200,
+                height: 630,
+                alt: 'Tamanto FlickReels Channel',
+            },
+        ],
+        locale: 'id_ID',
+        type: 'website',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Streaming FlickReels Drama China Viral',
+        description: 'Update harian drama pendek FlickReels hanya di Tamanto. Kita Nonton, Kita Terhibur!',
+    },
+}
+
+export default async function FlickreelsPage({ searchParams }: { searchParams: Promise<{ query?: string }> }) {
     const sp = await searchParams
     const query = sp?.query?.trim() || ""
     const isSearching = query.length > 0

@@ -13,15 +13,51 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { id } = await params
     const res = await getFlickreelsDetail(id)
-    
+
     const drama = res?.drama
+    const site = 'https://tamanto.web.id'
+    const dramaTitle = drama?.title || "Drama China"
+    const dramaDescription = drama?.description?.slice(0, 160) || `Nonton drama ${dramaTitle} subtitle Indonesia dengan kualitas HD di Tamanto.`
 
     return {
-        title: `Nonton ${drama?.title || "Drama"} Sub Indo - Melolo Premium`,
-        description: drama?.description?.slice(0, 160) || "Tonton drama china viral kualitas HD",
-        openGraph: {
-            images: [drama?.cover || ""],
+        // Format: Nonton [Judul] Sub Indo HD | FlickReels Tamanto
+        title: `Nonton ${dramaTitle} Sub Indo HD`,
+        description: dramaDescription,
+
+        alternates: {
+            canonical: `${site}/drama/china/channel/flickreels/${id}`,
         },
+
+        openGraph: {
+            title: `${dramaTitle} - FlickReels Short Drama`,
+            description: dramaDescription,
+            url: `${site}/drama/china/channel/flickreels/${id}`,
+            siteName: 'Tamanto',
+            type: 'video.tv_show',
+            images: [
+                {
+                    url: drama?.cover || `${site}/og-fallback.jpg`,
+                    width: 800,
+                    height: 1200,
+                    alt: `Nonton ${dramaTitle} di Tamanto`,
+                }
+            ],
+            locale: 'id_ID',
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: `${dramaTitle} | FlickReels Sub Indo`,
+            description: dramaDescription,
+            images: [drama?.cover || `${site}/og-fallback.jpg`],
+        },
+
+        // SEO Rich Snippet Metadata
+        robots: {
+            index: true,
+            follow: true,
+            'max-image-preview': 'large',
+        }
     }
 }
 

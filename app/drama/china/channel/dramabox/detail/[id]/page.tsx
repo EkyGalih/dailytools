@@ -10,16 +10,66 @@ import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: any }): Promise<Metadata> {
-  const { id } = await (params)
+  const { id } = await params
   const detail = await getDramaDetail(id)
-  if (!detail) return {}
-  const site = process.env.NEXT_PUBLIC_SITE_URL!
+
+  if (!detail) {
+    return {
+      title: 'Drama Tidak Ditemukan | Tamanto',
+    }
+  }
+
+  const site = 'https://tamanto.web.id' // Gunakan domain baru Anda
+  const dramaTitle = detail.bookName || 'Drama China'
+  const dramaDescription = detail.introduction?.slice(0, 160) || `Nonton drama ${dramaTitle} subtitle Indonesia terbaru.`
+
   return {
-    title: `Nonton ${detail.bookName} Subtitle Indonesia | My Tools`,
-    description: detail.introduction?.slice(0, 160),
+    // Format: Nonton Judul Drama Sub Indo | Tamanto
+    title: `Nonton ${dramaTitle} Subtitle Indonesia`,
+    description: dramaDescription,
+
+    // Alternates untuk SEO agar tidak dianggap duplikat
+    alternates: {
+      canonical: `${site}/drama/china/detail/${id}`,
+    },
+
+    // OpenGraph (Penting untuk WhatsApp/FB)
     openGraph: {
-      title: `${detail.bookName} - Drama China Viral`,
-      images: [{ url: detail.coverWap || `${site}/og-fallback.jpg` }],
+      title: `${dramaTitle} - Streaming Drama China Viral`,
+      description: dramaDescription,
+      url: `${site}/drama/china/detail/${id}`,
+      siteName: 'Tamanto',
+      type: 'video.tv_show',
+      images: [
+        {
+          url: detail.coverWap || detail.cover || `${site}/og-fallback.jpg`,
+          width: 800,
+          height: 1200,
+          alt: `Poster ${dramaTitle}`,
+        },
+      ],
+      locale: 'id_ID',
+    },
+
+    // Twitter Card
+    twitter: {
+      card: 'summary_large_image',
+      title: `${dramaTitle} | Sub Indo HD`,
+      description: dramaDescription,
+      images: [detail.coverWap || detail.cover || `${site}/og-fallback.jpg`],
+    },
+
+    // Tambahan robot agar cepat terindeks
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
   }
 }

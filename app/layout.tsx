@@ -9,13 +9,34 @@ import NextTopLoader from 'nextjs-toploader'
 import CoffeePopup from '@/components/drama/ads/CoffePopup'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://mytools.web.id'),
+  metadataBase: new URL('https://tamanto.web.id'),
   title: {
-    default: 'My Tools – Kalkulator & Tools Online Gratis',
-    template: '%s | My Tools',
+    default: 'Tamanto – Streaming Drama Asia, Anime & Manga Terlengkap',
+    template: '%s | Tamanto',
+  },
+  verification: {
+    google: 'googlef524069779b891a7',
   },
   description:
-    'Kumpulan tools online gratis: kalkulator THR, zakat, PPh 21, simulasi KPR, kompres PDF & gambar.',
+    'Nonton Drama China viral (Dramabox), Drama Korea terbaru, Anime Ongoing, hingga baca Manga & Manhwa sub Indo kualitas HD.',
+  keywords: [
+    'Tamanto', 'Nonton Drama China', 'Drama Korea Sub Indo', 'Streaming Anime',
+    'Baca Manga', 'Manhwa Indonesia', 'Dramabox Free', 'Hiburan Asia'
+  ],
+  authors: [{ name: 'Tamanto Team' }],
+  openGraph: {
+    title: 'Tamanto – Hiburan Tanpa Batas, Kita Nonton Bareng!',
+    description: 'Platform streaming Drama Asia, Anime, dan koleksi Manga terlengkap dengan update setiap hari.',
+    url: 'https://tamanto.web.id',
+    siteName: 'Tamanto',
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tamanto – Kita Nonton, Kita Terhibur',
+    description: 'Streaming Drama China, Korea, Anime, dan Manga terbaru dalam satu genggaman.',
+  },
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
@@ -91,12 +112,62 @@ export default function RootLayout({
           <CoffeePopup />
         </main>
 
-        <footer className="border-t bg-white mt-12">
-          <div className="max-w-5xl mx-auto px-4 py-8 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p>© {new Date().getFullYear()} My Tools • Platform Produktivitas Digital</p>
-            <div className="flex gap-6">
-              <Link href="/about" className="hover:text-orange-600 transition-colors">Tentang Kami</Link>
-              <Link href="/privacy-policy" className="hover:text-orange-600 transition-colors">Privacy Policy</Link>
+        <footer className="bg-white border-t border-zinc-100 pt-20 pb-10 mt-24">
+          <div className="max-w-7xl mx-auto px-6">
+            {/* Grid Utama */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+
+              {/* Kolom 1: Brand & Slogan */}
+              <div className="space-y-6">
+                <h2 className="text-2xl font-black italic tracking-tighter uppercase text-zinc-900">
+                  TAMAN<span className="text-indigo-600">TO.</span>
+                </h2>
+                <p className="text-zinc-500 text-sm leading-relaxed italic">
+                  "Kita Nonton, Kita Terhibur." <br />
+                  Platform hiburan Asia terlengkap mulai dari Drama, Anime, hingga koleksi Manga dalam satu genggaman.
+                </p>
+              </div>
+
+              {/* Kolom 2: Hiburan */}
+              <div className="space-y-6">
+                <h4 className="font-black text-xs uppercase tracking-[0.2em] text-zinc-900 italic">Streaming Hub</h4>
+                <ul className="space-y-4 text-sm text-zinc-500 font-medium">
+                  <li><Link href="/drama/china" className="hover:text-indigo-600 transition-all">Drama China (Dramabox)</Link></li>
+                  <li><Link href="/drama/korea" className="hover:text-indigo-600 transition-all">Drama Korea Terbaru</Link></li>
+                  <li><Link href="/anime" className="hover:text-indigo-600 transition-all">Streaming Anime HD</Link></li>
+                  <li><Link href="/bola/livescore" className="hover:text-indigo-600 transition-all">Livescore Sepak Bola</Link></li>
+                </ul>
+              </div>
+
+              {/* Kolom 3: Literasi Visual */}
+              <div className="space-y-6">
+                <h4 className="font-black text-xs uppercase tracking-[0.2em] text-zinc-900 italic">Manga Universe</h4>
+                <ul className="space-y-4 text-sm text-zinc-500 font-medium">
+                  <li><Link href="/komik/manga" className="hover:text-indigo-600 transition-all">Manga Japan</Link></li>
+                  <li><Link href="/komik/manhwa" className="hover:text-indigo-600 transition-all">Manhwa Korea</Link></li>
+                  <li><Link href="/komik/manhua" className="hover:text-indigo-600 transition-all">Manhua China</Link></li>
+                </ul>
+              </div>
+
+              {/* Kolom 4: Informasi */}
+              <div className="space-y-6">
+                <h4 className="font-black text-xs uppercase tracking-[0.2em] text-zinc-900 italic">Support</h4>
+                <ul className="space-y-4 text-sm text-zinc-500 font-medium">
+                  <li><Link href="/about" className="hover:text-indigo-600 transition-all">Tentang Tamanto</Link></li>
+                  <li><Link href="/privacy-policy" className="hover:text-indigo-600 transition-all">Privacy Policy</Link></li>
+                  <li><Link href="/terms" className="hover:text-indigo-600 transition-all">Syarat & Ketentuan</Link></li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Baris Bawah: Copyright & Aksen */}
+            <div className="pt-8 border-t border-zinc-50 flex flex-col md:flex-row justify-between items-center gap-6 text-[11px] font-bold uppercase tracking-widest text-zinc-400">
+              <p>© {new Date().getFullYear()} Tamanto • Hiburan Digital Batur Lombok</p>
+
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
+                <span className="italic">Made with Love in Lombok</span>
+              </div>
             </div>
           </div>
         </footer>

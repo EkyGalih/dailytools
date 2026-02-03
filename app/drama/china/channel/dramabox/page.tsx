@@ -5,10 +5,15 @@ import AffiliateShelf from '@/components/drama/ads/AffiliateShelf'
 import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 
 export const metadata: Metadata = {
-  title: 'Drama China Viral & Trending Hari Ini | My Tools',
-  description: 'Nonton drama China viral dan trending hari ini. Update harian, episode lengkap, genre romance, CEO, dan drama pendek populer.',
+  title: 'Nonton Drama China Viral (Dramabox) Sub Indo | Tamanto',
+  description: 'Streaming drama China pendek viral dari Dramabox. Update harian episode lengkap dengan genre CEO, Reinkarnasi, dan Romance kualitas HD.',
   alternates: {
-    canonical: '/drama/china/channel/dramabox',
+    canonical: 'https://tamanto.web.id/drama/china/channel/dramabox',
+  },
+  openGraph: {
+    title: 'Dramabox Hub - Koleksi Drama China Pendek Terpopuler',
+    description: 'Nikmati ribuan drama pendek vertikal yang sedang trending di TikTok dan media sosial lainnya hanya di Tamanto.',
+    images: ['/og-dramabox.jpg'],
   }
 }
 

@@ -65,9 +65,29 @@ export default function Navbar() {
     <header className="sticky top-0 z-[100] w-full border-b border-zinc-100 bg-white/80 backdrop-blur-md">
       <div ref={ref} className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 
-        {/* LOGO */}
-        <Link href="/" className="flex items-center gap-2 transition hover:opacity-80">
-          <Image src="/logo-with-text.png" alt="My Tools Logo" width={140} height={40} className="h-9 w-auto object-contain" priority />
+        {/* LOGO & BRAND */}
+        <Link href="/" className="flex items-center gap-3 transition-all hover:opacity-80 group">
+          {/* Logo Image - Background Hitam Dihapus */}
+          <div className="relative h-11 w-11 md:h-12 md:w-12 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+            <Image
+              src="/logo.png"
+              alt="Tamanto Logo"
+              width={120}
+              height={120}
+              className="h-full w-full object-contain"
+              priority
+            />
+          </div>
+
+          {/* Text Branding */}
+          <div className="flex flex-col">
+            <span className="text-xl md:text-2xl font-black italic tracking-tighter uppercase leading-none text-zinc-900">
+              TAMAN<span className="text-indigo-600">TO.</span>
+            </span>
+            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-zinc-400 leading-none mt-1">
+              Kita Nonton
+            </span>
+          </div>
         </Link>
 
         {/* DESKTOP NAV (Keep as is) */}
@@ -75,7 +95,7 @@ export default function Navbar() {
           <Link href="/" className={`px-4 py-2 text-sm font-bold transition ${isActive('/') ? 'text-purple-600' : 'text-zinc-600 hover:text-black'}`}>Beranda</Link>
 
           <DesktopDropdown label="Drama" icon={<Play className="w-4 h-4" />} open={open === 'drama'} onToggle={() => toggle('drama')}>
-            <NavItem href="/drama/china/channel/dramabox" label="Drama China" desc="Trending & Viral" />
+            <NavItem href="/drama/china" label="Drama China" desc="Trending & Viral" />
             <NavItem href="/drama/korea" label="Drama Korea" desc="Update Setiap Hari" />
           </DesktopDropdown>
 
@@ -193,7 +213,7 @@ export default function Navbar() {
               {/* DRAMA ASIA */}
               <MobileCollapse label="Drama Asia" icon={<Play className="w-5 h-5" />} isOpen={mobileMenu === 'drama'} onToggle={() => toggleMobileMenu('drama')}>
                 <div className="mt-4 space-y-4 border-l-2 border-purple-100 ml-3 pl-5">
-                  <MobileLink href="/drama/china/channel/dramabox" label="Drama China" sub />
+                  <MobileLink href="/drama/china" label="Drama China" sub />
                   <MobileLink href="/drama/korea" label="Drama Korea" sub />
                 </div>
               </MobileCollapse>

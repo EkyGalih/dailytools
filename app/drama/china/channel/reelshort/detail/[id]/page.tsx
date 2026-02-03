@@ -12,18 +12,58 @@ export const dynamic = 'force-dynamic'
 export async function generateMetadata({ params }: { params: any }): Promise<Metadata> {
     const { id } = await params
     const data = await getReelShortDetail(id)
-    if (!data?.success) return {}
-    const site = process.env.NEXT_PUBLIC_SITE_URL!
+
+    // Fallback jika data gagal diambil
+    if (!data?.success) {
+        return {
+            title: 'Drama Tidak Ditemukan | Tamanto',
+        }
+    }
+
+    const site = 'https://tamanto.web.id' // Ganti ke domain baru Anda
+    const dramaTitle = data.title || "Drama Pendek"
+    const dramaDescription = data.description?.slice(0, 160) || `Nonton drama pendek ${dramaTitle} subtitle Indonesia kualitas HD di Tamanto.`
 
     return {
-        title: `Nonton ${data.title} Sub Indo – Drama Pendek ReelShort | My Tools`,
-        description: data.description?.slice(0, 160),
-        openGraph: {
-            title: data.title,
-            images: data.cover ? [{ url: data.cover }] : [],
-            url: `${site}/drama/china/channel/reelshort/${id}`,
-            type: 'video.tv_show',
+        // Format: Nonton [Judul] Sub Indo – Drama Pendek ReelShort | Tamanto
+        title: `Nonton ${dramaTitle} Sub Indo`,
+        description: dramaDescription,
+
+        alternates: {
+            canonical: `${site}/drama/china/channel/reelshort/${id}`,
         },
+
+        openGraph: {
+            title: `${dramaTitle} - ReelShort Original Drama`,
+            description: dramaDescription,
+            url: `${site}/drama/china/channel/reelshort/${id}`,
+            siteName: 'Tamanto',
+            type: 'video.tv_show',
+            images: [
+                {
+                    url: data.cover || `${site}/og-fallback.jpg`,
+                    width: 800,
+                    height: 1200,
+                    alt: `Poster ${dramaTitle} - Tamanto`,
+                }
+            ],
+            locale: 'id_ID',
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: `${dramaTitle} | ReelShort Sub Indo HD`,
+            description: dramaDescription,
+            images: [data.cover || `${site}/og-fallback.jpg`],
+        },
+
+        // SEO Rich Snippet & Indexing
+        robots: {
+            index: true,
+            follow: true,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+        }
     }
 }
 

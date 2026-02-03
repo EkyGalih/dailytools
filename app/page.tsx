@@ -11,8 +11,37 @@ import { getAnimeHomePage } from '@/libs/anime/anime'
 import AnimeCard from '@/components/anime/AnimeCard'
 
 export const metadata: Metadata = {
-  title: 'My Tools – Digital Hub: Kreator, Finansial & Hiburan',
-  description: 'Akses gratis generator konten, kalkulator finansial, kompresor file, livescore bola, dan streaming drama Asia terbaru.',
+  title: 'Tamanto – Streaming Drama Asia, Anime & Manga Terlengkap',
+  description: 'Nonton Drama China viral (Dramabox), Drama Korea terbaru, Anime Ongoing, hingga baca Manga & Manhwa sub Indo kualitas HD.',
+  keywords: [
+    'Tamanto', 'Nonton Drama China', 'Drama Korea Sub Indo', 'Streaming Anime',
+    'Baca Manga', 'Manhwa Indonesia', 'Dramabox Free', 'Hiburan Asia'
+  ],
+  authors: [{ name: 'Tamanto Team' }],
+  openGraph: {
+    title: 'Tamanto – Hiburan Tanpa Batas, Kita Nonton Bareng!',
+    description: 'Platform streaming Drama Asia, Anime, dan koleksi Manga terlengkap dengan update setiap hari.',
+    url: 'https://tamanto.web.id',
+    siteName: 'Tamanto',
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tamanto – Kita Nonton, Kita Terhibur',
+    description: 'Streaming Drama China, Korea, Anime, dan Manga terbaru dalam satu genggaman.',
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
+    other: {
+      rel: 'icon',
+      url: '/logo.png',
+      sizes: '512x512',
+      type: 'image/png',
+    },
+    }
 }
 
 export default async function Home() {
@@ -36,23 +65,70 @@ export default async function Home() {
   return (
     <div className="space-y-24 pb-20 bg-[#fafafa]">
       {/* 🚀 HERO SECTION */}
-      <header className="relative overflow-hidden bg-[#050505] pt-20 pb-24 md:pt-32 md:pb-44">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full opacity-40 pointer-events-none">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[60%] bg-purple-900/30 blur-[120px] rounded-full transform-gpu" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[60%] bg-sky-900/30 blur-[120px] rounded-full transform-gpu" />
+      <header className="relative overflow-hidden bg-[#020202] pt-24 pb-28 md:pt-40 md:pb-52">
+        {/* Layer 1: Animasi Mesh Gradient yang lebih elegan */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-[-10%] left-[-15%] w-[60%] h-[70%] bg-indigo-600/20 blur-[140px] rounded-full animate-pulse" />
+          <div className="absolute bottom-[-10%] right-[-15%] w-[60%] h-[70%] bg-rose-600/20 blur-[140px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+          {/* Texture overlay agar tidak terlalu flat */}
+          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10" />
         </div>
 
-        <div className="relative max-w-5xl mx-auto px-6 text-center">
-          <span className="inline-block px-4 py-1.5 mb-6 text-[10px] font-black tracking-[0.3em] uppercase bg-white/5 border border-white/10 text-purple-400 rounded-full backdrop-blur-md">
-            The Digital Ecosystem
-          </span>
-          <h1 className="text-5xl md:text-8xl font-black text-white italic tracking-tighter leading-none">
-            MY <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-sky-400">TOOLS.</span>
+        <div className="relative max-w-6xl mx-auto px-6 text-center">
+          {/* Badge dengan Glitch/Glow Effect */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 text-[11px] font-black tracking-[0.2em] uppercase bg-white/[0.03] border border-white/10 text-indigo-400 rounded-full backdrop-blur-xl shadow-2xl shadow-indigo-500/20">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+            </span>
+            Pokok Ite Demen Manto TV
+          </div>
+
+          {/* H1 dengan Brutalist Typography & Gradient */}
+          <h1 className="text-6xl md:text-[10rem] font-black text-white italic tracking-tighter leading-[0.8] uppercase">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500 drop-shadow-[0_0_30px_rgba(99,102,241,0.3)]">TA</span>MANTO.
           </h1>
-          <p className="mt-8 text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed italic">
-            Satu pintu untuk produktivitas kreatif, kendali finansial, dan hiburan Asia terpopuler.
-          </p>
+
+          {/* Slogan & Deskripsi (Mobile Friendly) */}
+          <div className="mt-10 space-y-4">
+            <h2 className="text-xl md:text-3xl font-bold text-zinc-100 tracking-tight">
+              Kita Nonton, Kita Terhibur.
+            </h2>
+            <p className="max-w-xl mx-auto text-zinc-400 text-sm md:text-lg font-medium leading-relaxed italic border-l-2 border-indigo-500/30 pl-4 md:border-l-0 md:pl-0">
+              Destinasi premium untuk streaming <span className="text-zinc-200">Drama China, Korea, Anime,</span> hingga koleksi <span className="text-zinc-200">Manga</span> terbaik dalam genggaman Anda.
+            </p>
+          </div>
+
+          {/* Floating Action (Updated) */}
+          <div className="mt-12 flex flex-wrap justify-center gap-4 animate-in fade-in slide-in-from-bottom-5 duration-1000">
+            {/* Tombol Drama */}
+            <Link
+              href="#drama"
+              className="px-8 py-3 bg-white text-black font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-indigo-500 hover:text-white transition-all duration-300 active:scale-95 shadow-xl shadow-white/5 flex items-center gap-2"
+            >
+              Mulai Nonton
+            </Link>
+
+            {/* Tombol Anime */}
+            <Link
+              href="#anime"
+              className="px-8 py-3 bg-transparent text-white border border-white/20 font-black uppercase text-xs tracking-widest rounded-2xl backdrop-blur-md hover:bg-white/5 transition-all flex items-center gap-2"
+            >
+              Jelajahi Anime
+            </Link>
+
+            {/* Tombol Manga (New) */}
+            <Link
+              href="#manga"
+              className="px-8 py-3 bg-transparent text-zinc-400 border border-zinc-800 font-black uppercase text-xs tracking-widest rounded-2xl hover:text-rose-400 hover:border-rose-400/50 transition-all flex items-center gap-2"
+            >
+              Baca Manga
+            </Link>
+          </div>
         </div>
+
+        {/* Decorative Bottom Fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#020202] to-transparent" />
       </header>
 
       {/* ========================================== */}
@@ -102,13 +178,10 @@ export default async function Home() {
       </section>
 
       {/* 🎬 SECTION: DRAMA CHINA */}
-      <section className="max-w-7xl mx-auto px-6">
+      <section id="drama" className="max-w-7xl mx-auto px-6 scroll-mt-24">
         <SectionHeader title="China Drama" subtitle="Viral & Trending" href="/drama/china/channel/dramabox" badge="Dramabox" />
-        <div className="mt-10"><DramaBookGrid items={chinaDramas} limit={10} /></div>
-      </section>
+        <div className="mb-8 md:mb-10"><DramaBookGrid items={chinaDramas} limit={10} /></div>
 
-      {/* 🇰🇷 SECTION: DRAMA KOREA */}
-      <section className="max-w-7xl mx-auto px-6">
         <SectionHeader title="Korean Drama" subtitle="Update Setiap Hari" href="/drama/korea" badge="K-Series" />
         <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {koreaSeries.map((item: any) => (
@@ -118,8 +191,7 @@ export default async function Home() {
       </section>
 
       {/*  SECTION: ANIME */}
-      {/* 🎌 SECTION: ANIME */}
-      <section className="max-w-7xl mx-auto px-6">
+      <section id="anime" className="max-w-7xl mx-auto px-6 scroll-mt-24">
         <SectionHeader
           title="ANIME"
           subtitle="Update Setiap Hari"
@@ -146,7 +218,7 @@ export default async function Home() {
       {/* ========================================== */}
       {/* 📚 SECTION: KOMIK UNIVERSE */}
       {/* ========================================== */}
-      <section className="max-w-7xl mx-auto px-6 mt-20">
+      <section id="manga" className="max-w-7xl mx-auto px-6 mt-20 scroll-mt-24">
         <div className="flex items-end justify-between mb-10">
           <div>
             <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-zinc-900">

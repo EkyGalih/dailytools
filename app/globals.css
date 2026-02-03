@@ -78,3 +78,9 @@ html {
   background: #ea580c;
   border-radius: 10px;
 }
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}

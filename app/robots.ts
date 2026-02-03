@@ -5,7 +5,13 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
+      disallow: [
+        '/api/',
+        '/admin/',
+        '/premium/success',
+        '/search',
+      ],
     },
-    sitemap: 'https://mytools.web.id/sitemap.xml',
+    sitemap: 'https://tamanto.web.id/sitemap.xml',
   }
 }

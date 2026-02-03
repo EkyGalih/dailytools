@@ -3,8 +3,36 @@ import { getAnimeSchedule } from "@/libs/anime/anime";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Jadwal Rilis Anime Terupdate – MyTools Anime",
-    description: "Cek jadwal rilis anime subtitle Indonesia terbaru setiap harinya. Jangan lewatkan update episode terbaru anime favoritmu.",
+    title: "Jadwal Rilis Anime Sub Indo Terupdate Hari Ini | Tamanto",
+    description: "Cek jadwal rilis harian anime subtitle Indonesia terbaru. Pantau waktu tayang episode ongoing favoritmu agar tidak ketinggalan update hanya di Tamanto.",
+    keywords: [
+        'Jadwal Anime Hari Ini', 'Update Anime Ongoing', 'Jadwal Rilis Anime Sub Indo',
+        'Kapan Anime Rilis', 'Tamanto Schedule', 'Streaming Anime Terupdate'
+    ],
+    alternates: {
+        canonical: 'https://tamanto.web.id/anime/schedule',
+    },
+    openGraph: {
+        title: 'Jadwal Tayang Anime Ongoing - Tamanto',
+        description: 'Pantau terus hari rilis anime favoritmu setiap minggunya. Update akurat dan cepat untuk para pecinta anime.',
+        url: 'https://tamanto.web.id/anime/schedule',
+        siteName: 'Tamanto',
+        images: [
+            {
+                url: '/og-schedule.jpg', // Opsional: Berikan image bertema kalender atau jadwal rilis
+                width: 1200,
+                height: 630,
+                alt: 'Jadwal Rilis Anime Tamanto',
+            },
+        ],
+        locale: 'id_ID',
+        type: 'website',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Jangan Ketinggalan Episode Terbaru Anime Favoritmu!',
+        description: 'Cek jadwal tayang anime ongoing harian di Tamanto.',
+    },
 };
 
 export default async function SchedulePage() {

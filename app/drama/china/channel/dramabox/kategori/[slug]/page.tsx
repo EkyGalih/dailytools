@@ -14,9 +14,30 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const cat = DRAMA_CATEGORIES.find((c) => c.slug === slug)
 
+  const siteName = 'Tamanto'
+  const categoryName = cat?.name || 'Populer'
+  const title = `Drama China Genre ${categoryName} Sub Indo`
+  const description = `Eksplorasi ribuan episode drama China genre ${categoryName} terbaik. Streaming lancar kualitas HD dengan subtitle Indonesia hanya di ${siteName}.`
+
   return {
-    title: `Drama China Genre ${cat?.name || 'Populer'} | My Tools`,
-    description: `Nonton koleksi drama China genre ${cat?.name} terbaru. Update harian dengan kualitas terbaik dan subtitle Indonesia.`
+    title: `${title} | ${siteName}`,
+    description: description,
+    alternates: {
+      canonical: `https://tamanto.web.id/drama/china/genre/${slug}`,
+    },
+    openGraph: {
+      title: `${title} - Koleksi Terlengkap`,
+      description: description,
+      url: `https://tamanto.web.id/drama/china/genre/${slug}`,
+      siteName: siteName,
+      locale: 'id_ID',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: title,
+      description: description,
+    },
   }
 }
 

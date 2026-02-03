@@ -2,6 +2,53 @@ import { getAnimeAnimeByGenre, getAnimeGenres } from "@/libs/anime/anime";
 import AnimeHero from "@/components/anime/AnimeHero";
 import GenreSidebar from "@/components/anime/GenreSidebar";
 import AnimeCardGenre from "@/components/anime/AnimeCardGenre";
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    
+    // Format slug menjadi nama genre yang cantik (contoh: "slice-of-life" jadi "Slice Of Life")
+    const genreTitle = slug
+        ? slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+        : 'Populer';
+
+    const siteName = 'Tamanto';
+    const title = `Nonton Anime Genre ${genreTitle} Sub Indo`;
+    const description = `Jelajahi koleksi anime genre ${genreTitle} terlengkap. Streaming episode terbaru dengan kualitas HD dan subtitle Indonesia gratis hanya di ${siteName}.`;
+
+    return {
+        title: `${title} | ${siteName}`,
+        description: description,
+        alternates: {
+            canonical: `https://tamanto.web.id/anime/genre/${slug}`,
+        },
+        openGraph: {
+            title: title,
+            description: description,
+            url: `https://tamanto.web.id/anime/genre/${slug}`,
+            siteName: siteName,
+            locale: 'id_ID',
+            type: 'website',
+            images: [
+                {
+                    url: '/og-anime.jpg', // Gambar banner anime global kamu
+                    width: 1200,
+                    height: 630,
+                    alt: `Genre Anime ${genreTitle} di Tamanto`,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: title,
+            description: description,
+        },
+        robots: {
+            index: true,
+            follow: true,
+        },
+    };
+}
 
 // Next.js 15 mengharuskan params di-await
 export default async function GenrePage({ params }: { params: Promise<{ slug: string }> }) {

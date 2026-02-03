@@ -9,9 +9,36 @@ import { getReelShortHomepage, searchReelShort } from '@/libs/drama/reelshort/re
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Nonton Drama Pendek ReelShort Viral Sub Indo | My Tools',
-  description: 'Kumpulan drama pendek viral dan terbaru dari ReelShort. Streaming drama singkat genre CEO, Romance, dan Revenge dengan kualitas terbaik.',
-  keywords: ['reelshort', 'drama pendek', 'drama viral', 'nonton reelshort sub indo'],
+  title: 'Nonton ReelShort Sub Indo - Drama Pendek Viral | Tamanto',
+  description: 'Streaming koleksi drama pendek eksklusif dari ReelShort. Nikmati ribuan episode drama vertikal viral dengan subtitle Indonesia kualitas HD hanya di Tamanto.',
+  keywords: [
+    'ReelShort Indonesia', 'Nonton ReelShort Gratis', 'Drama Pendek ReelShort',
+    'Short Drama Sub Indo', 'Tamanto ReelShort', 'Streaming Drama Viral TikTok'
+  ],
+  alternates: {
+    canonical: 'https://tamanto.web.id/drama/china/channel/reelshort',
+  },
+  openGraph: {
+    title: 'ReelShort Media Hub – Kumpulan Drama Pendek Terpopuler',
+    description: 'Update harian drama pendek original dari ReelShort. Tonton kisah balasan dendam, CEO, dan romansa dalam format vertikal yang seru.',
+    url: 'https://tamanto.web.id/drama/china/channel/reelshort',
+    siteName: 'Tamanto',
+    images: [
+      {
+        url: '/og-reelshort.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Tamanto ReelShort Channel',
+      },
+    ],
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Streaming ReelShort Drama Viral Sub Indo',
+    description: 'Akses cepat ribuan episode drama pendek ReelShort di Tamanto. Kita Nonton, Kita Terhibur!',
+  },
 }
 
 export default async function ReelShortPage({

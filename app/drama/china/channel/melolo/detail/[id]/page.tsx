@@ -13,15 +13,54 @@ export async function generateMetadata({
     params: Promise<{ id: string }>
 }): Promise<Metadata> {
     const { id } = await params
-
     const res = await getMeloloDetail(id)
 
     const videoData = res?.data?.video_data
+    const site = 'https://tamanto.web.id'
 
+    const dramaTitle = videoData?.series_title || "Drama China"
+    const dramaDescription = videoData?.series_intro?.slice(0, 160) || `Nonton ${dramaTitle} subtitle Indonesia dengan kualitas terbaik di Tamanto.`
 
     return {
-        title: `Nonton ${videoData?.series_title || "Drama"} - Melolo Library`,
-        description: videoData?.series_intro?.slice(0, 160),
+        // Format: Nonton [Judul] Sub Indo HD | Melolo Tamanto
+        title: `Nonton ${dramaTitle} Sub Indo HD`,
+        description: dramaDescription,
+
+        alternates: {
+            canonical: `${site}/drama/china/channel/melolo/${id}`,
+        },
+
+        openGraph: {
+            title: `${dramaTitle} - Melolo Drama Collection`,
+            description: dramaDescription,
+            url: `${site}/drama/china/channel/melolo/${id}`,
+            siteName: 'Tamanto',
+            type: 'video.tv_show',
+            images: [
+                {
+                    url: videoData?.series_cover || `${site}/og-fallback.jpg`,
+                    width: 800,
+                    height: 1200,
+                    alt: `Poster ${dramaTitle} - Tamanto`,
+                }
+            ],
+            locale: 'id_ID',
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: `${dramaTitle} | Melolo Sub Indo`,
+            description: dramaDescription,
+            images: [videoData?.series_cover || `${site}/og-fallback.jpg`],
+        },
+
+        // SEO Deep Indexing
+        robots: {
+            index: true,
+            follow: true,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+        }
     }
 }
 

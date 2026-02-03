@@ -7,6 +7,41 @@ import {
 } from "@/libs/drama/melolo/melolo"
 import MeloloSearchBar from "@/components/drama/melolo/MeloloSearchBar"
 import MeloloSectionHeader from "@/components/drama/melolo/SectionHeaderMelolo"
+import { Metadata } from "next"
+
+
+export const metadata: Metadata = {
+    title: 'Streaming Drama China Melolo Sub Indo Terlengkap | Tamanto',
+    description: 'Nonton koleksi drama China terbaru dan terpopuler dari channel Melolo. Streaming gratis ribuan episode dengan subtitle Indonesia kualitas HD.',
+    keywords: [
+        'Melolo Drama China', 'Nonton Melolo Sub Indo', 'Drama China Melolo Terbaru',
+        'Tamanto Melolo', 'Streaming Drama Asia Gratis', 'Melolo Premium Indonesia'
+    ],
+    alternates: {
+        canonical: 'https://tamanto.web.id/drama/china/channel/melolo',
+    },
+    openGraph: {
+        title: 'Melolo Media Hub – Galeri Drama China Pilihan',
+        description: 'Update harian serial drama China terbaik dari Melolo. Akses mudah, cepat, dan kualitas gambar jernih hanya di Tamanto.',
+        url: 'https://tamanto.web.id/drama/china/channel/melolo',
+        siteName: 'Tamanto',
+        images: [
+            {
+                url: '/og-melolo.jpg', // Opsional: Berikan image branding khusus Melolo
+                width: 1200,
+                height: 630,
+                alt: 'Tamanto Melolo Channel',
+            },
+        ],
+        locale: 'id_ID',
+        type: 'website',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Streaming Drama Melolo Sub Indo HD',
+        description: 'Ribuan episode drama China dari channel Melolo siap menemani waktu santaimu di Tamanto.',
+    },
+}
 
 export default async function MeloloPage({ searchParams }: { searchParams: Promise<{ query?: string }> }) {
     const sp = await searchParams

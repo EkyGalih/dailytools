@@ -63,28 +63,12 @@ export default function RootLayout({
         {/* ✅ FIX ADSENSE: Gunakan native script untuk script utama AdSense agar tidak ada data-nscript */}
         <script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" // Ganti dengan ID Adsense kamu jika diperlukan
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4762845598503420" // Ganti dengan ID Adsense kamu jika diperlukan
           crossOrigin="anonymous"
         ></script>
         <meta name="monetag" content="13de0a9b9b0974ee549d25adad2492fb"></meta>
 
         {/* ✅ MONETAG AD ZONE 1 */}
-        <Script
-          id="monetag-zone-10559511"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(s){s.dataset.zone='10559511',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`,
-          }}
-        />
-
-        {/* ✅ MONETAG AD ZONE 2 */}
-        {/* <Script
-          id="monetag-zone-10559506"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(s){s.dataset.zone='10559506',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`,
-          }}
-        /> */}
         <Script
           id="monetag-vignette"
           strategy="afterInteractive"

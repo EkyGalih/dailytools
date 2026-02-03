@@ -21,7 +21,6 @@ import {
 } from "lucide-react"
 
 import DramaShareIcons from "@/components/drama/dramabox/DramaShareIcon"
-import AdsterraBanner from "../ads/AdsterraBanner"
 
 export default function MeloloPlayerClient({
     drama,
@@ -103,7 +102,6 @@ export default function MeloloPlayerClient({
 
                     {/* 1. PLAYER VIEWPORT */}
                     <div className="relative group shadow-2xl shadow-rose-500/5 rounded-[2.5rem] overflow-hidden bg-zinc-950 border border-zinc-100">
-                        <AdsterraBanner />
                         {!isPlaying ? (
                             /* Hero Preview Mode */
                             <div className="relative aspect-video lg:aspect-[21/9] flex items-center overflow-hidden">

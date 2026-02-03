@@ -68,31 +68,23 @@ export default function RootLayout({
         ></script>
         <meta name="monetag" content="13de0a9b9b0974ee549d25adad2492fb"></meta>
 
-        {/* 🔥 MONETAG IN-PAGE PUSH (Baru Ditambahkan) */}
-        {/* <Script
-          id="monetag-inpage-push"
+        {/* ✅ MONETAG AD ZONE 1 */}
+        <Script
+          id="monetag-zone-10559511"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
-            __html: `(function(s){
-              s.dataset.zone='10524194';
-              s.src='https://nap5k.com/tag.min.js';
-            })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
-          }}
-        /> */}
-
-        {/* 🔥 MONETAG VIGNETTE - Gunakan strategy lazyOnload agar tidak menghambat loading utama */}
-        <Script
-          id="monetag-vignette"
-          strategy="afterInteractive" // Berubah dari beforeInteractive agar DOM siap dulu
-          dangerouslySetInnerHTML={{
-            __html: `(function(s){
-              s.dataset.zone='10559068';
-              s.src='https://gizokraijaw.net/vignette.min.js';
-            })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
+            __html: `(function(s){s.dataset.zone='10559511',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`,
           }}
         />
-      </head>
-      <body className="bg-gray-50 text-gray-900">
+
+        {/* ✅ MONETAG AD ZONE 2 */}
+        {/* <Script
+          id="monetag-zone-10559506"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(s){s.dataset.zone='10559506',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`,
+          }}
+        /> */}
         <Script
           id="monetag-vignette"
           strategy="afterInteractive"
@@ -106,6 +98,8 @@ export default function RootLayout({
               .appendChild(document.createElement('script')));`,
           }}
         />
+      </head>
+      <body className="bg-gray-50 text-gray-900">
         <Navbar />
         <NextTopLoader
           color="#9333ea"

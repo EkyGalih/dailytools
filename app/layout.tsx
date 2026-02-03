@@ -66,7 +66,7 @@ export default function RootLayout({
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" // Ganti dengan ID Adsense kamu jika diperlukan
           crossOrigin="anonymous"
         ></script>
-        <meta name="6a97888e-site-verification" content="24ffcb4127c9a414a884c55bfa450c1b" />
+        <meta name="monetag" content="13de0a9b9b0974ee549d25adad2492fb"></meta>
 
         {/* 🔥 MONETAG IN-PAGE PUSH (Baru Ditambahkan) */}
         {/* <Script

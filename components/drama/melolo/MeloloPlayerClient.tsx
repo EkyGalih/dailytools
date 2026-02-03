@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 
 import DramaShareIcons from "@/components/drama/dramabox/DramaShareIcon"
+import ExoBanner from "../ads/ExoBanner"
 
 export default function MeloloPlayerClient({
     drama,
@@ -153,6 +154,9 @@ export default function MeloloPlayerClient({
                                 )}
                             </div>
                         )}
+                        <div className="mt-10">
+                            <ExoBanner />
+                        </div>
                     </div>
 
                     {/* 2. METADATA & ACTIONS */}

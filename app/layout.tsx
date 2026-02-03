@@ -69,7 +69,7 @@ export default function RootLayout({
         <meta name="6a97888e-site-verification" content="24ffcb4127c9a414a884c55bfa450c1b" />
 
         {/* 🔥 MONETAG IN-PAGE PUSH (Baru Ditambahkan) */}
-        <Script
+        {/* <Script
           id="monetag-inpage-push"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -78,7 +78,7 @@ export default function RootLayout({
               s.src='https://nap5k.com/tag.min.js';
             })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
           }}
-        />
+        /> */}
 
         {/* 🔥 MONETAG VIGNETTE - Gunakan strategy lazyOnload agar tidak menghambat loading utama */}
         <Script

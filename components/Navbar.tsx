@@ -82,7 +82,7 @@ export default function Navbar() {
           {/* Text Branding */}
           <div className="flex flex-col">
             <span className="text-xl md:text-2xl font-black italic tracking-tighter uppercase leading-none text-zinc-900">
-              TAMAN<span className="text-indigo-600">TO.</span>
+              <span className="text-indigo-600">TA</span>MANTO
             </span>
             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-zinc-400 leading-none mt-1">
               Kita Nonton
@@ -201,7 +201,7 @@ export default function Navbar() {
             <div className="flex flex-col">
               {/* Perbaikan Branding Tamanto: Black Italic & Uppercase */}
               <span className="text-xl md:text-2xl font-black italic tracking-tighter uppercase leading-none text-zinc-900">
-                TAMAN<span className="text-indigo-600">TO.</span>
+                <span className="text-indigo-600">TA</span>MANTO
               </span>
               {/* Slogan disesuaikan dengan identitas lokal Sasak kamu */}
               <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-[0.2em] mt-1">

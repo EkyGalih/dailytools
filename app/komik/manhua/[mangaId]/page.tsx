@@ -17,11 +17,58 @@ export async function generateMetadata({ params }: { params: Promise<{ mangaId: 
     const res = await getKomikDetail(mangaId);
     const manhua = res?.data;
 
+    if (!manhua) {
+        return {
+            title: "Manhua Tidak Ditemukan | Tamanto",
+        };
+    }
+
+    const site = 'https://tamanto.web.id';
+    const title = `Baca Manhua ${manhua.title} Sub Indo`;
+    const description = manhua.description?.slice(0, 160) || `Baca manhua ${manhua.title} subtitle Indonesia terbaru dengan kualitas HD hanya di Tamanto.`;
+
     return {
-        title: `Baca ${manhua?.title || "Manhua"} Bahasa Indonesia - MyTools`,
-        description: `Baca ${manhua?.title} online. ${manhua?.description?.slice(0, 150)}...`,
+        // Format: Baca Manhua [Judul] Sub Indo | Tamanto
+        title: `${title} | Tamanto`,
+        description: description,
+
+        alternates: {
+            // Mengarahkan ke rute spesifik manhua di Tamanto
+            canonical: `${site}/komik/manhua/${mangaId}`,
+        },
+
         openGraph: {
-            images: [manhua?.cover_image_url || ""],
+            title: title,
+            description: description,
+            url: `${site}/komik/manhua/${mangaId}`,
+            siteName: 'Tamanto',
+            type: 'book',
+            images: [
+                {
+                    url: manhua.thumbnail || manhua.cover || manhua.cover_image_url || `${site}/og-fallback.jpg`,
+                    width: 800,
+                    height: 1200,
+                    alt: `Cover Manhua ${manhua.title}`,
+                },
+            ],
+            locale: 'id_ID',
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: title,
+            description: description,
+            images: [manhua.thumbnail || manhua.cover || manhua.cover_image_url || `${site}/og-fallback.jpg`],
+        },
+
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-image-preview': 'large',
+            },
         },
     };
 }

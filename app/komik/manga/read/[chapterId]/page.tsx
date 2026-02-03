@@ -6,9 +6,48 @@ import ReadingControls from "@/components/komik/manga/ManhuaReadingControls"
 
 export async function generateMetadata({ params }: { params: Promise<{ chapterId: string }> }): Promise<Metadata> {
     const { chapterId } = await params
+
+    const site = 'https://tamanto.web.id'
+    const title = `Baca Komik Chapter ${chapterId} Sub Indo | Tamanto`
+    const description = `Nikmati pengalaman baca komik subtitle Indonesia dengan mode baca modern, cepat, dan responsif. Update chapter terbaru setiap hari hanya di Tamanto.`
+
     return {
-        title: `Reading Mode - MyTools Komik`,
-        description: "Halaman baca manga full chapter dengan pengalaman modern.",
+        // Format: Baca [Judul] Chapter [No] Sub Indo | Tamanto
+        title: title,
+        description: description,
+
+        alternates: {
+            canonical: `${site}/komik/read/${chapterId}`,
+        },
+
+        openGraph: {
+            title: `Reading Mode: ${title}`,
+            description: description,
+            url: `${site}/komik/read/${chapterId}`,
+            siteName: 'Tamanto',
+            type: 'article', // 'article' lebih cocok untuk halaman baca komik
+            images: [
+                {
+                    url: '/og-reader.jpg', // Opsional: Berikan image bertema manga/reading
+                    width: 1200,
+                    height: 630,
+                    alt: 'Manga Reader Tamanto',
+                },
+            ],
+            locale: 'id_ID',
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: title,
+            description: description,
+        },
+
+        // Fokus pada kenyamanan baca tanpa distraksi bot
+        robots: {
+            index: true,
+            follow: true,
+        },
     }
 }
 

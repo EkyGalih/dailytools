@@ -5,7 +5,7 @@ import {
 } from "@/libs/drama/drakor/drama"
 import DramaHero from "@/components/drama/drakor/DramaHero"
 import DramaCard from "@/components/drama/drakor/DramaCard"
-import { ArrowLeft, ChevronRight} from "lucide-react"
+import { ArrowLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import RefreshButton from "@/components/drama/drakor/RefreshButton"
 import { notFound } from "next/navigation"
@@ -31,14 +31,49 @@ const CATEGORY_MAP: Record<string, { title: string, fetcher: any, color: string 
     }
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
+import { Metadata } from 'next'
+
+export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
     const { category } = await params
     const config = CATEGORY_MAP[category]
-    if (!config) return { title: "Halaman Tidak Ditemukan" }
+
+    if (!config) return { title: "Halaman Tidak Ditemukan | Tamanto" }
+
+    const site = 'https://tamanto.web.id'
+    const categoryTitle = config.title || "Drama Korea"
+    const description = `Koleksi ${categoryTitle} subtitle Indonesia terbaru dengan kualitas Ultra HD. Update harian genre favoritmu hanya di Tamanto.`
 
     return {
-        title: `Nonton ${config.title} Sub Indo Terbaru | Hallyu Station`,
-        description: `Koleksi ${config.title} kualitas Ultra HD dengan subtitle Indonesia terlengkap.`
+        // Format: Nonton [Nama Kategori] Sub Indo Terbaru | Tamanto
+        title: `Nonton ${categoryTitle} Sub Indo Terbaru`,
+        description: description,
+
+        alternates: {
+            canonical: `${site}/drama/korea/category/${category}`,
+        },
+
+        openGraph: {
+            title: `${categoryTitle} Terbaru - Tamanto`,
+            description: description,
+            url: `${site}/drama/korea/category/${category}`,
+            siteName: 'Tamanto',
+            type: 'website',
+            images: [
+                {
+                    url: '/og-category.jpg', // Opsional: Berikan image bertema kategori
+                    width: 1200,
+                    height: 630,
+                    alt: `Kategori ${categoryTitle} di Tamanto`,
+                },
+            ],
+            locale: 'id_ID',
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: `Update ${categoryTitle} Sub Indo Tercepat`,
+            description: description,
+        },
     }
 }
 

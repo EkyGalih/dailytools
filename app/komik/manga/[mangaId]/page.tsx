@@ -28,12 +28,61 @@ export async function generateMetadata({ params }: { params: Promise<{ mangaId: 
     const res = await getKomikDetail(mangaId);
     const manga = res?.data;
 
-    return {
-        title: `${manga?.title || "Detail Manga"} - MyTools Komik`,
-        description: manga?.description?.slice(0, 160),
-    };
-}
+    if (!manga) {
+        return {
+            title: "Komik Tidak Ditemukan | Tamanto",
+        };
+    }
 
+    const site = 'https://tamanto.web.id';
+    const mangaTitle = manga.title || "Detail Komik";
+    const mangaDescription = manga.description?.slice(0, 160) || `Baca komik ${mangaTitle} subtitle Indonesia terbaru dengan kualitas HD hanya di Tamanto.`;
+
+    return {
+        // Format: [Judul Komik] Sub Indo - Tamanto
+        title: `${mangaTitle} Sub Indo`,
+        description: mangaDescription,
+
+        alternates: {
+            // Sesuai struktur navigasi Anda untuk komik
+            canonical: `${site}/komik/detail/${mangaId}`,
+        },
+
+        openGraph: {
+            title: `Baca ${mangaTitle} Subtitle Indonesia`,
+            description: mangaDescription,
+            url: `${site}/komik/detail/${mangaId}`,
+            siteName: 'Tamanto',
+            type: 'book',
+            images: [
+                {
+                    url: manga.thumbnail || manga.cover || `${site}/og-fallback.jpg`,
+                    width: 800,
+                    height: 1200,
+                    alt: `Cover ${mangaTitle}`,
+                },
+            ],
+            locale: 'id_ID',
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: `${mangaTitle} | Update Chapter Terbaru`,
+            description: mangaDescription,
+            images: [manga.thumbnail || manga.cover || `${site}/og-fallback.jpg`],
+        },
+
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-image-preview': 'large',
+            },
+        },
+    }
+}
 export default async function MangaDetailPage({ params }: { params: Promise<{ mangaId: string }> }) {
     const { mangaId } = await params;
     const res = await getKomikDetail(mangaId);

@@ -6,9 +6,53 @@ import ManhwaReadingControls from "@/components/komik/manhwa/ManhwaReadingContro
 
 export async function generateMetadata({ params }: { params: Promise<{ chapterId: string }> }): Promise<Metadata> {
     const { chapterId } = await params
+
+    const site = 'https://tamanto.web.id'
+    const title = `Reading Mode: Baca Manhwa Chapter ${chapterId} Sub Indo | Tamanto`
+    const description = "Nikmati pengalaman baca manhwa premium dengan mode fokus yang bersih, cepat, dan responsif hanya di Tamanto."
+
     return {
-        title: `Reading Mode - MyTools Komik`,
-        description: "Pengalaman baca manhwa premium dengan mode fokus.",
+        // Format: Reading Mode: Baca [Judul] Chapter [No] Sub Indo | Tamanto
+        title: title,
+        description: description,
+
+        alternates: {
+            // Memastikan Google mengindeks rute manhwa Tamanto yang benar
+            canonical: `${site}/komik/manhwa/read/${chapterId}`,
+        },
+
+        openGraph: {
+            title: title,
+            description: description,
+            url: `${site}/komik/manhwa/read/${chapterId}`,
+            siteName: 'Tamanto',
+            type: 'article',
+            images: [
+                {
+                    url: '/og-reader-manhwa.jpg', // Gambar bertema manhwa reader
+                    width: 1200,
+                    height: 630,
+                    alt: 'Premium Manhwa Reader Tamanto',
+                },
+            ],
+            locale: 'id_ID',
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: title,
+            description: description,
+        },
+
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-snippet': -1,
+            },
+        },
     }
 }
 

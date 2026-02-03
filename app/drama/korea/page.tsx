@@ -1,9 +1,46 @@
-import { Search, Play, Filter, History, Clapperboard, Flame, ListFilter, X, ChevronRight, ChevronLeft, Globe } from "lucide-react"
+import { Search, Filter, History } from "lucide-react"
 import DramaCard from "@/components/drama/drakor/DramaCard"
 import DramaHero from "@/components/drama/drakor/DramaHero"
 import DramaListCard from "@/components/drama/drakor/DramaLists"
 import { searchDrama, getGenres, getDramaByGenre, getHomePage } from "@/libs/drama/drakor/drama"
 import Link from "next/link"
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Nonton Drama Korea Sub Indo Terbaru & Terlengkap | Tamanto',
+  description:
+    'Pusat streaming drama Korea (Drakor) subtitle Indonesia kualitas HD. Update setiap hari, koleksi genre terlengkap mulai dari Romance, Thriller, hingga Komedi hanya di Tamanto.',
+  keywords: [
+    'Drama Korea Sub Indo', 'Nonton Drakor Terbaru', 'Drakor Ongoing',
+    'Streaming Drama Korea HD', 'Download Drakor', 'Tamanto Drama Korea',
+    'Drakorindo Terbaru', 'Drama Korea 2026'
+  ],
+  alternates: {
+    canonical: 'https://tamanto.web.id/drama/korea',
+  },
+  openGraph: {
+    title: 'Tamanto Drama Korea - Kita Nonton, Kita Terhibur!',
+    description: 'Update harian drama Korea subtitle Indonesia tercepat dan terlengkap dengan kualitas Ultra HD.',
+    url: 'https://tamanto.web.id/drama/korea',
+    siteName: 'Tamanto',
+    images: [
+      {
+        url: '/og-drakor-index.jpg', // Gunakan gambar grid poster drakor yang menarik
+        width: 1200,
+        height: 630,
+        alt: 'Katalog Drama Korea Tamanto',
+      },
+    ],
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Nonton Drama Korea Sub Indo Update Setiap Hari',
+    description: 'Katalog lengkap drakor terbaru dengan server streaming super cepat di Tamanto.',
+    images: ['/og-drakor-index.jpg'],
+  },
+}
 
 function unwrap(res: any) {
   return res?.data ?? res

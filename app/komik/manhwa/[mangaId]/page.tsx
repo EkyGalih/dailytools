@@ -26,13 +26,60 @@ function splitTitle(text: string) {
 export async function generateMetadata({ params }: { params: Promise<{ mangaId: string }> }): Promise<Metadata> {
     const { mangaId } = await params;
     const res = await getKomikDetail(mangaId);
-    const manga = res?.data;
+    const manhwa = res?.data;
+
+    if (!manhwa) {
+        return {
+            title: "Manhwa Tidak Ditemukan | Tamanto",
+        };
+    }
+
+    const site = 'https://tamanto.web.id';
+    const title = `Baca Manhwa ${manhwa.title} Sub Indo`;
+    const description = manhwa.description?.slice(0, 160) || `Baca manhwa ${manhwa.title} subtitle Indonesia terbaru dengan kualitas HD hanya di Tamanto.`;
 
     return {
-        title: `Baca ${manga?.title || "Manhwa"} Bahasa Indonesia - MyTools`,
-        description: `Baca ${manga?.title} online. ${manga?.description?.slice(0, 150)}...`,
+        // Format: Baca Manhwa [Judul] Sub Indo | Tamanto
+        title: `${title} | Tamanto`,
+        description: description,
+
+        alternates: {
+            // Mengarahkan ke rute spesifik manhwa di Tamanto
+            canonical: `${site}/komik/manhwa/${mangaId}`,
+        },
+
         openGraph: {
-            images: [manga?.cover_image_url || ""],
+            title: title,
+            description: description,
+            url: `${site}/komik/manhwa/${mangaId}`,
+            siteName: 'Tamanto',
+            type: 'book',
+            images: [
+                {
+                    url: manhwa.thumbnail || manhwa.cover || manhwa.cover_image_url || `${site}/og-fallback.jpg`,
+                    width: 800,
+                    height: 1200,
+                    alt: `Cover Manhwa ${manhwa.title}`,
+                },
+            ],
+            locale: 'id_ID',
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: title,
+            description: description,
+            images: [manhwa.thumbnail || manhwa.cover || manhwa.cover_image_url || `${site}/og-fallback.jpg`],
+        },
+
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-image-preview': 'large',
+            },
         },
     };
 }

@@ -6,9 +6,55 @@ import ManhuaReadingControls from "@/components/komik/manga/ManhuaReadingControl
 
 export async function generateMetadata({ params }: { params: Promise<{ chapterId: string }> }): Promise<Metadata> {
     const { chapterId } = await params
+
+    // Identitas utama platform Tamanto
+    const site = 'https://tamanto.web.id'
+    const title = `Cultivation Mode: Baca Manhua Chapter ${chapterId} Sub Indo | Tamanto`
+    const description = `Masuk ke mode kultivasi dan nikmati baca manhua subtitle Indonesia dengan pengalaman yang mulus, cepat, dan tanpa gangguan hanya di Tamanto.`
+
     return {
-        title: `Cultivation Mode - MyTools Manhua`,
-        description: "Halaman baca manhua dengan pengalaman spiritual yang mendalam.",
+        // Format: Cultivation Mode: Baca [Judul] Chapter [No] Sub Indo | Tamanto
+        title: title,
+        description: description,
+
+        alternates: {
+            // Memastikan Google mengindeks rute komik Tamanto yang benar
+            canonical: `${site}/komik/manhua/read/${chapterId}`,
+        },
+
+        openGraph: {
+            title: title,
+            description: description,
+            url: `${site}/komik/manhua/read/${chapterId}`,
+            siteName: 'Tamanto',
+            type: 'article',
+            images: [
+                {
+                    url: '/og-cultivation.jpg', // Gambar bertema manhua/kultivasi
+                    width: 1200,
+                    height: 630,
+                    alt: 'Cultivation Mode Tamanto',
+                },
+            ],
+            locale: 'id_ID',
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title: title,
+            description: description,
+            images: ['/og-cultivation.jpg'],
+        },
+
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-snippet': -1,
+            },
+        },
     }
 }
 

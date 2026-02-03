@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: '%s | Tamanto',
   },
   verification: {
-    google: "Qa7rW4YkK4_ER8nyMVXd5KEXzqSTItCifB4RThCRWeo", 
+    google: "Qa7rW4YkK4_ER8nyMVXd5KEXzqSTItCifB4RThCRWeo",
   },
   description:
     'Nonton Drama China viral (Dramabox), Drama Korea terbaru, Anime Ongoing, hingga baca Manga & Manhwa sub Indo kualitas HD.',
@@ -66,7 +66,8 @@ export default function RootLayout({
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" // Ganti dengan ID Adsense kamu jika diperlukan
           crossOrigin="anonymous"
         ></script>
-        
+        <meta name="6a97888e-site-verification" content="24ffcb4127c9a414a884c55bfa450c1b" />
+
         {/* 🔥 MONETAG IN-PAGE PUSH (Baru Ditambahkan) */}
         <Script
           id="monetag-inpage-push"

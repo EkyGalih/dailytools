@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: '%s | Tamanto',
   },
   verification: {
-    google: 'googlef524069779b891a7',
+    google: "googlef524069779b891a7", 
   },
   description:
     'Nonton Drama China viral (Dramabox), Drama Korea terbaru, Anime Ongoing, hingga baca Manga & Manhwa sub Indo kualitas HD.',

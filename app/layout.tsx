@@ -93,8 +93,19 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-gray-50 text-gray-900">
-        {/* Hapus AdsenseScript jika isinya hanya script client di atas, 
-            tapi jika isinya unit iklan (ins), biarkan tetap di sini */}
+        <Script
+          id="monetag-vignette"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(s){
+              s.dataset.zone='10559496';
+              s.src='https://gizokraijaw.net/vignette.min.js';
+            })([document.documentElement, document.body]
+              .filter(Boolean)
+              .pop()
+              .appendChild(document.createElement('script')));`,
+          }}
+        />
         <Navbar />
         <NextTopLoader
           color="#9333ea"

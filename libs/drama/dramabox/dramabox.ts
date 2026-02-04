@@ -38,67 +38,100 @@ async function fetchJSON<T>(
 }
 
 export async function getDramaByCategory(
-    slug: string,
-    options?: {
-        classify?: 'terbaru' | 'terpopuler'
-    }
+  slug: string,
+  options?: {
+    classify?: 'terbaru' | 'terpopuler'
+  }
 ) {
-    let endpoint = '/latest'
-    const params = new URLSearchParams()
+  let endpoint = '/latest'
+  const params = new URLSearchParams()
 
-    switch (slug) {
-        case 'dubindo':
-            endpoint = '/dubindo'
-            params.set('classify', options?.classify || 'terbaru') // default
-            break
+  switch (slug) {
+    case 'dubindo':
+      endpoint = '/dubindo'
+      params.set('classify', options?.classify || 'terbaru') // default
+      break
 
-        case 'randomdrama':
-            endpoint = '/randomdrama'
-            break
+    case 'randomdrama':
+      endpoint = '/randomdrama'
+      break
 
-        case 'foryou':
-            endpoint = '/foryou'
-            break
+    case 'foryou':
+      endpoint = '/foryou'
+      break
 
-        case 'trending':
-            endpoint = '/trending'
-            break
+    case 'trending':
+      endpoint = '/trending'
+      break
 
-        case 'latest':
-            endpoint = '/latest'
-            break
+    case 'latest':
+      endpoint = '/latest'
+      break
 
-        case 'populersearch':
-            endpoint = '/populersearch'
-            break
-    }
+    case 'populersearch':
+      endpoint = '/populersearch'
+      break
 
-    const url =
-        params.toString().length > 0
-            ? `${BASE}${endpoint}?${params.toString()}`
-            : `${BASE}${endpoint}`
+    case 'vip':
+      endpoint = '/vip'
+      break
+  }
 
-    const json = await fetchJSON<any>(url, 1800)
-    if (!json) return []
-    if (Array.isArray(json)) return json
-    if (Array.isArray(json?.data)) return json.data
-    if (Array.isArray(json?.data?.list)) return json.data.list
+  const url =
+    params.toString().length > 0
+      ? `${BASE}${endpoint}?${params.toString()}`
+      : `${BASE}${endpoint}`
+
+  const json = await fetchJSON<any>(url, 1800)
+
+  if (!json) return []
+  
+  if (slug === 'vip') {
+    if (Array.isArray(json?.columnVoList)) return json.columnVoList
+    if (Array.isArray(json?.data?.columnVoList)) return json.data.columnVoList
     return []
+  }
+
+  if (Array.isArray(json)) return json
+  if (Array.isArray(json?.data)) return json.data
+  if (Array.isArray(json?.data?.list)) return json.data.list
+  return []
 }
 
 export async function getDramaDetail(bookId: string) {
-    const json = await fetchJSON<any>(
-      `${BASE}/detail?bookId=${encodeURIComponent(bookId)}`,
-      3600
-    )
-    if (json?.bookId) return json
-    return null
+  const json = await fetchJSON<any>(
+    `${BASE}/detail?bookId=${encodeURIComponent(bookId)}`,
+    3600
+  )
+  if (json?.bookId) return json
+  return null
 }
 
 export async function getDramaEpisodes(bookId: string) {
-    const json = await fetchJSON<any[]>(
-      `${BASE}/allepisode?bookId=${encodeURIComponent(bookId)}`,
-      3600
-    )
-    return Array.isArray(json) ? json : []
+  const json = await fetchJSON<any[]>(
+    `${BASE}/allepisode?bookId=${encodeURIComponent(bookId)}`,
+    3600
+  )
+  return Array.isArray(json) ? json : []
+}
+
+export async function getDramaVIP() {
+  const url = `${BASE}/vip`; // Endpoint menyesuaikan dengan server Sansekai Anda
+
+  const json = await fetchJSON<any>(url, 3600); // Revalidate 1 jam
+
+  if (!json) return [];
+
+  // Berdasarkan struktur JSON yang Anda berikan:
+  // Data utama berada di dalam columnVoList
+  if (Array.isArray(json?.columnVoList)) {
+    return json.columnVoList;
+  }
+
+  // Fallback jika dibungkus dalam properti data
+  if (Array.isArray(json?.data?.columnVoList)) {
+    return json.data.columnVoList;
+  }
+
+  return [];
 }

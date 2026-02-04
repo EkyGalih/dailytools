@@ -8,6 +8,7 @@ import DramaFilters from './DramaFilter'
 import DubIndoSubFilter from './DubIndoSubFilter'
 import DramaBookSkeleton from '@/components/common/DramaBoxSkleton'
 import { Search, X } from 'lucide-react'
+import MaintenancePage from '@/components/common/MaintenancePage'
 
 export default function DramaExplorer({
     initialItems,
@@ -30,8 +31,29 @@ export default function DramaExplorer({
         return pathname.replace(key, '').split('/')[0]
     }, [pathname])
 
+    const isVIP = activeCategory === "vip"
+
+    function renderVipSections() {
+        return (
+            <div className="space-y-14">
+                {items.map((col: any) => (
+                    <div key={col.columnId}>
+                        {/* Title */}
+                        <h2 className="text-xl md:text-2xl font-black text-zinc-900 mb-5">
+                            {col.title}
+                        </h2>
+
+                        {/* Grid */}
+                        <DramaBookGrid items={col.bookList || []} />
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
     async function onSearch(e: React.FormEvent) {
         e.preventDefault()
+        if (isVIP) return
         if (!query.trim()) {
             setItems(initialItems)
             return
@@ -55,7 +77,7 @@ export default function DramaExplorer({
         <section className="space-y-8">
             {/* --- ACTION BAR --- */}
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between border-b border-zinc-50 pb-6">
-                
+
                 {/* LEFT: CATEGORY LIST (Scrolled on Mobile) */}
                 <div className="w-full lg:flex-1 overflow-hidden">
                     <DramaFilters active={query.trim() ? 'search' : activeCategory} />
@@ -63,7 +85,7 @@ export default function DramaExplorer({
 
                 {/* RIGHT: DUB INDO FILTER & SEARCH */}
                 <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-                    
+
                     {/* SUB FILTER DUB INDO: Muncul di atas search (Mobile) & Samping Kiri search (Desktop) */}
                     {activeCategory === 'dubindo' && (
                         <div className="w-full sm:w-auto animate-in fade-in slide-in-from-right-4 duration-500">
@@ -109,6 +131,9 @@ export default function DramaExplorer({
                     <div className="pt-10">
                         <DramaBookSkeleton count={10} />
                     </div>
+                ) : isVIP ? (
+                    <MaintenancePage />
+                    // renderVipSections()
                 ) : (
                     <DramaBookGrid items={items} />
                 )}

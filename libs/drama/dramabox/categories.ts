@@ -5,6 +5,7 @@ export type DramaCategorySlug =
   | 'foryou'
   | 'latest'
   | 'populersearch'
+  | 'vip'
 
 export const DRAMA_CATEGORIES: Array<{
   slug: DramaCategorySlug
@@ -16,4 +17,5 @@ export const DRAMA_CATEGORIES: Array<{
   { slug: 'foryou', name: 'For You' },
   { slug: 'latest', name: 'Terbaru' },
   { slug: 'populersearch', name: 'Pencarian Populer' },
+  { slug: 'vip', name: 'VIP' },
 ]

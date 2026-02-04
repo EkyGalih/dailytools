@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     default: 'Tamanto – Streaming Drama Asia, Anime & Manga Terlengkap',
     template: '%s | Tamanto',
   },
+  other: {
+    "google-adsense-account": "ca-pub-4762845598503420",
+  },
   verification: {
     google: "Qa7rW4YkK4_ER8nyMVXd5KEXzqSTItCifB4RThCRWeo",
   },

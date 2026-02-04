@@ -147,8 +147,9 @@ export default function RootLayout({
                 <h4 className="font-black text-xs uppercase tracking-[0.2em] text-zinc-900 italic">Support</h4>
                 <ul className="space-y-4 text-sm text-zinc-500 font-medium">
                   <li><Link href="/about" className="hover:text-indigo-600 transition-all">Tentang Tamanto</Link></li>
+                  <li><Link href="/hubungi-kami" className="hover:text-indigo-600 transition-all">Hubungi Kami</Link></li>
                   <li><Link href="/privacy-policy" className="hover:text-indigo-600 transition-all">Privacy Policy</Link></li>
-                  <li><Link href="/terms" className="hover:text-indigo-600 transition-all">Syarat & Ketentuan</Link></li>
+                  <li><Link href="/terms-conditions" className="hover:text-indigo-600 transition-all">Syarat & Ketentuan</Link></li>
                 </ul>
               </div>
             </div>

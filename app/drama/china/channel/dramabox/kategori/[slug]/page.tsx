@@ -58,7 +58,6 @@ export default async function DramaCategoryPage({
   const items = await getDramaByCategory(cat.slug, { classify: mode })
   const products = getAffiliateProducts()
 
-
   return (
     <div className="bg-[#fafafa] min-h-screen pb-20">
       {/* <AffiliateMiniPopup /> */}

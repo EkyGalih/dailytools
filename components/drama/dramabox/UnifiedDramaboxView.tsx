@@ -149,22 +149,13 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
 
                                     {/* Overlays 3x Klik */}
                                     {(clickCount[currentIndex] || 0) < 2 && !isAdGap && (
-                                        <div onClick={() => handleAction(currentIndex)} className="absolute inset-0 z-30 bg-zinc-950/90 backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer p-4 text-center">
+                                        <div onClick={handleAction} className="absolute inset-0 z-30 bg-zinc-950/90 backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer p-4 text-center">
                                             <div className="w-12 h-12 md:w-16 md:h-16 bg-purple-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-purple-500/50">
                                                 <Play className="w-6 h-6 md:w-8 md:h-8 text-white fill-current ml-1" />
                                             </div>
                                             <p className="text-white text-sm md:text-base font-black italic uppercase tracking-tighter leading-none">
                                                 Klik Untuk Memulai
                                             </p>
-                                        </div>
-                                    )}
-
-                                    {/* Overlays 10 Ep Gap */}
-                                    {isAdGap && (
-                                        <div onClick={() => handleAction(currentIndex)} className="absolute inset-0 z-40 bg-purple-900/95 backdrop-blur-3xl flex flex-col items-center justify-center cursor-pointer text-center p-6">
-                                            <div className="w-16 h-16 md:w-20 md:h-20 bg-white text-purple-600 rounded-full flex items-center justify-center mb-6 animate-bounce shadow-2xl font-black text-xl md:text-2xl">10+</div>
-                                            <h2 className="text-white text-lg md:text-2xl font-black italic uppercase tracking-tighter">Support & Lanjut</h2>
-                                            <p className="text-purple-200 text-[10px] md:text-xs mt-2 font-bold uppercase tracking-widest">Klik untuk lanjut ke Episode {currentIndex + 1}</p>
                                         </div>
                                     )}
                                 </div>

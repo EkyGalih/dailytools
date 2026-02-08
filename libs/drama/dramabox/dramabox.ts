@@ -42,6 +42,33 @@ async function fetchJSON<T>(
   }
 }
 
+async function fetchWithFallback<T>(
+  url: string,
+  revalidate: number
+): Promise<T | null> {
+  // 1️⃣ coba cache dulu
+  const cached = await fetchJSON<T>(url, revalidate)
+  if (cached) return cached
+
+  // 2️⃣ fallback realtime (tanpa cache)
+  try {
+    const res = await fetch(url, {
+      headers: DEFAULT_HEADERS,
+      cache: 'no-store',
+    })
+
+    if (!res.ok) return null
+
+    const ct = res.headers.get('content-type') || ''
+    if (!ct.includes('application/json')) return null
+
+    return res.json()
+  } catch (err) {
+    console.error('[Dramabox Fallback Error]', url, err)
+    return null
+  }
+}
+
 export async function getDramaByCategory(
   slug: string,
   options?: {
@@ -87,7 +114,7 @@ export async function getDramaByCategory(
       ? `${BASE}${endpoint}?${params.toString()}`
       : `${BASE}${endpoint}`
 
-  const json = await fetchJSON<any>(url, 1800)
+  const json = await fetchWithFallback<any>(url, 1800)
 
   if (!json) return []
   
@@ -104,7 +131,7 @@ export async function getDramaByCategory(
 }
 
 export async function getDramaDetail(bookId: string) {
-  const json = await fetchJSON<any>(
+  const json = await fetchWithFallback<any>(
     `${BASE}/detail?bookId=${encodeURIComponent(bookId)}`,
     3600
   )
@@ -113,7 +140,7 @@ export async function getDramaDetail(bookId: string) {
 }
 
 export async function getDramaEpisodes(bookId: string) {
-  const json = await fetchJSON<any[]>(
+  const json = await fetchWithFallback<any[]>(
     `${BASE}/allepisode?bookId=${encodeURIComponent(bookId)}`,
     3600
   )
@@ -123,7 +150,7 @@ export async function getDramaEpisodes(bookId: string) {
 export async function getDramaVIP() {
   const url = `${BASE}/vip`; // Endpoint menyesuaikan dengan server Sansekai Anda
 
-  const json = await fetchJSON<any>(url, 3600); // Revalidate 1 jam
+  const json = await fetchWithFallback<any>(url, 3600); // Revalidate 1 jam
 
   if (!json) return [];
 

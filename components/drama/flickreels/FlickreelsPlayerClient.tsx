@@ -6,21 +6,21 @@ import Link from "next/link"
 import {
     Lock,
     Flame,
-    Info,
     Monitor,
     Smartphone,
-    ArrowLeft,
     PlayCircle,
     Star,
     CheckCircle2,
     LayoutGrid,
-    Zap,
-    Play,
+    ArrowLeft,
     ChevronRight,
     Activity
 } from "lucide-react"
 
+import PremiumModal from "@/components/premium/PremiumModal"
+
 import DramaShareIcons from "@/components/drama/dramabox/DramaShareIcon"
+import { usePremiumDracinStatus } from "../usePremiumDrachin"
 
 export default function FlickreelsPlayerClient({
     drama,
@@ -31,32 +31,69 @@ export default function FlickreelsPlayerClient({
     episodes: any[]
     initialEpIndex: number
 }) {
-    const [currentIndex, setCurrentIndex] = useState(initialEpIndex)
+    const [currentIndex, setCurrentIndex] = useState(0)
     const [isPlaying, setIsPlaying] = useState(false)
     const [isVertical, setIsVertical] = useState(true)
     const [streamUrl, setStreamUrl] = useState<string | null>(null)
-    const [loadingStream, setLoadingStream] = useState(false)
     const [shareUrl, setShareUrl] = useState("")
 
     const videoRef = useRef<HTMLVideoElement>(null)
     const activeEp = episodes[currentIndex]
 
+    const FREE_LIMIT = 25
+    const STORAGE_KEY = `flickreels:last_episode:${drama.id || drama.slug || drama.title}`;
+    const [hasResume, setHasResume] = useState(false);
+    const { premium, loading: premiumLoading } = usePremiumDracinStatus()
+    const [showPremiumModal, setShowPremiumModal] = useState(false)
+
     useEffect(() => {
         setShareUrl(window.location.href)
     }, [])
 
-    const fetchStreamUrl = async (videoId: string) => {
-        try {
-            setLoadingStream(true)
-            const res = await fetch(`/api/flickreels/stream?videoId=${videoId}`)
-            const json = await res.json()
-            setStreamUrl(json?.url || null)
-        } catch (err) {
-            setStreamUrl(null)
-        } finally {
-            setLoadingStream(false)
+    // Restore last watched episode on mount or fallback to initialEpIndex
+    useEffect(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved !== null) {
+            const idx = Number(saved);
+            if (!isNaN(idx) && idx >= 0 && idx < episodes.length) {
+                setCurrentIndex(idx);
+                setHasResume(true);
+                return;
+            }
         }
-    }
+        // fallback to server-provided initialEpIndex
+        if (
+            typeof initialEpIndex === "number" &&
+            initialEpIndex >= 0 &&
+            initialEpIndex < episodes.length
+        ) {
+            setCurrentIndex(initialEpIndex);
+        }
+    }, [episodes.length]);
+    // Dedicated resume handler for continue-watching/start button
+    const handleResume = () => {
+        if (premiumLoading) return;
+
+        if (!premium && currentIndex >= FREE_LIMIT) {
+            setShowPremiumModal(true);
+            return;
+        }
+
+        setIsPlaying(true);
+
+        if (window.innerWidth < 1024) {
+            document
+                .getElementById("flickreels-viewport")
+                ?.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
+    // Persist episode progress whenever currentIndex changes
+    useEffect(() => {
+        if (currentIndex >= 0) {
+            localStorage.setItem(STORAGE_KEY, String(currentIndex));
+        }
+    }, [currentIndex]);
 
     useEffect(() => {
         if (isPlaying && activeEp?.raw?.videoUrl) {
@@ -64,12 +101,69 @@ export default function FlickreelsPlayerClient({
         }
     }, [currentIndex, isPlaying, activeEp])
 
+    useEffect(() => {
+        if (!isPlaying) return
+        if (!videoRef.current) return
+
+        const tryPlay = async () => {
+            try {
+                await videoRef.current!.play()
+            } catch (e) {
+                // autoplay mungkin diblok browser, user masih bisa klik play manual
+            }
+        }
+
+        // beri delay kecil agar src benar-benar terpasang
+        const t = setTimeout(tryPlay, 300)
+        return () => clearTimeout(t)
+    }, [currentIndex])
+
+    const forceExitFullscreen = async () => {
+        if (document.fullscreenElement) {
+            try {
+                await document.exitFullscreen()
+            } catch { }
+        }
+    }
+
     const handleEpisodeClick = (index: number) => {
+        if (premiumLoading) return
+
+        if (!premium && index >= FREE_LIMIT) {
+            setShowPremiumModal(true)
+            return
+        }
+
+        // Persist clicked episode index
+        localStorage.setItem(STORAGE_KEY, String(index));
         setIsPlaying(true)
         setCurrentIndex(index)
+
         if (window.innerWidth < 1024) {
-            const playerElem = document.getElementById('flickreels-viewport')
-            playerElem?.scrollIntoView({ behavior: 'smooth' })
+            document
+                .getElementById("flickreels-viewport")
+                ?.scrollIntoView({ behavior: "smooth" })
+        }
+    }
+
+
+    const handleVideoEnded = async () => {
+        const nextIndex = currentIndex + 1
+
+        // Persist next index before paywall check
+        localStorage.setItem(STORAGE_KEY, String(nextIndex));
+
+        // 🔒 PAYWALL: episode 26+ (index 25)
+        if (!premium && nextIndex >= FREE_LIMIT) {
+            await forceExitFullscreen()
+            setIsPlaying(false)
+            setShowPremiumModal(true)
+            return
+        }
+
+        if (nextIndex < episodes.length) {
+            setCurrentIndex(nextIndex)
+            setIsPlaying(true)
         }
     }
 
@@ -106,31 +200,30 @@ export default function FlickreelsPlayerClient({
                                             {drama.title}
                                         </h1>
                                         <button
-                                            onClick={() => handleEpisodeClick(currentIndex)}
+                                            onClick={handleResume}
                                             className="inline-flex items-center gap-3 bg-white text-zinc-950 px-8 py-3.5 rounded-full font-black uppercase text-[10px] tracking-widest hover:scale-105 transition-all shadow-xl active:scale-95"
                                         >
-                                            <PlayCircle size={18} /> Start Episode 1
+                                            <PlayCircle size={18} />
+                                            {hasResume ? "Lanjut Menonton" : "Start Episode 1"}
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div className={`relative mx-auto transition-all duration-700 ease-in-out ${isVertical ? "max-w-[380px] aspect-[9/16]" : "w-full aspect-video"}`}>
-                                {loadingStream ? (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950/90 backdrop-blur-md z-20">
-                                        <div className="w-10 h-10 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4" />
-                                        <span className="text-[8px] text-zinc-500 font-black uppercase tracking-[0.4em]">Buffering...</span>
-                                    </div>
-                                ) : activeEp?.unlock === false ? (
-                                    <div className="absolute inset-0 z-30 bg-zinc-950/95 flex flex-col items-center justify-center text-center p-10">
-                                        <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-4 border border-white/10">
-                                            <Lock size={24} className="text-indigo-400" />
-                                        </div>
-                                        <h3 className="text-white text-sm font-black uppercase tracking-widest italic">Premium Access Required</h3>
-                                        <button className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-indigo-500 transition-all">Unlock Story</button>
+                                {!streamUrl ? (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black text-white text-xs font-bold">
+                                        Loading video...
                                     </div>
                                 ) : (
-                                    <video ref={videoRef} src={streamUrl || ""} controls className="w-full h-full object-contain" playsInline />
+                                    <video
+                                        ref={videoRef}
+                                        src={streamUrl}
+                                        controls
+                                        playsInline
+                                        onEnded={handleVideoEnded}
+                                        className="w-full h-full object-contain"
+                                    />
                                 )}
                             </div>
                         )}
@@ -206,7 +299,7 @@ export default function FlickreelsPlayerClient({
                             <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-3 gap-2">
                                 {episodes.map((ep: any, i: number) => {
                                     const isActive = i === currentIndex
-                                    const isLocked = ep.unlock === false
+                                    const isLocked = !premium && i >= FREE_LIMIT
                                     return (
                                         <button
                                             key={ep.id}
@@ -245,6 +338,9 @@ export default function FlickreelsPlayerClient({
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
             `}</style>
+            {showPremiumModal && (
+                <PremiumModal onClose={() => setShowPremiumModal(false)} />
+            )}
         </article>
     )
 }

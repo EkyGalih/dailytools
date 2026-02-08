@@ -10,6 +10,8 @@ import AffiliateShelf from '../ads/AffiliateShelf'
 import { usePremiumDracinStatus } from '../usePremiumDrachin'
 
 export default function UnifiedDramaboxView({ detail, episodes }: { detail: any, episodes: any[] }) {
+    const getProgressKey = (bookId: string | number) =>
+        `dramabox_progress_${bookId}`
     const [isPlaying, setIsPlaying] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(0)
     const [clickCount, setClickCount] = useState<Record<number, number>>({})
@@ -22,6 +24,20 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
     const FREE_LIMIT = 25;
     const [showPremiumModal, setShowPremiumModal] = useState(false)
 
+    useEffect(() => {
+        if (!detail?.bookId) return
+
+        const key = getProgressKey(detail.bookId)
+        const saved = localStorage.getItem(key)
+
+        if (saved !== null) {
+            const idx = Number(saved)
+            if (!isNaN(idx) && idx >= 0 && idx < episodes.length) {
+                setCurrentIndex(idx)
+            }
+        }
+    }, [detail?.bookId, episodes.length])
+
     const currentEpisode = episodes[currentIndex]
 
     const videoUrl = (() => {
@@ -30,69 +46,56 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
         return video?.videoPath || ''
     })()
 
-    const openAd = () => {
-        const products = getAffiliateProducts(detail.tags || ["DEFAULT"])
-        if (products?.length > 0) {
-            const random = products[Math.floor(Math.random() * products.length)]
-            if (random?.link) window.open(random.link, "_blank")
-        }
-    }
-
-    const handleAction = (index: number) => {
+    const handleAction = () => {
         if (!isPlaying) setIsPlaying(true)
 
-        // Kalau lagi adGap (per 10 episode)
-        if (isAdGap) {
-            openAd()
-            setIsAdGap(false)
+        setClickCount(prev => ({
+            ...prev,
+            [currentIndex]: 2
+        }))
 
-            setTimeout(() => videoRef.current?.play(), 500)
-            return
-        }
-
-        const count = (clickCount[index] || 0) + 1
-        setClickCount(prev => ({ ...prev, [index]: count }))
-
-        // ✅ Klik pertama → iklan
-        if (count === 1) {
-            openAd()
-            setCurrentIndex(index)
-            return
-        }
-
-        // ✅ Klik kedua → play
-        if (count >= 2 && videoRef.current) {
-            videoRef.current.play()
-        }
+        setTimeout(() => {
+            videoRef.current?.play().catch(() => { })
+        }, 300)
     }
 
     const handleVideoEnded = () => {
         const nextIndex = currentIndex + 1
+
+        // 🔒 Paywall enforced even on fullscreen + auto-next
         if (!premium && nextIndex >= FREE_LIMIT) {
             setIsPlaying(false)
             setShowPremiumModal(true)
+
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => { })
+            }
             return
         }
 
         if (nextIndex < episodes.length) {
             if ((nextIndex + 1) % 10 === 0) {
-                setIsAdGap(true); setCurrentIndex(nextIndex)
-                setClickCount(prev => ({ ...prev, [nextIndex]: 3 }))
-            } else {
-                setCurrentIndex(nextIndex)
-                setClickCount(prev => ({ ...prev, [nextIndex]: 3 }))
+                setIsAdGap(true)
             }
+
+            setCurrentIndex(nextIndex)
+            setClickCount(prev => ({ ...prev, [nextIndex]: 3 }))
         }
     }
 
     useEffect(() => {
+        if (isPlaying && detail?.bookId) {
+            const key = getProgressKey(detail.bookId)
+            localStorage.setItem(key, String(currentIndex))
+        }
+
         if (isPlaying && !isAdGap && (clickCount[currentIndex] || 0) >= 2) {
             const timer = setTimeout(() => {
-                videoRef.current?.play().catch(() => console.log("Autoplay blocked"))
+                videoRef.current?.play().catch(() => { })
             }, 500)
             return () => clearTimeout(timer)
         }
-    }, [currentIndex, isAdGap])
+    }, [currentIndex, isAdGap, isPlaying, detail?.bookId])
 
     return (
         <article className="bg-white rounded-[1.5rem] md:rounded-[40px] shadow-[0_40px_100px_rgba(0,0,0,0.06)] border border-zinc-100 overflow-hidden">
@@ -124,17 +127,25 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
                                         {detail.bookName}
                                     </h1>
                                     <button
-                                        onClick={() => handleAction(0)}
+                                        onClick={() => handleAction()}
                                         className="group flex items-center justify-center gap-3 px-8 py-4 md:px-10 md:py-5 bg-purple-600 text-white rounded-xl md:rounded-2xl text-xs md:text-sm font-black uppercase tracking-widest hover:bg-purple-700 transition-all active:scale-95 shadow-xl shadow-purple-500/20"
                                     >
-                                        <Play className="w-5 h-5 md:w-6 md:h-6 fill-current" /> Mulai Menonton
+                                        <Play className="w-5 h-5 md:w-6 md:h-6 fill-current" /> Lanjutkan Menonton
                                     </button>
                                 </div>
                             </div>
                         ) : (
                             <div className="space-y-4">
                                 <div className={`relative bg-black rounded-[1.2rem] md:rounded-[2rem] overflow-hidden shadow-2xl transition-all duration-700 ${isVertical ? 'max-w-[320px] md:max-w-[360px] mx-auto aspect-[9/16]' : 'w-full aspect-video'}`}>
-                                    <video ref={videoRef} src={videoUrl} controls onEnded={handleVideoEnded} className="w-full h-full object-contain" />
+                                    {videoUrl && (
+                                        <video
+                                            ref={videoRef}
+                                            src={videoUrl}
+                                            controls
+                                            onEnded={handleVideoEnded}
+                                            className="w-full h-full object-contain"
+                                        />
+                                    )}
 
                                     {/* Overlays 3x Klik */}
                                     {(clickCount[currentIndex] || 0) < 2 && !isAdGap && (

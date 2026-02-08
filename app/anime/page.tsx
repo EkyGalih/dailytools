@@ -1,6 +1,7 @@
 import { getAnimeGenres, getAnimeHomePage } from "@/libs/anime/anime";
 import HomePageClient from "./HomePage";
 import { Metadata } from "next";
+import ElegantMaintenancePage from "@/components/common/MaintenancePage";
 
 // app/anime/page.tsx
 
@@ -42,8 +43,10 @@ export const metadata: Metadata = {
 export default async function HomePage() {
     const data = await getAnimeHomePage();
     const genres = await getAnimeGenres();
+    console.log(data);
 
     if (!data) return <div className="text-white text-center py-20">Gagal memuat data...</div>;
 
-    return <HomePageClient initialData={data} genres={genres} />;
+    return <ElegantMaintenancePage />
+    // return <HomePageClient initialData={data} genres={genres} />;
 }

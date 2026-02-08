@@ -1,3 +1,4 @@
+import ElegantMaintenancePage from "@/components/common/MaintenancePage"
 import MangaClientPage from "@/components/komik/manga/MangaClientPage"
 import { getKomikLatest, getKomikPopular, getKomikRecommended } from "@/libs/komik/komik"
 import { Metadata } from 'next'
@@ -44,11 +45,13 @@ export default async function MangaPage() {
         getKomikLatest()
     ])
 
-    return (
-        <MangaClientPage
-            initialRecommended={res || []}
-            initialPopular={resPopular || []}
-            initialLatest={resLatest || []}
-        />
-    )
+        return <ElegantMaintenancePage />
+    
+    // return (
+    //     <MangaClientPage
+    //         initialRecommended={res || []}
+    //         initialPopular={resPopular || []}
+    //         initialLatest={resLatest || []}
+    //     />
+    // )
 }

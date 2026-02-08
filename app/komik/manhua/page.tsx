@@ -1,3 +1,4 @@
+import ElegantMaintenancePage from "@/components/common/MaintenancePage"
 import ManhuaClientPage from "@/components/komik/manhua/ManhuaClientPage"
 import { getKomikLatest, getKomikPopular, getKomikRecommended } from "@/libs/komik/komik"
 
@@ -42,12 +43,13 @@ export default async function MangaPage() {
         getKomikPopular(),
         getKomikLatest()
     ])
+        return <ElegantMaintenancePage />
 
-    return (
-        <ManhuaClientPage
-            initialRecommended={res || []}
-            initialPopular={resPopular || []}
-            initialLatest={resLatest || []}
-        />
-    )
+    // return (
+    //     <ManhuaClientPage
+    //         initialRecommended={res || []}
+    //         initialPopular={resPopular || []}
+    //         initialLatest={resLatest || []}
+    //     />
+    // )
 }

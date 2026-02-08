@@ -1,51 +1,78 @@
 "use client"
 
-import { ArrowLeft, Hammer, Sparkles } from "lucide-react"
+import { ArrowLeft, Hammer, Sparkles, Coffee, ExternalLink } from "lucide-react"
 import Link from "next/link"
 
-export default function SimpleMaintenancePage() {
+export default function ElegantMaintenancePage() {
     return (
-        <main className="min-h-[70vh] bg-[#fafafa] flex flex-col items-center justify-center p-8 relative overflow-hidden rounded-[3rem] border border-zinc-100 shadow-sm my-10">
+        <main className="min-h-[80vh] bg-[#020203] flex flex-col items-center justify-center p-6 relative overflow-hidden rounded-[3.5rem] border border-white/[0.05] shadow-2xl my-10">
 
-            {/* Background Minimalist Glow */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-50 blur-[100px] rounded-full opacity-60" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-rose-50 blur-[100px] rounded-full opacity-60" />
+            {/* Soft Ambient Glows - Elegant Positioning */}
+            <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-indigo-600/10 blur-[140px] rounded-full" />
+            <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-violet-600/10 blur-[140px] rounded-full" />
 
-            <div className="max-w-md w-full relative z-10 text-center space-y-10">
+            <div className="max-w-lg w-full relative z-10 flex flex-col items-center">
 
-                {/* Minimalist Icon */}
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-3xl shadow-sm border border-zinc-100 rotate-3">
-                    <Hammer size={32} className="text-indigo-600" />
+                {/* floating Badge */}
+                <div className="mb-8 flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-md">
+                    <Sparkles size={12} className="text-amber-400" />
+                    <span className="text-[10px] font-medium tracking-[0.3em] text-zinc-400 uppercase">
+                        Tamanto TIM
+                    </span>
                 </div>
 
-                {/* Text Content */}
-                <div className="space-y-4">
-                    <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400">
-                        <Sparkles size={12} className="text-amber-400" /> Tamanto 2026
-                    </div>
-                    <h1 className="text-5xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">
-                        Tahap <br /> <span className="text-indigo-600">Pengembangan</span>
+                {/* Main Content Card */}
+                <div className="text-center space-y-6">
+                    <h1 className="text-6xl md:text-7xl font-extrabold tracking-tighter text-white leading-[0.9] italic">
+                        Halaman <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-400 to-zinc-600">
+                            Sedang Dalam Perbaikan
+                        </span>
                     </h1>
-                    <p className="text-zinc-500 text-xs font-medium leading-relaxed italic px-4">
-                        Halaman ini sedang dipoles agar sesuai dengan standar **Keamanan VIP** dan **Performa Tinggi** yang kami janjikan.
+
+                    <div className="h-px w-20 bg-gradient-to-r from-transparent via-zinc-700 to-transparent mx-auto" />
+
+                    <p className="text-zinc-400 text-sm font-light leading-relaxed max-w-[280px] mx-auto opacity-80">
+                        Kami sedang menyempurnakan setiap piksel untuk kenyamanan baca & nonton Anda.
                     </p>
                 </div>
 
-                {/* Simple Action */}
-                <div className="pt-6">
+                {/* Elegant Glass Buttons */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-sm mt-12">
                     <Link
                         href="/"
-                        className="inline-flex items-center gap-3 px-8 py-4 bg-zinc-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-indigo-600 transition-all active:scale-95 group shadow-xl shadow-zinc-200"
+                        className="group flex items-center justify-center gap-3 px-6 py-4 bg-white text-black rounded-2xl font-bold text-[11px] uppercase tracking-wider hover:bg-zinc-200 transition-all active:scale-[0.98]"
                     >
-                        <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                        Kembali ke Beranda
+                        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                        Explore
                     </Link>
+
+                    <a
+                        href="https://trakteer.id/god_suru/showcase?menu=open"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center justify-center gap-3 px-6 py-4 bg-white/[0.03] border border-white/[0.08] text-white rounded-2xl font-bold text-[11px] uppercase tracking-wider hover:bg-white/[0.08] transition-all active:scale-[0.98]"
+                    >
+                        <Coffee size={16} className="text-rose-500 group-hover:scale-110 transition-transform" />
+                        Kirim Energi Kopi
+                    </a>
                 </div>
 
-                {/* Discreet Footer */}
-                <p className="text-[8px] font-black text-zinc-300 uppercase tracking-[0.5em] pt-12">
-                    Verified • TAMANTO
-                </p>
+                {/* Bottom Info */}
+                <div className="mt-16 flex flex-col items-center gap-4">
+                    <div className="flex items-center gap-4 text-[9px] font-bold text-zinc-600 tracking-[0.4em] uppercase">
+                        <span>High Quality</span>
+                        <span className="w-1 h-1 rounded-full bg-zinc-800" />
+                        <span>Secure</span>
+                        <span className="w-1 h-1 rounded-full bg-zinc-800" />
+                        <span>VIP</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Subtle corner accent */}
+            <div className="absolute bottom-10 right-10 opacity-20 hidden md:block">
+                <Hammer size={40} className="text-zinc-500" />
             </div>
         </main>
     )

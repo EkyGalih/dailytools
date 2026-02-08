@@ -3,6 +3,7 @@ import DramaHero from '@/components/drama/dramabox/DramaHero'
 import DramaExplorer from '@/components/drama/dramabox/DramaExplorer'
 import AffiliateShelf from '@/components/drama/ads/AffiliateShelf'
 import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
+import { getDramaByCategory } from '@/libs/drama/dramabox/dramabox'
 
 export const metadata: Metadata = {
   title: 'Nonton Drama China Viral (Dramabox) Sub Indo | Tamanto',
@@ -19,23 +20,11 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic"
 
-async function getTrendingDramaBox() {
-  try {
-    const res = await fetch("https://dramabox.sansekai.my.id/api/dramabox/latest", {
-      next: { revalidate: 3600 },
-    })
-    if (!res.ok) return []
-    return res.json()
-  } catch (err) {
-    return []
-  }
-}
-
 export default async function DramaChinaPage() {
-  const items = await getTrendingDramaBox()
+  const items = await getDramaByCategory('trending')
   const safeItems = Array.isArray(items) ? items : []
   const products = getAffiliateProducts()
-
+console.log(items);
   if (safeItems.length === 0) {
     return (
       <main className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center">

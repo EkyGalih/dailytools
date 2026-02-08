@@ -5,7 +5,6 @@ import { DRAMA_CATEGORIES } from '@/libs/drama/dramabox/categories'
 import { getDramaByCategory } from '@/libs/drama/dramabox/dramabox'
 import DramaHero from '@/components/drama/dramabox/DramaHero'
 import DramaExplorer from '@/components/drama/dramabox/DramaExplorer'
-import AffiliateMiniPopup from '@/components/drama/ads/AffiliateMiniPopup'
 import { Metadata } from 'next'
 import AffiliateShelf from '@/components/drama/ads/AffiliateShelf'
 import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
@@ -57,6 +56,7 @@ export default async function DramaCategoryPage({
   const mode = classify === 'terpopuler' ? 'terpopuler' : 'terbaru'
   const items = await getDramaByCategory(cat.slug, { classify: mode })
   const products = getAffiliateProducts()
+  console.log(items);
 
   return (
     <div className="bg-[#fafafa] min-h-screen pb-20">

@@ -29,7 +29,12 @@ async function fetchJSON<T>(
     if (!ct.includes('application/json')) return null
 
     return res.json()
-  } catch (err) {
+  } catch (err: any) {
+    // AbortError is expected in Next.js SSR / navigation, ignore silently
+    if (err?.name === 'AbortError' || err?.code === 20) {
+      return null
+    }
+
     console.error('[Dramabox API Error]', url, err)
     return null
   } finally {

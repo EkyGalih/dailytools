@@ -15,7 +15,7 @@ export default function RequirePremium() {
             sessionStorage.setItem("last_page", pathname)
 
             // redirect ke premium
-            router.push("/premium")
+            router.push("/paket")
         }
     }, [])
 

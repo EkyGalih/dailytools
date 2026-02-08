@@ -9,6 +9,7 @@ import DramaCard from '@/components/drama/drakor/DramaCard'
 import { Sparkles, Minimize2, Wallet, ArrowUpRight, LayoutGrid } from 'lucide-react'
 import { getAnimeHomePage } from '@/libs/anime/anime'
 import AnimeCard from '@/components/anime/AnimeCard'
+import PayButton from '@/components/PayButton'
 
 export const metadata: Metadata = {
   title: 'Tamanto – Streaming Drama Asia, Anime & Manga Terlengkap',
@@ -82,6 +83,7 @@ export default async function Home() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
             </span>
             Pokok Ite Demen Manto TV
+            <PayButton />
           </div>
 
           {/* H1 dengan Brutalist Typography & Gradient */}

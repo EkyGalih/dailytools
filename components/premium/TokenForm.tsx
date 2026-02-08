@@ -4,38 +4,68 @@ import { useEffect, useState } from "react"
 import { KeyRound, LogOut, Loader2, CheckCircle2, Zap } from "lucide-react"
 import { getDeviceId } from "@/libs/device"
 
+const formatDate = (value: number | string) => {
+    const date = new Date(Number(value))
+    if (isNaN(date.getTime())) return "-"
+    return new Intl.DateTimeFormat("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    }).format(date)
+}
+
 export default function TokenForm({ onSuccess }: { onSuccess?: () => void }) {
     const [token, setToken] = useState("")
     const [msg, setMsg] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [savedToken, setSavedToken] = useState<string | null>(null)
+    const [expiresAt, setExpiresAt] = useState<number | null>(null)
 
     useEffect(() => {
         const t = localStorage.getItem("premium_token")
+        const exp = localStorage.getItem("premium_expires_at")
         if (t) setSavedToken(t)
+        if (exp) setExpiresAt(Number(exp))
     }, [])
 
     async function logout() {
-        setIsLoading(true)
+        const token = localStorage.getItem("premium_token");
+        if (!token) {
+            localStorage.clear();
+            setSavedToken(null);
+            setExpiresAt(null);
+            setMsg("Sesi sudah berakhir.");
+            return;
+        }
 
-        const token = localStorage.getItem("premium_token")
-        const deviceId = getDeviceId()
+        setIsLoading(true);
 
         try {
-            await fetch("/api/token/logout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token, deviceId }),
-            })
+            const deviceId = getDeviceId();
 
-            localStorage.removeItem("premium_token")
+            const res = await fetch(
+                "https://api-payment-tamanto.vercel.app/logout",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token, deviceId }),
+                }
+            );
 
-            setSavedToken(null)
-            setMsg("Sesi berakhir. Kembali ke mode Free.")
+            // WALAU backend error → tetap logout lokal
+            localStorage.removeItem("premium_token");
+            localStorage.removeItem("premium_expires_at");
 
-            window.dispatchEvent(new Event("premium_updated"))
+            setSavedToken(null);
+            setExpiresAt(null);
+            setMsg("Sesi berakhir. Kembali ke mode Free.");
+
+            window.dispatchEvent(new Event("premium_updated"));
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     }
 
@@ -47,7 +77,7 @@ export default function TokenForm({ onSuccess }: { onSuccess?: () => void }) {
         const deviceId = getDeviceId()
 
         try {
-            const res = await fetch("/api/token/redeem", {
+            const res = await fetch("https://api-payment-tamanto.vercel.app/redeem", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token, deviceId }),
@@ -57,15 +87,21 @@ export default function TokenForm({ onSuccess }: { onSuccess?: () => void }) {
 
             if (json.success) {
                 localStorage.setItem("premium_token", token)
-                setSavedToken(token)
+                localStorage.setItem("premium_expires_at", String(json.expiresAt))
 
-                setMsg("✅ Premium Aktif s/d " + json.expires_at)
+                setSavedToken(token)
+                setExpiresAt(Number(json.expiresAt))
+                setMsg("")
 
                 window.dispatchEvent(new Event("premium_updated"))
-
                 setTimeout(() => onSuccess?.(), 1500)
             } else {
                 setMsg("❌ " + json.error)
+            }
+
+            if (json.error?.includes("2 perangkat")) {
+                setMsg("❌ Token sudah aktif di 2 device lain");
+                return;
             }
         } finally {
             setIsLoading(false)
@@ -74,33 +110,40 @@ export default function TokenForm({ onSuccess }: { onSuccess?: () => void }) {
 
     if (savedToken) {
         return (
-            <div className="space-y-6 animate-in fade-in zoom-in-95 duration-500">
-                <div className="bg-gradient-to-br from-emerald-400/10 to-cyan-400/10 border-2 border-emerald-500/20 rounded-[2rem] p-8 text-center backdrop-blur-sm">
-                    <div className="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-400 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-emerald-500/30 rotate-3">
-                        <CheckCircle2 size={32} />
+            <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
+                <div className="bg-white border border-emerald-100 rounded-[2.5rem] p-10 text-center shadow-[0_20px_50px_-15px_rgba(16,185,129,0.1)] relative overflow-hidden">
+                    {/* Decorative Glow */}
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-50 blur-3xl rounded-full" />
+
+                    <div className="relative z-10">
+                        <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
+                            <CheckCircle2 size={40} strokeWidth={2.5} />
+                        </div>
+                        <h3 className="text-zinc-900 font-black italic uppercase tracking-tighter text-2xl mb-2">Premium Aktif</h3>
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full">
+                            <Zap size={12} className="text-emerald-500" fill="currentColor" />
+                            <p className="text-emerald-600 text-[10px] font-black uppercase tracking-widest italic">
+                                Berlaku s/d {expiresAt ? formatDate(String(expiresAt)) : "..."}
+                            </p>
+                        </div>
                     </div>
-                    <h3 className="text-emerald-600 font-black uppercase tracking-[0.2em] text-xs">Membership Active</h3>
-                    <p className="text-zinc-500 text-[10px] font-bold uppercase mt-1 italic">{msg || "Nimati premium hingga " + savedToken.split(".")[1] + "."}</p>
                 </div>
 
                 <button
                     onClick={logout}
                     disabled={isLoading}
-                    className={`w-full py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em]
-    transition-all duration-300 flex items-center justify-center gap-2
-    ${isLoading
-                            ? "bg-zinc-100 text-zinc-300 cursor-not-allowed"
-                            : "text-zinc-400 hover:text-rose-500 hover:bg-rose-50"
+                    className={`w-full py-5 rounded-[1.8rem] font-black uppercase text-[10px] tracking-[0.3em]
+  transition-all duration-300 flex items-center justify-center gap-3 border
+  ${isLoading
+                            ? "bg-rose-400 text-white border-rose-300 cursor-not-allowed"
+                            : "bg-rose-600 text-white border-rose-600 hover:bg-rose-700 hover:border-rose-700 active:scale-95"
                         }`}
                 >
                     {isLoading ? (
-                        <>
-                            <Loader2 size={14} className="animate-spin" />
-                            Logging out...
-                        </>
+                        <Loader2 size={16} className="animate-spin" />
                     ) : (
                         <>
-                            <LogOut size={14} />
+                            <LogOut size={16} />
                             Keluar dari Sesi
                         </>
                     )}

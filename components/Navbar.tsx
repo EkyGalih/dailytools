@@ -142,7 +142,7 @@ export default function Navbar() {
 
           <Link href="/about" className="px-4 py-2 text-sm font-bold text-zinc-600 hover:text-black">About</Link>
           <Link
-            href="/premium"
+            href="/paket"
             className={`group relative ml-4 flex items-center justify-center w-10 h-10 rounded-2xl transition-all duration-500 overflow-hidden
     ${isPremium
                 ? "bg-gradient-to-tr from-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-500/30 rotate-[10deg] hover:rotate-0"
@@ -299,7 +299,7 @@ export default function Navbar() {
 
               <MobileLink href="/about" icon={<Info className="w-5 h-5" />} label="Tentang Kami" />
               <Link
-                href="/premium"
+                href="/paket"
                 className={`group relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 active:scale-90
     ${isPremium
                     ? "bg-gradient-to-tr from-rose-500 to-orange-400 text-white shadow-lg shadow-rose-500/30"

@@ -7,6 +7,7 @@ import { Play, Lock, Smartphone, Monitor, Calendar, Info, ChevronLeft, Star, Arr
 import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 import DramaShareIcons from '@/components/drama/dramabox/DramaShareIcon'
 import AffiliateShelf from '../ads/AffiliateShelf'
+import { usePremiumDracinStatus } from '../usePremiumDrachin'
 
 export default function UnifiedDramaboxView({ detail, episodes }: { detail: any, episodes: any[] }) {
     const [isPlaying, setIsPlaying] = useState(false)
@@ -15,6 +16,11 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
     const [isVertical, setIsVertical] = useState(false)
     const [isAdGap, setIsAdGap] = useState(false)
     const videoRef = useRef<HTMLVideoElement>(null)
+
+    // handle premium status
+    const { premium, loading } = usePremiumDracinStatus();
+    const FREE_LIMIT = 25;
+    const [showPremiumModal, setShowPremiumModal] = useState(false)
 
     const currentEpisode = episodes[currentIndex]
 
@@ -62,6 +68,12 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
 
     const handleVideoEnded = () => {
         const nextIndex = currentIndex + 1
+        if (!premium && nextIndex >= FREE_LIMIT) {
+            setIsPlaying(false)
+            setShowPremiumModal(true)
+            return
+        }
+
         if (nextIndex < episodes.length) {
             if ((nextIndex + 1) % 10 === 0) {
                 setIsAdGap(true); setCurrentIndex(nextIndex)
@@ -253,17 +265,20 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
                                     <button
                                         key={ep.chapterId}
                                         onClick={() => {
-                                            setIsAdGap(false)
-                                            setIsPlaying(true)
-                                            setCurrentIndex(i)
+                                            if (!premium && i >= FREE_LIMIT) {
+                                                setShowPremiumModal(true)
+                                                return
+                                            }
 
-                                            // langsung play tanpa iklan
+                                            setIsAdGap(false);
+                                            setIsPlaying(true);
+                                            setCurrentIndex(i);
+
                                             setTimeout(() => {
-                                                videoRef.current?.play()
-                                            }, 300)
+                                                videoRef.current?.play();
+                                            }, 300);
 
-                                            // tandai sudah ditonton
-                                            setClickCount(prev => ({ ...prev, [i]: 2 }))
+                                            setClickCount(prev => ({ ...prev, [i]: 2 }));
                                         }}
                                         className={`relative flex flex-col items-center justify-center p-3 md:p-4 rounded-xl md:rounded-2xl border transition-all duration-300 ${isActive
                                             ? 'bg-purple-600 border-purple-600 text-white shadow-xl shadow-purple-500/30 scale-95'
@@ -288,6 +303,77 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 10px; }
             `}</style>
+
+            {showPremiumModal && (
+                <div className="fixed inset-0 z-[999] bg-zinc-900/40 backdrop-blur-md flex items-center justify-center px-4">
+                    <div className="bg-white rounded-[2.5rem] max-w-md w-full overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] animate-in zoom-in-95 duration-300">
+
+                        {/* Dekorasi Atas (Optional Soft Gradient) */}
+                        <div className="h-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400" />
+
+                        <div className="p-10 text-center">
+                            {/* Icon dengan Ring Soft */}
+                            <div className="w-20 h-20 mx-auto mb-6 bg-slate-50 border border-slate-100 rounded-3xl flex items-center justify-center text-3xl shadow-sm">
+                                <span className="drop-shadow-sm">💎</span>
+                            </div>
+
+                            {/* Typography Profesional */}
+                            <h2 className="text-2xl font-bold tracking-tight text-zinc-800 mb-2">
+                                Konten Eksklusif
+                            </h2>
+                            <p className="text-zinc-500 text-sm leading-relaxed mb-8">
+                                Episode ini dirancang khusus untuk member premium.
+                                Dapatkan akses instan dan nikmati tontonan berkualitas tinggi.
+                            </p>
+
+                            {/* Detail Paket dalam Kotak Soft */}
+                            <div className="bg-slate-50 rounded-2xl p-5 mb-8 border border-slate-100">
+                                <div className="flex justify-between items-center mb-2">
+                                    <span className="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Harga Spesial</span>
+                                    <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">PROMO</span>
+                                </div>
+                                <div className="text-left">
+                                    <span className="text-2xl font-black text-zinc-900">Rp 2.500</span>
+                                    <span className="text-zinc-400 text-sm"> / 24 jam</span>
+                                </div>
+                                <ul className="mt-3 text-left space-y-2">
+                                    <li className="text-[11px] text-zinc-600 flex items-center">
+                                        <svg className="w-3 h-3 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" /></svg>
+                                        Akses Drama Apa saja sepuasnya di situs ini
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="space-y-3">
+                                <Link
+                                    href="/paket"
+                                    className="block w-full bg-zinc-900 hover:bg-zinc-800 text-white py-4 rounded-2xl font-bold text-sm transition-all active:scale-[0.98] shadow-lg shadow-zinc-200"
+                                >
+                                    Berlangganan Sekarang
+                                </Link>
+
+                                <button
+                                    onClick={() => setShowPremiumModal(false)}
+                                    className="block w-full bg-white hover:bg-zinc-50 text-zinc-400 py-3 rounded-2xl font-medium text-sm transition-all"
+                                >
+                                    Mungkin nanti
+                                </button>
+                            </div>
+
+                            {/* Tombol Sudah Punya Akses */}
+                            <div className="mt-8 pt-6 border-t border-zinc-100">
+                                <p className="text-zinc-500 text-xs">
+                                    Sudah punya paket aktif?{' '}
+                                    <Link href="/paket/redeem" className="text-purple-600 font-bold hover:underline ml-1">
+                                        Klik di sini
+                                    </Link>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </article>
     )
 }

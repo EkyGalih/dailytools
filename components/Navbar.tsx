@@ -398,7 +398,7 @@ function NestedDropdown({ label, icon, isOpen, onToggle, children }: any) {
 
 function NavItem({ href, label, desc }: any) {
   return (
-    <Link href={href} className="block px-4 py-2.5 rounded-xl hover:bg-purple-50 group transition-all">
+    <Link href={href} prefetch={false} className="block px-4 py-2.5 rounded-xl hover:bg-purple-50 group transition-all">
       <p className="text-[13px] font-bold text-zinc-900 group-hover:text-purple-700">{label}</p>
       {desc && <p className="text-[10px] text-zinc-400 font-medium">{desc}</p>}
     </Link>
@@ -419,7 +419,7 @@ function MobileCollapse({ label, icon, isOpen, onToggle, children }: any) {
 
 function MobileLink({ href, label, sub, icon }: any) {
   return (
-    <Link href={href} className={`flex items-center gap-3 font-bold transition-colors ${sub ? 'py-1 text-zinc-500 text-[13px] hover:text-purple-600' : 'py-3 text-lg text-zinc-900 italic uppercase tracking-tighter'}`}>
+    <Link href={href} prefetch={false} className={`flex items-center gap-3 font-bold transition-colors ${sub ? 'py-1 text-zinc-500 text-[13px] hover:text-purple-600' : 'py-3 text-lg text-zinc-900 italic uppercase tracking-tighter'}`}>
       {icon} {label}
     </Link>
   )

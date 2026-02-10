@@ -3,10 +3,10 @@ import { apiFetch } from "@/libs/fetchApi";
 /* ===============================
    ✅ Base API URL (Client Safe)
 =============================== */
-const BASE_URL = process.env.BASE_URL_API;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_API;
 
 if (!BASE_URL) {
-    throw new Error("BASE_URL_API belum di set di .env");
+    throw new Error("NEXT_PUBLIC_BASE_URL_API belum di set di .env");
 }
 
 /* ===============================

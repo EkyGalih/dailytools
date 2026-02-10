@@ -1,10 +1,10 @@
 import { apiFetch } from "@/libs/fetchApi"
 
 // ✅ Base API URL (must be exposed to client)
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_API
+const BASE_URL = process.env.BASE_URL_API
 
 if (!BASE_URL) {
-    throw new Error("NEXT_PUBLIC_BASE_URL_API belum di set di .env")
+    throw new Error("BASE_URL_API belum di set di .env")
 }
 
 // ✅ These should match backend Redis TTL
@@ -12,7 +12,6 @@ const REVALIDATE_HOME = 86400       // 1 hari
 const REVALIDATE_LIST = 21600       // 6 jam
 const REVALIDATE_DETAIL = 3600      // 1 jam
 const REVALIDATE_SEARCH = 600       // 10 menit
-const REVALIDATE_EPISODE = 3600     // 1 jam
 
 /**
  * ✅ Ambil semua series (default homepage)

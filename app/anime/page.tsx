@@ -45,7 +45,7 @@ export default async function HomePage() {
     const genres = await getAnimeGenres();
     console.log(data);
 
-    if (!data) return <div className="text-white text-center py-20">Gagal memuat data...</div>;
+    // if (!data) return <div className="text-white text-center py-20">Gagal memuat data...</div>;
 
     // return <ElegantMaintenancePage />
     return <HomePageClient initialData={data} genres={genres} />;

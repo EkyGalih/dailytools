@@ -15,8 +15,6 @@ if (!BASE_URL) {
 const REVALIDATE_HOME = 86400; // 1 hari
 const REVALIDATE_LIST = 21600; // 6 jam
 const REVALIDATE_DETAIL = 3600; // 1 jam
-const REVALIDATE_SEARCH = 600; // 10 menit
-const REVALIDATE_EPISODE = 3600; // 1 jam
 
 /* ============================================================
    ✅ OTAKUDESU API SERVICES
@@ -32,7 +30,7 @@ export async function getAnimeHomePage() {
             `${BASE_URL}/anime/homepage`,
             REVALIDATE_HOME
         );
-
+        console.log("Response status:", res);
         if (!res.ok) return null;
         return res.json();
     } catch (err) {

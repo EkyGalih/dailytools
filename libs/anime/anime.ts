@@ -30,7 +30,7 @@ export async function getAnimeHomePage() {
             `${BASE_URL}/anime/homepage`,
             REVALIDATE_HOME
         );
-        console.log("Response status:", res);
+
         if (!res.ok) return null;
         return res.json();
     } catch (err) {

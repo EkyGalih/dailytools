@@ -43,8 +43,6 @@ export const metadata: Metadata = {
 export default async function HomePage() {
     const data = await getAnimeHomePage();
     const genres = await getAnimeGenres();
-    console.log("BUG", data);
-    console.log("BUG2", genres);
 
     // if (!data) return <div className="text-white text-center py-20">Gagal memuat data...</div>;
 

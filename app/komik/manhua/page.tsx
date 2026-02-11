@@ -43,13 +43,12 @@ export default async function MangaPage() {
         getKomikPopular(),
         getKomikLatest()
     ])
-        return <ElegantMaintenancePage />
 
-    // return (
-    //     <ManhuaClientPage
-    //         initialRecommended={res || []}
-    //         initialPopular={resPopular || []}
-    //         initialLatest={resLatest || []}
-    //     />
-    // )
+    return (
+        <ManhuaClientPage
+            initialRecommended={res || []}
+            initialPopular={resPopular || []}
+            initialLatest={resLatest || []}
+        />
+    )
 }

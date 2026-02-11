@@ -44,13 +44,13 @@ export default async function ManhwaPage() {
         getKomikLatest("project")
     ])
 
-    return <ElegantMaintenancePage />
+    // return <ElegantMaintenancePage />
 
-    // return (
-    //     <ManhwaClientPage
-    //         initialRecommended={res || []}
-    //         initialPopular={resPopular || []}
-    //         initialLatest={resLatest || []}
-    //     />
-    // )
+    return (
+        <ManhwaClientPage
+            initialRecommended={res || []}
+            initialPopular={resPopular || []}
+            initialLatest={resLatest || []}
+        />
+    )
 }

@@ -1,13 +1,15 @@
 // libs/komik/komikbox.ts
 
-const BASE = "https://api.sansekai.my.id/api/komik"
+// const BASE = "https://api.sansekai.my.id/api/komik"
+const BASE = "http://localhost:3000/api/komik"
 
 /* ===============================
    DEFAULT HEADERS
 =============================== */
 const DEFAULT_HEADERS = {
     accept: "application/json",
-    "User-Agent": "Sansekai-Komik/1.0",
+    "User-Agent": "mytools-Komik/1.0",
+    "x-api-key": process.env.NEXT_PUBLIC_API_KEY as string,
 }
 
 const DEFAULT_TIMEOUT = 8000
@@ -44,11 +46,11 @@ async function fetchJSON<T>(
     }
 }
 
-export async function getKomikRecommended(
+export async function getKomikPopular(
     type: "manga" | "manhwa" | "manhua" = "manga"
 ) {
     const json = await fetchJSON<any>(
-        `${BASE}/recommended?type=${type}`,
+        `${BASE}/popular?tipe=${type}`,
         21600 // cache 6 jam
     )
 
@@ -56,11 +58,11 @@ export async function getKomikRecommended(
     return json.data
 }
 
-export async function getKomikLatest(
-    type: "project" | "mirror" = "project"
+export async function getKomikUpdated(
+    type: "manga" | "manhwa" | "manhua" = "manga"
 ) {
     const json = await fetchJSON<any>(
-        `${BASE}/latest?type=${type}`,
+        `${BASE}/updated?tipe=${type}`,
         1800 // cache 30 menit
     )
 
@@ -68,24 +70,37 @@ export async function getKomikLatest(
     return json.data
 }
 
-export async function searchKomik(query: string) {
-    if (!query) return []
-
+export async function getKomikGenres() {
     const json = await fetchJSON<any>(
-        `${BASE}/search?query=${encodeURIComponent(query)}`,
-        600 // cache 10 menit
+        `${BASE}/genres`,
+        86400 // cache 1 hari
     )
 
     if (!json?.data) return []
     return json.data
 }
 
-export async function getKomikPopular() {
+export async function getKomikGenresDetail(
+    genre: string,
+    tipe: "manga" | "manhwa" | "manhua" = "manga"
+) {
     const json = await fetchJSON<any>(
-        `${BASE}/popular`,
-        3600 // cache 1 jam
+        `${BASE}/genres/${encodeURIComponent(genre)}?tipe=${tipe}`,
+        86400 // cache 1 hari
     )
 
+    if (!json?.datas) return []
+    return json.datas
+}
+
+export async function searchKomik(query: string) {
+    if (!query) return []
+
+    const json = await fetchJSON<any>(
+        `${BASE}/search?q=${encodeURIComponent(query)}`,
+        600 // cache 10 menit
+    )
+    console.log("Search Komik Result:", json)
     if (!json?.data) return []
     return json.data
 }

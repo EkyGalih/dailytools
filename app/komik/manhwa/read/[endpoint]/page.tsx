@@ -1,4 +1,4 @@
-import { getKomikImages, getKomikChapterList, getKomikDetail } from "@/libs/komik/komik"
+import { getKomikImages, getKomikDetail } from "@/libs/komik/komik"
 import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"

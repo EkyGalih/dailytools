@@ -1,7 +1,8 @@
 // libs/komik/komikbox.ts
 
 // const BASE = "https://api.sansekai.my.id/api/komik"
-const BASE = "http://localhost:3000/api/komik"
+// const BASE = "http://localhost:3000/api/komik"
+const BASE = "htts://mytools.web.id/api/komik"
 
 /* ===============================
    DEFAULT HEADERS

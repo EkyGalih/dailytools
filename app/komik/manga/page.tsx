@@ -44,7 +44,9 @@ export default async function MangaPage() {
         getKomikUpdated("manga"),
         getKomikGenres(),
     ])
-
+    console.log("Genres Manga:", genres);
+    console.log("Popular Manga:", resPopular);
+    console.log("Latest Manga:", resLatest);
         // return <ElegantMaintenancePage />
     
     return (

@@ -3,6 +3,7 @@ import MangaHero from "@/components/komik/manga/MangaHero";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import { getKomikDetail } from "@/libs/komik/komik";
 import { BookOpen, BookType } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 
 function splitTitle(text: string) {

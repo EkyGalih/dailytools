@@ -3,11 +3,7 @@ import { apiFetch } from "@/libs/fetchApi";
 /* ===============================
    ✅ Base API URL (Client Safe)
 =============================== */
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_API;
-
-if (!BASE_URL) {
-    throw new Error("NEXT_PUBLIC_BASE_URL_API belum di set di .env");
-}
+const BASE = "https://mytools.web.id/api/anime"
 
 /* ===============================
    ✅ TTL Revalidate (match Redis)
@@ -27,7 +23,7 @@ const REVALIDATE_DETAIL = 3600; // 1 jam
 export async function getAnimeHomePage() {
     try {
         const res = await apiFetch(
-            `${BASE_URL}/anime/homepage`,
+            `${BASE}/homepage`,
             REVALIDATE_HOME
         );
 
@@ -50,7 +46,7 @@ export async function getAnimeHomePage() {
 export async function getAnimeList() {
     try {
         const res = await apiFetch(
-            `${BASE_URL}/anime/list-anime`,
+            `${BASE}/list-anime`,
             REVALIDATE_LIST // cache 6 jam
         );
 
@@ -70,7 +66,7 @@ export async function getAnimeList() {
 export async function getAnimeSchedule() {
     try {
         const res = await apiFetch(
-            `${BASE_URL}/anime/jadwal`,
+            `${BASE}/jadwal`,
             43200 // cache 12 jam
         );
 
@@ -92,7 +88,7 @@ export async function getAnimeDetail(slug: string) {
 
     try {
         const res = await apiFetch(
-            `${BASE_URL}/anime/detail/${slug}`,
+            `${BASE}/detail/${slug}`,
             REVALIDATE_DETAIL
         );
 
@@ -130,7 +126,7 @@ export async function getAnimeEpisodeDetail(slug: string) {
 export async function getAnimeGenres() {
     try {
         const res = await apiFetch(
-            `${BASE_URL}/anime/genres`,
+            `${BASE}/genres`,
             REVALIDATE_HOME
         );
 
@@ -154,7 +150,7 @@ export async function getAnimeAnimeByGenre(
 
     try {
         const res = await apiFetch(
-            `${BASE_URL}/anime/genres/${encodeURIComponent(
+            `${BASE}/genres/${encodeURIComponent(
                 genre
             )}?page=${page}`,
             REVALIDATE_LIST

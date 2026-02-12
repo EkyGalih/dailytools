@@ -9,7 +9,7 @@ export default function ManhwaLatestCard({ manhwa }: { manhwa: any }) {
 
     return (
         <Link
-            href={`/komik/manga/detail/${manhwa.endpoint}`}
+            href={`/komik/manhwa/detail/${manhwa.endpoint}`}
             title={`Baca ${manhwa.title} - ${manhwa.newest_chapter}`}
             className="group relative flex flex-col w-full overflow-hidden rounded-[2.2rem] bg-[#09090b] border border-white/[0.03] hover:border-cyan-500/40 transition-all duration-500 shadow-2xl h-full"
         >

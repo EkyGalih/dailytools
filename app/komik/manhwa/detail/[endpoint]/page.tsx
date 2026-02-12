@@ -150,9 +150,6 @@ export default async function ManhwaDetailPage({ params }: { params: Promise<{ e
                                     </span>
                                 ))}
                             </div>
-                            <h1 className="text-5xl md:text-8xl font-black text-white uppercase italic tracking-tighter leading-[0.8] drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                                {manhwa.title}
-                            </h1>
                         </header>
 
                         {/* Immersive Synopsis */}

@@ -20,7 +20,7 @@ export default function KomikSearchCard({ manga }: Props) {
     
     return (
         <Link
-            href={`/komik/manga/detail/${manga.endpoint}`}
+            href={`/komik/manga/${manga.endpoint}`}
             className="group relative bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 hover:border-orange-500 transition-all duration-300 shadow-lg hover:shadow-orange-500/20"
         >
             {/* Thumbnail */}

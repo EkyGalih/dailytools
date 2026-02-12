@@ -1,7 +1,7 @@
 
 import ElegantMaintenancePage from "@/components/common/MaintenancePage"
 import ManhwaClientPage from "@/components/komik/manhwa/ManhwaClientPage"
-import { getKomikGenres, getKomikLatest, getKomikPopular, getKomikRecommended, getKomikUpdated } from "@/libs/komik/komik"
+import { getKomikGenres, getKomikPopular, getKomikUpdated } from "@/libs/komik/komik"
 
 export const metadata = {
     title: "Manhwa Explorer – Baca Manhwa Sub Indo Terlengkap | Tamanto",

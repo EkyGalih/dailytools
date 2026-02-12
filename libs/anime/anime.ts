@@ -3,10 +3,10 @@ import { apiFetch } from "@/libs/fetchApi";
 /* ===============================
    ✅ Base API URL (Client Safe)
 =============================== */
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_API;
 
 if (!BASE_URL) {
-    console.error("NEXT_PUBLIC_API_BASE_URL belum diset");
+    console.error("NEXT_PUBLIC_BASE_URL_API belum diset");
 }
 
 /* ============================================================

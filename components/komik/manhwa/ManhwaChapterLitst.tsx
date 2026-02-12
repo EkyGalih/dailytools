@@ -7,13 +7,28 @@ interface ChapterListProps {
 }
 
 export default function ManhwaChapterList({ chapters }: ChapterListProps) {
-    const formatDate = (dateStr: string) => {
-        if (!dateStr) return "N/A";
-        const date = new Date(dateStr);
-        return new Intl.DateTimeFormat('id-ID', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+
+        // Format expected: DD/MM/YYYY
+        const parts = dateString.split("/");
+
+        if (parts.length !== 3) return "-";
+
+        const [day, month, year] = parts;
+
+        const date = new Date(
+            Number(year),
+            Number(month) - 1,
+            Number(day)
+        );
+
+        if (isNaN(date.getTime())) return "-";
+
+        return new Intl.DateTimeFormat("id-ID", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
         }).format(date);
     };
 
@@ -30,8 +45,8 @@ export default function ManhwaChapterList({ chapters }: ChapterListProps) {
 
                 return (
                     <Link
-                        key={ch.chapter_id}
-                        href={`/komik/manhwa/read/${ch.chapter_id}`}
+                        key={ch.endpoint}
+                        href={`/komik/manhwa/read/${ch.endpoint}`}
                         className={`group relative flex items-center justify-between p-4 md:p-5 rounded-[1.8rem] border transition-all duration-500
                         ${isLatest
                                 ? "bg-gradient-to-r from-cyan-500/10 to-violet-600/5 border-cyan-500/30 shadow-[0_10px_30px_rgba(6,182,212,0.1)]"
@@ -47,7 +62,7 @@ export default function ManhwaChapterList({ chapters }: ChapterListProps) {
                                     : "bg-zinc-900 text-zinc-500 group-hover:bg-zinc-800 group-hover:text-cyan-400"
                                 }`}>
                                 <span className="text-[7px] opacity-70 uppercase tracking-tighter leading-none mb-0.5">CH</span>
-                                <span className="text-sm md:text-base leading-none tracking-tighter">{ch.chapter_number}</span>
+                                <span className="text-sm md:text-base leading-none tracking-tighter">{ch.length}</span>
 
                                 {isLatest && (
                                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-violet-500 rounded-full border-2 border-[#070708] animate-ping" />
@@ -57,7 +72,7 @@ export default function ManhwaChapterList({ chapters }: ChapterListProps) {
                             <div className="flex flex-col">
                                 <h4 className={`text-sm md:text-base font-bold tracking-tight line-clamp-1 transition-colors duration-300
                                 ${isLatest ? "text-white" : "text-zinc-300 group-hover:text-white"}`}>
-                                    {ch.chapter_title || `Chapter ${ch.chapter_number}`}
+                                    {ch.title || `Chapter ${ch.chapter_number}`}
                                 </h4>
 
                                 {/* Meta Info Bar */}
@@ -68,7 +83,7 @@ export default function ManhwaChapterList({ chapters }: ChapterListProps) {
                                     </span>
                                     <span className="hidden sm:inline text-[9px] font-black text-zinc-600 uppercase tracking-widest">|</span>
                                     <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-1.5">
-                                        {ch.view_count.toLocaleString()} Views
+                                        {ch.views.toLocaleString()} Views
                                     </span>
                                 </div>
                             </div>

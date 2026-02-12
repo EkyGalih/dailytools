@@ -69,8 +69,8 @@ export default function ManhwaReadingControls() {
                 </div>
 
                 <span className="relative text-[10px] font-black uppercase tracking-[0.2em] text-zinc-300 group-hover:text-white transition-colors">
-                    {viewMode === 'normal' && "Focus Mode"}
-                    {viewMode === 'focus' && "Maximize"}
+                    {viewMode === 'normal' && "Mode Fokus"}
+                    {viewMode === 'focus' && "Fullscreen"}
                     {viewMode === 'ultra' && "Exit"}
                 </span>
             </button>

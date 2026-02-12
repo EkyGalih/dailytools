@@ -97,31 +97,32 @@ export async function searchKomik(query: string) {
     if (!query) return []
 
     const json = await fetchJSON<any>(
-        `${BASE}/search?q=${encodeURIComponent(query)}`,
-        600 // cache 10 menit
+        `/api/komik/search?q=${encodeURIComponent(query)}`,
+        600
     )
-    console.log("Search Komik Result:", json)
-    if (!json?.data) return []
-    return json.data
+
+    if (!json?.datas) return []
+
+    return json.datas
 }
 
-export async function getKomikDetail(mangaId: string) {
-    if (!mangaId) return null
+export async function getKomikDetail(endpoint: string) {
+    if (!endpoint) return null
 
     const json = await fetchJSON<any>(
-        `${BASE}/detail?manga_id=${encodeURIComponent(mangaId)}`,
+        `${BASE}/detail/${encodeURIComponent(endpoint)}`,
         21600 // cache 6 jam
     )
 
-    if (!json?.data?.manga_id) return null
+    if (!json?.data?.endpoint) return null
     return json
 }
 
-export async function getKomikChapterList(mangaId: string) {
-    if (!mangaId) return []
+export async function getKomikChapterList(endpoint: string) {
+    if (!endpoint) return []
 
     const json = await fetchJSON<any>(
-        `${BASE}/chapterlist?manga_id=${encodeURIComponent(mangaId)}`,
+        `${BASE}/chapter/${encodeURIComponent(endpoint)}`,
         21600 // cache 6 jam
     )
 
@@ -133,7 +134,7 @@ export async function getKomikImages(chapterId: string) {
     if (!chapterId) return []
 
     const json = await fetchJSON<any>(
-        `${BASE}/getimage?chapter_id=${encodeURIComponent(chapterId)}`,
+        `${BASE}/chapter/${encodeURIComponent(chapterId)}`,
         86400 // cache 1 hari (gambar jarang berubah)
     )
 

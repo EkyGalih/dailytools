@@ -7,6 +7,7 @@ import KomikSearchClient from "@/components/komik/manga/KomikSearchClient"
 import SectionHeader from "@/components/komik/manga/SectionHeader"
 import MangaHero from "./MangaHero"
 import GenreSideList from "./GenreSideList"
+import KomikSearchCard from "./KomikSearchCard"
 
 export default function MangaClientPage({ initialPopular, initialLatest, genreData }: any) {
     const [searchResults, setSearchResults] = useState<any[] | null>(null)
@@ -65,7 +66,7 @@ export default function MangaClientPage({ initialPopular, initialLatest, genreDa
                                     {searchResults && searchResults.length > 0 ? (
                                         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6">
                                             {searchResults.map((manga: any) => (
-                                                <KomikRecommendedCard key={manga.manga_id} manga={manga} />
+                                                <KomikSearchCard key={manga.endpoint} manga={manga} />
                                             ))}
                                         </div>
                                     ) : (
@@ -85,7 +86,7 @@ export default function MangaClientPage({ initialPopular, initialLatest, genreDa
                                         />
                                         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6 mt-10">
                                             {initialPopular.slice(0, 8).map((manga: any) => (
-                                                <KomikRecommendedCard key={manga.manga_id} manga={manga} />
+                                                <KomikRecommendedCard key={manga.endpoint} manga={manga} />
                                             ))}
                                         </div>
                                     </section>
@@ -99,7 +100,7 @@ export default function MangaClientPage({ initialPopular, initialLatest, genreDa
                                         />
                                         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6 mt-10">
                                             {initialLatest.slice(0, 8).map((manga: any) => (
-                                                <KomikLatestCard key={manga.manga_id} manga={manga} />
+                                                <KomikLatestCard key={manga.endpoint} manga={manga} />
                                             ))}
                                         </div>
                                     </section>

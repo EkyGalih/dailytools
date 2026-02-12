@@ -1,7 +1,7 @@
 
 import ElegantMaintenancePage from "@/components/common/MaintenancePage"
 import ManhwaClientPage from "@/components/komik/manhwa/ManhwaClientPage"
-import { getKomikLatest, getKomikPopular, getKomikRecommended } from "@/libs/komik/komik"
+import { getKomikGenres, getKomikLatest, getKomikPopular, getKomikRecommended, getKomikUpdated } from "@/libs/komik/komik"
 
 export const metadata = {
     title: "Manhwa Explorer – Baca Manhwa Sub Indo Terlengkap | Tamanto",
@@ -38,19 +38,19 @@ export const metadata = {
 }
 
 export default async function ManhwaPage() {
-    const [res, resPopular, resLatest] = await Promise.all([
-        getKomikRecommended("manhwa"),
-        getKomikPopular(),
-        getKomikLatest("project")
+    const [resPopular, resLatest, genres] = await Promise.all([
+        getKomikPopular("manhua"),
+        getKomikUpdated("manhua"),
+        getKomikGenres(),
     ])
 
     // return <ElegantMaintenancePage />
 
     return (
         <ManhwaClientPage
-            initialRecommended={res || []}
-            initialPopular={resPopular || []}
+             initialPopular={resPopular || []}
             initialLatest={resLatest || []}
+            genreData={genres || []}
         />
     )
 }

@@ -4,13 +4,14 @@ import { useState } from "react"
 import ManhuaHero from "./ManhuaHero"
 import ManhuaRecommendedCard from "./ManhuaRecommendedCard"
 import ManhuaLatestCard from "./ManhuaLatestCard"
-import ManhuaPopularMiniCard from "./ManhuaPopularMiniCard"
 import ManhuaSectionHeader from "./ManhuaSectionHeader"
 import ManhuaSearchClient from "./ManhuaSearchClient"
+import ManhuaGenreSideList from "./ManhuaGenreSideList"
 
-export default function ManhuaClientPage({ initialRecommended, initialPopular, initialLatest }: any) {
+export default function ManhuaClientPage({ initialGenres, initialPopular, initialLatest }: any) {
     const [searchResults, setSearchResults] = useState<any[] | null>(null)
     const [searchQuery, setSearchQuery] = useState("")
+    const genres = initialGenres || []
 
     return (
         <main className="min-h-screen bg-[#09090b] text-white pb-20">
@@ -56,7 +57,7 @@ export default function ManhuaClientPage({ initialRecommended, initialPopular, i
                                 {searchResults && searchResults.length > 0 ? (
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                         {searchResults.map((manhua: any) => (
-                                            <ManhuaRecommendedCard key={manhua.manga_id} manhua={manhua} />
+                                            <ManhuaRecommendedCard key={manhua.endpoint} manhua={manhua} />
                                         ))}
                                     </div>
                                 ) : (
@@ -75,9 +76,12 @@ export default function ManhuaClientPage({ initialRecommended, initialPopular, i
                                         desc="Koleksi manhua terbaik berdasarkan rating dan tren populer."
                                         link="/komik/manhua/recommended"
                                     />
-                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                        {initialRecommended.slice(0, 8).map((manhua: any) => (
-                                            <ManhuaRecommendedCard key={manhua.manga_id} manhua={manhua} />
+                                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                        {initialPopular.slice(0, 12).map((item: any) => (
+                                            <ManhuaRecommendedCard
+                                                key={item.endpoint}
+                                                manhua={item}
+                                            />
                                         ))}
                                     </div>
                                 </section>
@@ -91,7 +95,7 @@ export default function ManhuaClientPage({ initialRecommended, initialPopular, i
                                     />
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                         {initialLatest.slice(0, 8).map((manhua: any) => (
-                                            <ManhuaLatestCard key={manhua.manga_id} manhua={manhua} />
+                                            <ManhuaLatestCard key={manhua.endpoint} manhua={manhua} />
                                         ))}
                                     </div>
                                 </section>
@@ -99,28 +103,9 @@ export default function ManhuaClientPage({ initialRecommended, initialPopular, i
                         )}
                     </div>
 
-                    {/* SIDEBAR (TETAP MUNCUL) */}
-                    <aside>
-                        <div className="sticky top-28 space-y-8">
-                            <div className="p-6 bg-zinc-900/30 border border-zinc-800/50 rounded-[2rem]">
-                                <h2 className="text-lg font-black uppercase tracking-tight flex items-center gap-2">
-                                    <span className="text-violet-400 drop-shadow-[0_0_10px_rgba(167,139,250,0.7)]">
-                                        ⚡
-                                    </span>
-                                    Top Manhua
-                                </h2>
-
-                                <p className="text-zinc-500 text-[11px] mt-1">
-                                    Ranking manhua terkuat di dunia cultivation
-                                </p>
-                                <div className="mt-8 space-y-4">
-                                    {initialPopular.slice(0, 10).map((manhua: any, i: number) => (
-                                        <ManhuaPopularMiniCard key={manhua.manga_id} manhua={manhua} rank={i + 1} />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </aside>
+                    <div className="hidden lg:block">
+                        <ManhuaGenreSideList genres={genres} />
+                    </div>
                 </div>
             </section>
         </main>

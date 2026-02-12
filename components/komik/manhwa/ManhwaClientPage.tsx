@@ -1,17 +1,18 @@
 'use client'
 
 import { useState } from "react"
-import KomikPopularMiniCard from "@/components/komik/manga/KomikPopularMiniCard"
-import KomikSearchClient from "@/components/komik/manga/KomikSearchClient"
 import SectionHeader from "@/components/komik/manga/SectionHeader"
 import ManhwaHero from "./ManhwaHero"
 import ManhwaRecommendedCard from "./ManhwaRecommendedCard"
-import ManhwaPopularMiniCard from "./ManhwaPopularMiniCard"
 import ManhwaSearchClient from "./ManhwaSearchClient"
+import ManhwaLatestCard from "./ManhuaLaterstCard"
+import ManhwaGenreSideList from "./ManhwaGenreSideList"
 
-export default function ManhwaClientPage({ initialRecommended, initialPopular, initialLatest }: any) {
+export default function ManhwaClientPage({ initialPopular, initialLatest, genreData }: any) {
     const [searchResults, setSearchResults] = useState<any[] | null>(null)
     const [searchQuery, setSearchQuery] = useState("")
+
+    const genres = genreData || []
 
     return (
         <main className="min-h-screen bg-[#09090b] text-white pb-20">
@@ -76,8 +77,8 @@ export default function ManhwaClientPage({ initialRecommended, initialPopular, i
                                         link="/komik/recommended"
                                     />
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                        {initialRecommended.slice(0, 8).map((manhwa: any) => (
-                                            <ManhwaRecommendedCard key={manhwa.manga_id} manhwa={manhwa} />
+                                        {initialPopular.slice(0, 8).map((manhwa: any) => (
+                                            <ManhwaRecommendedCard key={manhwa.endpoint} manhwa={manhwa} />
                                         ))}
                                     </div>
                                 </section>
@@ -91,7 +92,7 @@ export default function ManhwaClientPage({ initialRecommended, initialPopular, i
                                     />
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                         {initialLatest.slice(0, 8).map((manhwa: any) => (
-                                            <ManhwaPopularMiniCard key={manhwa.manga_id} manhwa={manhwa} />
+                                            <ManhwaLatestCard key={manhwa.endpoint} manhwa={manhwa} />
                                         ))}
                                     </div>
                                 </section>
@@ -100,21 +101,9 @@ export default function ManhwaClientPage({ initialRecommended, initialPopular, i
                     </div>
 
                     {/* SIDEBAR (TETAP MUNCUL) */}
-                    <aside>
-                        <div className="sticky top-28 space-y-8">
-                            <div className="p-6 bg-zinc-900/30 border border-zinc-800/50 rounded-[2rem]">
-                                <h2 className="text-lg font-black uppercase tracking-tight flex items-center gap-2">
-                                    <span className="text-orange-500">⭐</span> Populer
-                                </h2>
-                                <p className="text-zinc-500 text-sm mt-1">Manhwa Paling Banyak di Baca</p>
-                                <div className="mt-8 space-y-4">
-                                    {initialPopular.slice(0, 5).map((manhwa: any, i: number) => (
-                                        <ManhwaPopularMiniCard key={manhwa.manga_id} manhwa={manhwa} />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </aside>
+                    <div className="hidden lg:block">
+                        <ManhwaGenreSideList genres={genres} />
+                    </div>
                 </div>
             </section>
         </main>

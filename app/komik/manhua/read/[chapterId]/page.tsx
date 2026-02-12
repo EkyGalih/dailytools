@@ -1,8 +1,8 @@
-import { getKomikImages, getKomikChapterList } from "@/libs/komik/komik"
+import { getKomikImages, getKomikDetail } from "@/libs/komik/komik"
 import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
-import ManhuaReadingControls from "@/components/komik/manga/ManhuaReadingControls"
+import ManhuaReadingControls from "@/components/komik/manhua/ManhuaReadingControls"
 
 export async function generateMetadata({ params }: { params: Promise<{ chapterId: string }> }): Promise<Metadata> {
     const { chapterId } = await params
@@ -61,24 +61,32 @@ export async function generateMetadata({ params }: { params: Promise<{ chapterId
 export default async function ManhuaReadPage({ params }: { params: Promise<{ chapterId: string }> }) {
     const { chapterId } = await params
     const chapterData = await getKomikImages(chapterId)
+    const manhuaEndpoint =
+        chapterData.manga_endpoint?.includes("manga/")
+            ? chapterData.manga_endpoint.replace("manga/", "")
+            : null
 
-    if (!chapterData || !chapterData.chapter) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-[#050606]">
+    const detail = manhuaEndpoint
+        ? await getKomikDetail(manhuaEndpoint)
+        : null
+        
+        if (!chapterData || !chapterData.images) {
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-[#050606]">
                 <p className="text-emerald-900 font-black uppercase tracking-[0.3em] animate-pulse text-xs">Scroll Not Found</p>
             </div>
         )
     }
-
-    const images: string[] = chapterData.chapter?.data || []
-    const chapters = await getKomikChapterList(chapterData.manga_id)
+    
+    const images: string[] = chapterData.images || []
+    const chapters = detail?.data?.chapters || []
 
     return (
         <main className="min-h-screen bg-[#050606] text-zinc-100 selection:bg-emerald-500/30 overflow-x-hidden">
             {/* --- TOPBAR (JADE STYLE) --- */}
             <header className="sticky top-0 z-[60] bg-[#050606]/80 backdrop-blur-2xl border-b border-emerald-500/10 px-6 py-4 flex items-center justify-between transition-all duration-500">
                 <div className="flex items-center gap-4">
-                    <Link href={`/komik/manhua/${chapterData.manga_id}`} className="group flex items-center gap-2.5 px-4 py-2 rounded-full bg-emerald-500/5 border border-emerald-500/10 text-[10px] font-black uppercase tracking-widest text-emerald-500 hover:text-white hover:bg-emerald-600 transition-all">
+                    <Link href={`/komik/manhua/${manhuaEndpoint}`} className="group flex items-center gap-2.5 px-4 py-2 rounded-full bg-emerald-500/5 border border-emerald-500/10 text-[10px] font-black uppercase tracking-widest text-emerald-500 hover:text-white hover:bg-emerald-600 transition-all">
                         <span className="group-hover:-translate-x-1 transition-transform">←</span> Exit
                     </Link>
                     <div className="h-4 w-px bg-emerald-900/30" />
@@ -101,18 +109,18 @@ export default async function ManhuaReadPage({ params }: { params: Promise<{ cha
                         <div className="p-12 bg-emerald-950/10 border-b border-emerald-500/5 flex flex-col items-center gap-8">
                             <p className="text-emerald-900 font-black uppercase tracking-[0.5em] text-[9px]">Begin Cultivation</p>
                             <div className="flex items-center gap-4 w-full max-w-md">
-                                {chapterData.prev_chapter_id ? (
-                                    <Link href={`/komik/manhua/read/${chapterData.prev_chapter_id}`} className="flex-1 text-center py-4 rounded-2xl bg-zinc-950 border border-emerald-900/20 text-[10px] font-black uppercase tracking-widest text-emerald-700 hover:border-emerald-500 hover:text-emerald-400 transition-all active:scale-95">
+                                {chapterData.prev_chapter ? (
+                                    <Link href={`/komik/manhua/read/${chapterData.prev_chapter}`} className="flex-1 text-center py-4 rounded-2xl bg-zinc-950 border border-emerald-900/20 text-[10px] font-black uppercase tracking-widest text-emerald-700 hover:border-emerald-500 hover:text-emerald-400 transition-all active:scale-95">
                                         ← Previous
                                     </Link>
                                 ) : <div className="flex-1 opacity-10 text-center text-[10px] font-black uppercase tracking-widest py-4 border border-dashed border-emerald-900 rounded-2xl">Root</div>}
 
-                                {chapterData.next_chapter_id ? (
-                                    <Link href={`/komik/manhua/read/${chapterData.next_chapter_id}`} className="flex-2 px-10 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 text-black text-[10px] font-black uppercase tracking-widest hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all active:scale-95 text-center">
+                                {chapterData.next_chapter ? (
+                                    <Link href={`/komik/manhua/read/${chapterData.next_chapter}`} className="flex-2 px-10 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 text-black text-[10px] font-black uppercase tracking-widest hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all active:scale-95 text-center">
                                         Next Scroll →
                                     </Link>
                                 ) : (
-                                    <Link href={`/komik/manhua/${chapterData.manga_id}`} className="flex-1 py-4 rounded-2xl bg-emerald-900/20 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest text-center">Ascended</Link>
+                                    <Link href={`/komik/manhua/${manhuaEndpoint}`} className="flex-1 py-4 rounded-2xl bg-emerald-900/20 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest text-center">Ascended</Link>
                                 )}
                             </div>
                         </div>
@@ -141,18 +149,18 @@ export default async function ManhuaReadPage({ params }: { params: Promise<{ cha
                         <div className="p-12 bg-emerald-950/10 border-t border-emerald-500/5 flex flex-col items-center gap-8">
                             <p className="text-emerald-900 font-black uppercase tracking-[0.5em] text-[9px]">End of Scripture</p>
                             <div className="flex items-center gap-4 w-full max-w-md">
-                                {chapterData.prev_chapter_id ? (
-                                    <Link href={`/komik/manhua/read/${chapterData.prev_chapter_id}`} className="flex-1 text-center py-4 rounded-2xl bg-zinc-950 border border-emerald-900/20 text-[10px] font-black uppercase tracking-widest text-emerald-700 hover:text-emerald-400 transition-all">
+                                {chapterData.prev_chapter ? (
+                                    <Link href={`/komik/manhua/read/${chapterData.prev_chapter}`} className="flex-1 text-center py-4 rounded-2xl bg-zinc-950 border border-emerald-900/20 text-[10px] font-black uppercase tracking-widest text-emerald-700 hover:text-emerald-400 transition-all">
                                         ← Previous
                                     </Link>
                                 ) : <div className="flex-1 opacity-10 text-center text-[10px] font-black uppercase tracking-widest py-4 border border-dashed border-emerald-900 rounded-2xl">Root</div>}
 
-                                {chapterData.next_chapter_id ? (
-                                    <Link href={`/komik/manhua/read/${chapterData.next_chapter_id}`} className="flex-2 px-10 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 text-black text-[10px] font-black uppercase tracking-widest hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all text-center">
+                                {chapterData.next_chapter ? (
+                                    <Link href={`/komik/manhua/read/${chapterData.next_chapter}`} className="flex-2 px-10 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 text-black text-[10px] font-black uppercase tracking-widest hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all text-center">
                                         Next Scroll →
                                     </Link>
                                 ) : (
-                                    <Link href={`/komik/manhua/${chapterData.manga_id}`} className="flex-1 py-4 rounded-2xl bg-emerald-900/20 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest text-center">Ascended</Link>
+                                    <Link href={`/komik/manhua/${detail?.endpoint}`} className="flex-1 py-4 rounded-2xl bg-emerald-900/20 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest text-center">Ascended</Link>
                                 )}
                             </div>
                         </div>
@@ -167,12 +175,12 @@ export default async function ManhuaReadPage({ params }: { params: Promise<{ cha
                             </div>
                             <div className="flex-grow overflow-y-auto pr-2 space-y-2 custom-scrollbar no-scrollbar-mobile">
                                 {chapters.map((ch: any) => {
-                                    const active = ch.chapter_id === chapterId
+                                    const active = ch.endpoint === chapterId
                                     return (
-                                        <Link key={ch.chapter_id} href={`/komik/manhua/read/${ch.chapter_id}`}
+                                        <Link key={ch.endpoint} href={`/komik/manhua/read/${ch.endpoint}`}
                                             className={`group relative flex items-center justify-between px-5 py-4 rounded-2xl border transition-all duration-300 
-                                            ${active ? "bg-emerald-500 text-black border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)]" : "bg-white/[0.02] border-white/5 text-emerald-900 hover:text-emerald-400 hover:border-emerald-500/20"}`}>
-                                            <span className="text-[10px] font-black uppercase tracking-tighter">{ch.name || `Scroll ${ch.chapter_number}`}</span>
+                                            ${active ? "bg-emerald-500 text-black border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)]" : "bg-white/[0.02] border-white/5 text-emerald-600 hover:text-emerald-400 hover:border-emerald-500/20"}`}>
+                                            <span className="text-[10px] font-black uppercase tracking-tighter">{ch.title || `Scroll ${ch.chapter_number}`}</span>
                                             {active && <div className="w-1.5 h-1.5 bg-black rounded-full animate-pulse" />}
                                         </Link>
                                     )

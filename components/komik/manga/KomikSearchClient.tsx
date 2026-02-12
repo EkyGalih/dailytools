@@ -40,11 +40,13 @@ export default function KomikSearchClient({
             }
         }, 600)
 
+
         return () => {
             active = false
             clearTimeout(delay)
         }
     }, [query]) // ✅ ONLY QUERY
+
 
     return (
         <div className="max-w-2xl w-full relative group">

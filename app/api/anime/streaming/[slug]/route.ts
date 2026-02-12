@@ -17,6 +17,7 @@ export async function GET(
             headers: {
                 "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
             },
+            cache: "no-store",
         });
 
         const data = await res.json();

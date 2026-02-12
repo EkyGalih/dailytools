@@ -3,14 +3,11 @@ import { apiFetch } from "@/libs/fetchApi";
 /* ===============================
    ✅ Base API URL (Client Safe)
 =============================== */
-const BASE = "https://mytools.web.id/api/anime"
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-/* ===============================
-   ✅ TTL Revalidate (match Redis)
-=============================== */
-const REVALIDATE_HOME = 86400; // 1 hari
-const REVALIDATE_LIST = 21600; // 6 jam
-const REVALIDATE_DETAIL = 3600; // 1 jam
+if (!BASE_URL) {
+    console.error("NEXT_PUBLIC_API_BASE_URL belum diset");
+}
 
 /* ============================================================
    ✅ OTAKUDESU API SERVICES
@@ -23,8 +20,8 @@ const REVALIDATE_DETAIL = 3600; // 1 jam
 export async function getAnimeHomePage() {
     try {
         const res = await apiFetch(
-            `${BASE}/homepage`,
-            REVALIDATE_HOME
+            `${BASE_URL}/anime/homepage`,
+            { revalidate: 86400 }
         );
 
         if (!res.ok) return null;
@@ -46,13 +43,12 @@ export async function getAnimeHomePage() {
 export async function getAnimeList() {
     try {
         const res = await apiFetch(
-            `${BASE}/list-anime`,
-            REVALIDATE_LIST // cache 6 jam
+            `${BASE_URL}/anime/list-anime`,
+            { revalidate: 21600 }
         );
 
         if (!res.ok) return null;
-
-        return await res.json();
+        return res.json();
     } catch (err) {
         console.error("getAnimeList error:", err);
         return null;
@@ -66,13 +62,12 @@ export async function getAnimeList() {
 export async function getAnimeSchedule() {
     try {
         const res = await apiFetch(
-            `${BASE}/jadwal`,
-            43200 // cache 12 jam
+            `${BASE_URL}/anime/jadwal`,
+            { revalidate: 21600 }
         );
 
         if (!res.ok) return null;
-
-        return await res.json();
+        return res.json();
     } catch (err) {
         console.error("getAnimeSchedule error:", err);
         return null;
@@ -88,14 +83,14 @@ export async function getAnimeDetail(slug: string) {
 
     try {
         const res = await apiFetch(
-            `${BASE}/detail/${slug}`,
-            REVALIDATE_DETAIL
+            `${BASE_URL}/anime/detail/${slug}`,
+            { revalidate: 3600 }
         );
 
         if (!res.ok) return null;
         return res.json();
     } catch (err) {
-        console.error("getAnimeAnimeDetail error:", err);
+        console.error("getAnimeDetail error:", err);
         return null;
     }
 }
@@ -107,16 +102,25 @@ export async function getAnimeDetail(slug: string) {
 export async function getAnimeEpisodeDetail(slug: string) {
     if (!slug) return null;
 
-    try {
-        const res = await fetch(`/api/anime/streaming/${slug}`);
+    for (let i = 0; i < 2; i++) {
+        try {
+            const res = await apiFetch(
+                `${BASE_URL}/anime/streaming/${slug}`,
+                { noStore: true }
+            );
 
-        if (!res.ok) return null;
+            if (res.ok) {
+                const json = await res.json();
+                if (json?.data) return json;
+            }
+        } catch (err) {
+            console.error("Retry streaming fetch:", err);
+        }
 
-        return res.json();
-    } catch (err) {
-        console.error("getAnimeEpisodeDetail error:", err);
-        return null;
+        await new Promise(r => setTimeout(r, 500));
     }
+
+    return null;
 }
 
 /**
@@ -126,8 +130,8 @@ export async function getAnimeEpisodeDetail(slug: string) {
 export async function getAnimeGenres() {
     try {
         const res = await apiFetch(
-            `${BASE}/genres`,
-            REVALIDATE_HOME
+            `${BASE_URL}/anime/genres`,
+            { revalidate: 86400 }
         );
 
         if (!res.ok) return null;
@@ -150,10 +154,8 @@ export async function getAnimeAnimeByGenre(
 
     try {
         const res = await apiFetch(
-            `${BASE}/genres/${encodeURIComponent(
-                genre
-            )}?page=${page}`,
-            REVALIDATE_LIST
+            `${BASE_URL}/anime/genres/${encodeURIComponent(genre)}?page=${page}`,
+            { revalidate: 21600 }
         );
 
         if (!res.ok) return null;
@@ -169,18 +171,19 @@ export async function getAnimeAnimeByGenre(
  * GET /anime/search?q=
  */
 export async function searchAnime(query: string, page: number = 1) {
-    if (!query) return null
+    if (!query) return null;
 
     try {
-        const res = await fetch(
-            `/api/anime/search?q=${encodeURIComponent(query)}&page=${page}`
-        )
+        const res = await apiFetch(
+            `${BASE_URL}/anime/search?q=${encodeURIComponent(query)}&page=${page}`,
+            { noStore: true }
+        );
 
-        if (!res.ok) return null
-        return res.json()
+        if (!res.ok) return null;
+        return res.json();
     } catch (err) {
-        console.error("searchAnime error:", err)
-        return null
+        console.error("searchAnime error:", err);
+        return null;
     }
 }
 

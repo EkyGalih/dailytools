@@ -1,11 +1,18 @@
-export async function apiFetch(url: string, revalidate = 60) {
+export async function apiFetch(
+    url: string,
+    options?: {
+        revalidate?: number
+        noStore?: boolean
+    }
+) {
     return fetch(url, {
         headers: {
             accept: "application/json",
-            "User-Agent": "mytools-Komik/1.0",
+            "User-Agent": "tamanto-client/1.0",
             "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
         },
-
-        next: { revalidate },
+        ...(options?.noStore
+            ? { cache: "no-store" }
+            : { next: { revalidate: options?.revalidate ?? 60 } }),
     });
 }

@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 import { DRAMA_CHANNELS } from '@/libs/drama/channel'
-import { getAnimeList } from "@/libs/anime/anime"
+import { getAnimeRecomended } from "@/libs/anime/anime"
 // Import fetcher tambahan Anda di sini, misal:
 // import { getDramaList } from "@/libs/drama/drama"
 
@@ -11,7 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 1. DYNAMIC FETCHING (Anime, Drama, dll)
   // ========================================================
   const [animeRes] = await Promise.all([
-    getAnimeList().catch(() => null),
+    getAnimeRecomended().catch(() => null),
     // getDramaList().catch(() => null),
   ])
 

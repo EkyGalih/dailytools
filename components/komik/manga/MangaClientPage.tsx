@@ -21,9 +21,9 @@ export default function MangaClientPage({ initialPopular, initialLatest, genreDa
 
             <div className="relative z-10">
                 <MangaHero
-                    title="Manga"
-                    highlight="Explorer"
-                    desc="Temukan manga terbaik, terbaru, dan terpopuler hari ini dengan kualitas gambar terbaik."
+                    title="Paviliun"
+                    highlight="Manga"
+                    desc="Masuki dunia tanpa batas, tempat setiap halaman membuka petualangan baru, dari isekai epik hingga romansa yang menyentuh jiwa."
                 />
 
                 <section className="px-6 lg:px-20 -mt-10 relative z-30">

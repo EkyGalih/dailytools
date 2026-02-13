@@ -1,6 +1,6 @@
 import ElegantMaintenancePage from "@/components/common/MaintenancePage"
 import MangaClientPage from "@/components/komik/manga/MangaClientPage"
-import { getKomikGenres, getKomikPopular, getKomikUpdated } from "@/libs/komik/komik"
+import { getKomikGenres, getKomikRecomended, getKomikUpdated } from "@/libs/komik/komik"
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Tamanto Manga Explorer – Destinasi Baca Komik Terpopuler',
-        description: 'Update harian Manga dan Manhwa terbaru. Pengalaman baca komik digital terbaik dengan kualitas gambar jernih. Kita Baca, Kita Terhibur!',
+        description: 'Masuki dunia tanpa batas, tempat setiap halaman membuka petualangan baru, dari isekai epik hingga romansa yang menyentuh jiwa!',
         url: 'https://tamanto.web.id/manga',
         siteName: 'Tamanto',
         images: [
@@ -33,14 +33,14 @@ export const metadata: Metadata = {
     twitter: {
         card: 'summary_large_image',
         title: 'Baca Manhwa & Manga Sub Indo Update Setiap Hari',
-        description: 'Koleksi komik digital terlengkap dari berbagai genre tersedia di Tamanto Manga.',
+        description: 'Masuki dunia tanpa batas, tempat setiap halaman membuka petualangan baru, dari isekai epik hingga romansa yang menyentuh jiwa.',
         images: ['/og-manga.jpg'],
     },
 }
 
 export default async function MangaPage() {
     const [resPopular, resLatest, genres] = await Promise.all([
-        getKomikPopular("manga"),
+        getKomikRecomended("manga"),
         getKomikUpdated("manga"),
         getKomikGenres(),
     ])

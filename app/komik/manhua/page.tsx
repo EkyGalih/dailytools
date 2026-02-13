@@ -1,6 +1,6 @@
 import ElegantMaintenancePage from "@/components/common/MaintenancePage"
 import ManhuaClientPage from "@/components/komik/manhua/ManhuaClientPage"
-import { getKomikGenres, getKomikPopular, getKomikUpdated } from "@/libs/komik/komik"
+import { getKomikGenres, getKomikRecomended, getKomikUpdated } from "@/libs/komik/komik"
 
 
 export const metadata = {
@@ -40,7 +40,7 @@ export const metadata = {
 export default async function MangaPage() {
     const [genres, resPopular, resLatest] = await Promise.all([
         getKomikGenres(),
-        getKomikPopular("manhua"),
+        getKomikRecomended("manhua"),
         getKomikUpdated("manhua"),
     ])
 

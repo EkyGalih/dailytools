@@ -18,9 +18,9 @@ export default function ManhuaClientPage({ initialGenres, initialPopular, initia
             {/* HERO */}
 
             <ManhuaHero
-                title="Manhua"
-                highlight="Explorer"
-                desc="Baca manhua trending dengan update chapter terbaru setiap hari."
+                title="Atrium"
+                highlight="Manhua"
+                desc="Dari reinkarnasi sang jenius hingga kebangkitan penguasa langit, temukan manhua dengan alur epik dan pertarungan spektakuler."
             />
 
             {/* SEARCH SECTION */}

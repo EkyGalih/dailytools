@@ -1,16 +1,12 @@
 // libs/komik/komikbox.ts
 
-// const BASE = "https://api.sansekai.my.id/api/komik"
-// const BASE = "http://localhost:3000/api/komik"
-const BASE = "https://mytools.web.id/api/komik"
-
+const BASE = "https://api.sansekai.my.id/api/komik"
 /* ===============================
    DEFAULT HEADERS
 =============================== */
 const DEFAULT_HEADERS = {
     accept: "application/json",
-    "User-Agent": "mytools-Komik/1.0",
-    "x-api-key": process.env.API_KEY as string,
+    "User-Agent": "mytools-Komik/1.0"
 }
 
 const DEFAULT_TIMEOUT = 8000
@@ -47,23 +43,23 @@ async function fetchJSON<T>(
     }
 }
 
-export async function getKomikPopular(
+export async function getKomikRecomended(
     type: "manga" | "manhwa" | "manhua" = "manga"
 ) {
     const json = await fetchJSON<any>(
-        `${BASE}/popular?tipe=${type}`,
+        `${BASE}/recommended?type=${type}`,
         21600 // cache 6 jam
     )
-
+console.log(json);
     if (!json?.data) return []
     return json.data
 }
 
 export async function getKomikUpdated(
-    type: "manga" | "manhwa" | "manhua" = "manga"
+    type: "project" | "mirror" = "project"
 ) {
     const json = await fetchJSON<any>(
-        `${BASE}/updated?tipe=${type}`,
+        `${BASE}/latest?tipe=${type}`,
         1800 // cache 30 menit
     )
 

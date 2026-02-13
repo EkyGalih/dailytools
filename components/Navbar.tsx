@@ -107,11 +107,12 @@ export default function Navbar() {
             <span>Anime</span>
           </Link>
 
-          <DesktopDropdown label="Komik" icon={<BookOpenText className="w-4 h-4" />} open={open === 'komik'} onToggle={() => toggle('komik')}>
-            <NavItem href="/komik/manga" label="Manga" desc="🇯🇵 Komik Jepang" />
-            <NavItem href="/komik/manhwa" label="Manhwa" desc="🇰🇷 Webtoon Korea" />
-            <NavItem href="/komik/manhua" label="Manhua" desc="🇨🇳 Komik China" />
-          </DesktopDropdown>
+          <Link href="/komik"
+            className="px-4 py-2 text-sm font-bold text-zinc-600 hover:text-black flex items-center gap-2 transition-colors"
+          >
+            <BookOpenText className="w-4 h-4 shrink-0" />
+            <span>Komik</span>
+          </Link>
 
           <DesktopDropdown label="Tools" icon={<Laptop className="w-4 h-4" />} open={open?.startsWith('tools') ?? false} onToggle={() => toggle('tools')}>
             <NestedDropdown label="Kreator" icon={<Sparkles className="w-3.5 h-3.5" />} isOpen={open === 'tools-kreator'} onToggle={() => toggle('tools-kreator')}>

@@ -18,9 +18,9 @@ export default function ManhwaClientPage({ initialPopular, initialLatest, genreD
         <main className="min-h-screen bg-[#09090b] text-white pb-20">
             {/* HERO */}
             <ManhwaHero
-                title="Manhwa"
-                highlight="Trending"
-                desc="Temukan manhwa yang sedang viral, paling banyak dibaca, dan paling dicari."
+                title="Saga"
+                highlight="Manhwa"
+                desc="Jelajahi kisah penuh kekuatan, balas dendam, dan kebangkitan karakter utama dalam dunia manhwa terbaik pilihan hari ini."
             />
 
             {/* SEARCH SECTION */}

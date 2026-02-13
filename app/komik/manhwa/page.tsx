@@ -40,7 +40,7 @@ export const metadata = {
 export default async function ManhwaPage() {
     const [resPopular, resLatest, genres] = await Promise.all([
         getKomikRecomended("manhua"),
-        getKomikUpdated("manhua"),
+        getKomikUpdated(),
         getKomikGenres(),
     ])
 

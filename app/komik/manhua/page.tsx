@@ -41,7 +41,7 @@ export default async function MangaPage() {
     const [genres, resPopular, resLatest] = await Promise.all([
         getKomikGenres(),
         getKomikRecomended("manhua"),
-        getKomikUpdated("manhua"),
+        getKomikUpdated(),
     ])
 
     return (

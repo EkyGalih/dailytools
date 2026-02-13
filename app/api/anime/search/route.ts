@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     try {
         const res = await fetch(backendUrl, {
             headers: {
-                "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
+                "x-api-key": process.env.API_KEY!,
             },
         })
 

@@ -14,7 +14,7 @@ export async function GET(req: Request) {
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/komik/search?q=${encodeURIComponent(q)}`,
             {
                 headers: {
-                    "x-api-key": process.env.NEXT_PUBLIC_API_KEY as string,
+                    "x-api-key": process.env.API_KEY as string,
                 },
                 cache: "no-store"
             }

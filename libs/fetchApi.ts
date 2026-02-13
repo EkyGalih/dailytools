@@ -9,7 +9,7 @@ export async function apiFetch(
         headers: {
             accept: "application/json",
             "User-Agent": "tamanto-client/1.0",
-            "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
+            "x-api-key": process.env.API_KEY!,
         },
         ...(options?.noStore
             ? { cache: "no-store" }

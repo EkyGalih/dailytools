@@ -1,35 +1,37 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
 export async function GET(
-    _req: NextRequest,
+    _req: Request,
     { params }: { params: Promise<{ slug: string }> }
 ) {
-    const { slug } = await params;
+    const { slug } = await params; // 🔥 WAJIB await
 
-    try {
-        // ✅ Backend URL (port 3000)
-        const backendUrl = `${process.env.NEXT_PUBLIC_BASE_URL_API}/anime/streaming/${slug}`;
-
-        // ✅ Fetch backend + kirim API Key
-        const res = await fetch(backendUrl, {
-            headers: {
-                "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
-            },
-            cache: "no-store",
-        });
-
-        const data = await res.json();
-
-        return NextResponse.json(data);
-    } catch (err) {
+    if (!slug) {
         return NextResponse.json(
-            {
-                message: "error",
-                error: "Backend fetch failed",
-            },
+            { message: "Slug tidak ada" },
+            { status: 400 }
+        );
+    }
+
+    const backendUrl = `${process.env.NEXT_PUBLIC_BASE_URL_API}/anime/streaming/${slug}`;
+
+    if (!process.env.NEXT_PUBLIC_BASE_URL_API) {
+        return NextResponse.json(
+            { message: "NEXT_PUBLIC_BASE_URL_API belum diset" },
             { status: 500 }
         );
     }
+
+    const res = await fetch(backendUrl, {
+        headers: {
+            "x-api-key": process.env.API_KEY!,
+        },
+        cache: "no-store",
+    });
+
+    const data = await res.json();
+
+    return NextResponse.json(data);
 }

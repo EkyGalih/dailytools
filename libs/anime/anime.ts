@@ -100,27 +100,13 @@ export async function getAnimeDetail(slug: string) {
  * GET /anime/episode/:slug
  */
 export async function getAnimeEpisodeDetail(slug: string) {
-    if (!slug) return null;
+    const res = await fetch(`/api/anime/streaming/${slug}`, {
+        cache: "no-store"
+    });
 
-    for (let i = 0; i < 2; i++) {
-        try {
-            const res = await apiFetch(
-                `${BASE_URL}/anime/streaming/${slug}`,
-                { noStore: true }
-            );
+    if (!res.ok) return null;
 
-            if (res.ok) {
-                const json = await res.json();
-                if (json?.data) return json;
-            }
-        } catch (err) {
-            console.error("Retry streaming fetch:", err);
-        }
-
-        await new Promise(r => setTimeout(r, 500));
-    }
-
-    return null;
+    return res.json();
 }
 
 /**

@@ -10,7 +10,7 @@ const BASE = "https://mytools.web.id/api/komik"
 const DEFAULT_HEADERS = {
     accept: "application/json",
     "User-Agent": "mytools-Komik/1.0",
-    "x-api-key": process.env.NEXT_PUBLIC_API_KEY as string,
+    "x-api-key": process.env.API_KEY as string,
 }
 
 const DEFAULT_TIMEOUT = 8000

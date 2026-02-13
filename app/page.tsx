@@ -204,14 +204,8 @@ export default async function Home() {
         <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {animeList?.ongoing?.slice(0, 5).map((item: any) => (
             <AnimeCard
-              key={item.endpoint}
-              endpoint={item.endpoint}
-              title={item.title}
-              thumbnail={item.thumbnail}
-              episode={`${item.episode || "?"}`}
-              info={item.info}
-              update={item.update}
-              link=''
+              key={item.id}
+              anime={item}
             />
           ))}
         </div>

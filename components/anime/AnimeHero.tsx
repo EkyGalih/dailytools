@@ -78,35 +78,6 @@ export default function AnimeHero({
                         </span>
                         <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-amber-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
                     </button>
-
-                    {/* Tombol Jadwal Rilis (Bisa diarahkan ke page lain atau scroll ke section lain) */}
-                    <button
-                        onClick={() => isHomePage ? router.push('/anime/jadwal') : router.push('/anime')}
-                        className="px-10 py-4 bg-zinc-900/50 backdrop-blur-xl text-white font-bold rounded-2xl border border-white/5 hover:bg-zinc-800 transition-all hover:border-orange-600/50 flex items-center gap-2"
-                    >
-                        {!isHomePage && (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H72.83l47.58,47.59a8,8,0,0,1-11.32,11.32l-61.26-61.26a8,8,0,0,1,0-11.32l61.26-61.26a8,8,0,0,1,11.32,11.32L72.83,120H200A8,8,0,0,1,208,128Z"></path></svg>
-                        )}
-                        {isHomePage ? "Jadwal Rilis" : "Kembali Ke Daftar"}
-                    </button>
-
-                    <Link
-                        href="/anime/daftar-anime"
-                        className="group relative px-10 py-4 bg-zinc-900/40 backdrop-blur-xl text-white font-black rounded-2xl border border-white/10 transition-all hover:scale-105 hover:border-orange-500/50 overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.3)] flex items-center gap-3"
-                    >
-                        {/* Background Glow Effect on Hover */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-orange-600/10 to-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                        <span className="relative z-10 flex items-center gap-2 tracking-tight">
-                            Daftar Anime A-Z
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" className="group-hover:rotate-45 transition-transform duration-300 text-orange-500">
-                                <path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"></path>
-                            </svg>
-                        </span>
-
-                        {/* Animated Border Trace (Efek Garis Berjalan) */}
-                        <div className="absolute inset-0 rounded-2xl border border-orange-500/20 scale-105 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500" />
-                    </Link>
                 </div>
 
                 {/* ... */}

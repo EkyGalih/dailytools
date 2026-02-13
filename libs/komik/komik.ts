@@ -48,9 +48,9 @@ export async function getKomikRecomended(
 ) {
     const json = await fetchJSON<any>(
         `${BASE}/recommended?type=${type}`,
-        21600 // cache 6 jam
+        259200 // cache 3 hari
     )
-console.log(json);
+    console.log(json);
     if (!json?.data) return []
     return json.data
 }
@@ -59,8 +59,8 @@ export async function getKomikUpdated(
     type: "project" | "mirror" = "project"
 ) {
     const json = await fetchJSON<any>(
-        `${BASE}/latest?tipe=${type}`,
-        1800 // cache 30 menit
+        `${BASE}/latest?type=${type}`, // FIXED (type bukan tipe)
+        1800
     )
 
     if (!json?.data) return []

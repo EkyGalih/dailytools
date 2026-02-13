@@ -39,20 +39,22 @@ export const metadata: Metadata = {
 }
 
 export default async function MangaPage() {
-    const [resPopular, resLatest, genres] = await Promise.all([
+    const [resPopular, resLatest, resLatestMirror, genres] = await Promise.all([
         getKomikRecomended("manga"),
-        getKomikUpdated("manga"),
+        getKomikUpdated("project"),
+        getKomikUpdated("mirror"),
         getKomikGenres(),
     ])
     console.log("Genres Manga:", genres);
     console.log("Popular Manga:", resPopular);
     console.log("Latest Manga:", resLatest);
-        // return <ElegantMaintenancePage />
-    
+    // return <ElegantMaintenancePage />
+
     return (
         <MangaClientPage
             initialPopular={resPopular || []}
             initialLatest={resLatest || []}
+            initialLatestMirror={resLatestMirror || []}
             genreData={genres || []}
         />
     )

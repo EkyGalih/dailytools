@@ -9,9 +9,10 @@ import MangaHero from "./MangaHero"
 import GenreSideList from "./GenreSideList"
 import KomikSearchCard from "./KomikSearchCard"
 
-export default function MangaClientPage({ initialPopular, initialLatest, genreData }: any) {
+export default function MangaClientPage({ initialPopular, initialLatest, initialLatestMirror, genreData }: any) {
     const [searchResults, setSearchResults] = useState<any[] | null>(null)
     const [searchQuery, setSearchQuery] = useState("")
+    const [activeType, setActiveType] = useState<"project" | "mirror">("project")
 
     // Ambil data genre dari props (pastikan Page.tsx mengirim genreData)
     const genres = genreData || []
@@ -92,16 +93,47 @@ export default function MangaClientPage({ initialPopular, initialLatest, genreDa
                                     </section>
 
                                     <section className="relative">
-                                        <div className="absolute -inset-x-6 lg:-inset-x-10 -inset-y-12 bg-zinc-900/20 -z-10 skew-y-1 rounded-[3rem]" />
-                                        <SectionHeader
-                                            title="⏳ Update Terbaru"
-                                            desc="Jangan lewatkan chapter terbaru yang rilis hari ini."
-                                            link="/komik/latest"
-                                        />
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6 mt-10">
-                                            {initialLatest.slice(0, 8).map((manga: any) => (
-                                                <KomikLatestCard key={manga.endpoint} manga={manga} />
-                                            ))}
+
+                                        <div className="flex items-center justify-between">
+                                            <SectionHeader
+                                                title="⏳ Update Terbaru"
+                                                desc="Jangan lewatkan chapter terbaru yang rilis hari ini."
+                                                link="/komik/latest"
+                                            />
+
+                                            {/* TOGGLE */}
+                                            <div className="flex items-center gap-2 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+                                                <button
+                                                    onClick={() => setActiveType("project")}
+                                                    className={`px-4 py-1.5 text-xs font-bold rounded-lg transition ${activeType === "project"
+                                                        ? "bg-orange-600 text-white"
+                                                        : "text-zinc-400 hover:text-white"
+                                                        }`}
+                                                >
+                                                    Original
+                                                </button>
+
+                                                <button
+                                                    onClick={() => setActiveType("mirror")}
+                                                    className={`px-4 py-1.5 text-xs font-bold rounded-lg transition ${activeType === "mirror"
+                                                        ? "bg-purple-600 text-white"
+                                                        : "text-zinc-400 hover:text-white"
+                                                        }`}
+                                                >
+                                                    Mirror
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6 mt-1">
+                                            {(activeType === "project"
+                                                ? initialLatest
+                                                : initialLatestMirror
+                                            )
+                                                .slice(0, 8)
+                                                .map((manga: any) => (
+                                                    <KomikLatestCard key={manga.manga_id} manga={manga} />
+                                                ))}
                                         </div>
                                     </section>
                                 </div>

@@ -8,8 +8,7 @@ import Link from "next/link";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const res = await getAnimeDetail(slug);
-    const data = res?.data;
+    const data = await getAnimeDetail(slug);
 
     if (!data) {
         return {
@@ -19,8 +18,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     const siteName = 'Tamanto';
     const siteUrl = 'https://tamanto.web.id';
-    const fullTitle = `Nonton ${data.title} Sub Indo HD`;
-    const cleanDescription = data.synopsis?.slice(0, 160) || `Streaming anime ${data.title} subtitle Indonesia kualitas HD terbaru di ${siteName}.`;
+    const fullTitle = `Nonton ${data.judul} Sub Indo HD`;
+    const cleanDescription =
+        data.sinopsis?.slice(0, 160) ||
+        `Streaming anime ${data.judul} subtitle Indonesia kualitas HD terbaru di ${siteName}.`;
 
     return {
         title: fullTitle,
@@ -29,17 +30,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             canonical: `${siteUrl}/anime/${slug}`,
         },
         openGraph: {
-            title: `${data.title} - Tamanto Anime Universe`,
+            title: `${data.judul} - Tamanto Anime Universe`,
             description: cleanDescription,
             url: `${siteUrl}/anime/${slug}`,
             siteName: siteName,
             type: 'video.tv_show',
             images: [
                 {
-                    url: data.thumbnail || `${siteUrl}/og-fallback.jpg`,
+                    url: data.cover || `${siteUrl}/og-fallback.jpg`,
                     width: 800,
                     height: 1200,
-                    alt: `Nonton ${data.title} di Tamanto`,
+                    alt: `Nonton ${data.judul} di Tamanto`,
                 },
             ],
             locale: 'id_ID',
@@ -48,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             card: 'summary_large_image',
             title: fullTitle,
             description: cleanDescription,
-            images: [data.thumbnail || `${siteUrl}/og-fallback.jpg`],
+            images: [data.cover || `${siteUrl}/og-fallback.jpg`],
         },
         robots: {
             index: true,
@@ -60,8 +61,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function AnimeDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const res = await getAnimeDetail(slug);
-    const data = res?.data;
+    const data = await getAnimeDetail(slug);
 
     if (!data) return <RetryAnimeNotFound />;
 
@@ -74,8 +74,8 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ sl
                 {/* Image Backdrop (Blurred) */}
                 <div className="absolute inset-0 z-0">
                     <Image
-                        src={data.thumbnail}
-                        alt={data.title}
+                        src={data.cover}
+                        alt={data.judul}
                         fill
                         className="object-cover opacity-30 blur-2xl scale-110"
                         priority
@@ -91,8 +91,8 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ sl
                         {/* Poster Utama - Diberi Margin Top di mobile agar tidak terpotong */}
                         <div className="relative w-48 md:w-64 aspect-[3/4] shrink-0 rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10 mt-4 md:mt-0">
                             <Image
-                                src={data.thumbnail}
-                                alt={data.title}
+                                src={data.cover}
+                                alt={data.judul}
                                 fill
                                 className="object-cover"
                                 sizes="(max-width: 768px) 192px, 256px"
@@ -111,18 +111,18 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ sl
                             </div>
 
                             <h1 className="text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter mb-4 leading-tight md:leading-none uppercase break-words">
-                                {data.title}
+                                {data.judul}
                             </h1>
 
                             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 md:gap-6 text-sm font-bold text-zinc-400">
                                 <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/5">
                                     <span className="text-orange-500 text-lg">⭐</span>
-                                    <span className="text-white text-lg">{data.score || 'N/A'}</span>
+                                    <span className="text-white text-lg">{data.rating || 'N/A'}</span>
                                 </div>
                                 <div className="hidden md:block h-4 w-[1px] bg-zinc-800" />
-                                <span className="bg-zinc-900/50 px-3 py-1.5 rounded-xl border border-white/5">{data.studio || 'Unknown'}</span>
+                                <span className="bg-zinc-900/50 px-3 py-1.5 rounded-xl border border-white/5">{data.author || 'Unknown'}</span>
                                 <div className="hidden md:block h-4 w-[1px] bg-zinc-800" />
-                                <span className="bg-zinc-900/50 px-3 py-1.5 rounded-xl border border-white/5">{data.release_date || data.season}</span>
+                                <span className="bg-zinc-900/50 px-3 py-1.5 rounded-xl border border-white/5">{data.published}</span>
                             </div>
                         </div>
                     </div>
@@ -137,7 +137,7 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ sl
                     </h2>
                     <div className="bg-zinc-900/40 border border-zinc-800/50 p-6 md:p-8 rounded-3xl backdrop-blur-sm">
                         <p className="text-zinc-400 leading-relaxed text-sm md:text-base italic">
-                            "{data.synopsis || 'Belum ada sinopsis untuk anime ini.'}"
+                            "{data.sinopsis || 'Belum ada sinopsis untuk anime ini.'}"
                         </p>
                     </div>
 
@@ -149,22 +149,22 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ sl
                     <div className="bg-zinc-900/80 border border-zinc-800 rounded-3xl p-6 sticky top-24">
                         <h3 className="text-lg font-black uppercase mb-6 text-white tracking-tighter">Information</h3>
                         <div className="space-y-4">
-                            <InfoRow label="Judul Jepang" value={data.japanese} />
-                            <InfoRow label="Total Eps" value={data.total_episode} />
-                            <InfoRow label="Durasi" value={data.duration} />
+                            <InfoRow label="ID Series" value={data.series_id} />
+                            <InfoRow label="Total Episode" value={data.chapter?.length?.toString()} />
+                            <InfoRow label="Tipe" value={data.type} />
                             <InfoRow label="Status" value={data.status} />
                         </div>
 
                         <div className="mt-8">
                             <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-3">Genres</p>
                             <div className="flex flex-wrap gap-2">
-                                {data.genres?.map((g: any) => (
+                                {data.genre?.map((g: string, i: number) => (
                                     <Link
-                                        key={g.endpoint}
-                                        href={`/genres/${g.endpoint}`}
+                                        key={`${g}-${i}`}
+                                        href={`/genres/${data.genreurl?.[i]}`}
                                         className="px-3 py-1 bg-zinc-800 hover:bg-orange-600 text-zinc-300 hover:text-white text-[10px] font-bold rounded-lg transition-colors border border-zinc-700"
                                     >
-                                        {g.title}
+                                        {g}
                                     </Link>
                                 ))}
                             </div>

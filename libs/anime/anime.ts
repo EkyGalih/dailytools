@@ -3,10 +3,10 @@ import { apiFetch } from "@/libs/fetchApi";
 /* ===============================
    ✅ Base API URL (Client Safe)
 =============================== */
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_API;
+const BASE_URL = 'https://api.sansekai.my.id/api';
 
 if (!BASE_URL) {
-    console.error("NEXT_PUBLIC_BASE_URL_API belum diset");
+    console.error("BASE_URL_API belum diset");
 }
 
 /* ============================================================
@@ -14,20 +14,50 @@ if (!BASE_URL) {
 ============================================================ */
 
 /**
- * ✅ Homepage Otakudesu
- * GET /anime/homepage
+ * ✅ Anime Latest
+ * GET /anime/latest
  */
-export async function getAnimeHomePage() {
+export async function getAnimeLatest() {
     try {
         const res = await apiFetch(
-            `${BASE_URL}/anime/homepage`,
+            `${BASE_URL}/anime/latest`,
             { revalidate: 86400 }
         );
 
         if (!res.ok) return null;
         return res.json();
     } catch (err) {
-        console.error("getAnimeHomePage error:", err);
+        console.error("getAnimeLatest error:", err);
+        return null;
+    }
+}
+
+export async function getAnimeRecomended(page: number = 1) {
+    try {
+        const res = await apiFetch(
+            `${BASE_URL}/anime/recommended?page=${page}`,
+            { revalidate: 86400 }
+        );
+
+        if (!res.ok) return null;
+        return res.json();
+    } catch (err) {
+        console.error("getAnimeRecomended error:", err);
+        return null;
+    }
+}
+
+export async function getAnimeMovie() {
+    try {
+        const res = await apiFetch(
+            `${BASE_URL}/anime/movie`,
+            { revalidate: 86400 }
+        );
+
+        if (!res.ok) return null;
+        return res.json();
+    } catch (err) {
+        console.error("getAnimeMovie error:", err);
         return null;
     }
 }
@@ -40,39 +70,39 @@ export async function getAnimeHomePage() {
  * ✅ Anime List (Letter + Pagination)
  * GET /anime/list?letter=A&page=1
  */
-export async function getAnimeList() {
-    try {
-        const res = await apiFetch(
-            `${BASE_URL}/anime/list-anime`,
-            { revalidate: 21600 }
-        );
+// export async function getAnimeList() {
+//     try {
+//         const res = await apiFetch(
+//             `${BASE_URL}/anime/list-anime`,
+//             { revalidate: 21600 }
+//         );
 
-        if (!res.ok) return null;
-        return res.json();
-    } catch (err) {
-        console.error("getAnimeList error:", err);
-        return null;
-    }
-}
+//         if (!res.ok) return null;
+//         return res.json();
+//     } catch (err) {
+//         console.error("getAnimeList error:", err);
+//         return null;
+//     }
+// }
 
 /**
  * ✅ Jadwal Rilis Anime Ongoing
  * GET /anime/schedule
  */
-export async function getAnimeSchedule() {
-    try {
-        const res = await apiFetch(
-            `${BASE_URL}/anime/jadwal`,
-            { revalidate: 21600 }
-        );
+// export async function getAnimeSchedule() {
+//     try {
+//         const res = await apiFetch(
+//             `${BASE_URL}/anime/jadwal`,
+//             { revalidate: 21600 }
+//         );
 
-        if (!res.ok) return null;
-        return res.json();
-    } catch (err) {
-        console.error("getAnimeSchedule error:", err);
-        return null;
-    }
-}
+//         if (!res.ok) return null;
+//         return res.json();
+//     } catch (err) {
+//         console.error("getAnimeSchedule error:", err);
+//         return null;
+//     }
+// }
 
 /**
  * ✅ Detail Anime
@@ -83,12 +113,15 @@ export async function getAnimeDetail(slug: string) {
 
     try {
         const res = await apiFetch(
-            `${BASE_URL}/anime/detail/${slug}`,
+            `${BASE_URL}/anime/detail?urlId=${slug}`,
             { revalidate: 3600 }
         );
 
         if (!res.ok) return null;
-        return res.json();
+
+        const json = await res.json();
+
+        return json?.data?.[0] || null; // ambil object pertama
     } catch (err) {
         console.error("getAnimeDetail error:", err);
         return null;
@@ -113,44 +146,44 @@ export async function getAnimeEpisodeDetail(slug: string) {
  * ✅ Genre List (All Genres)
  * GET /anime/genres
  */
-export async function getAnimeGenres() {
-    try {
-        const res = await apiFetch(
-            `${BASE_URL}/anime/genres`,
-            { revalidate: 86400 }
-        );
+// export async function getAnimeGenres() {
+//     try {
+//         const res = await apiFetch(
+//             `${BASE_URL}/anime/genres`,
+//             { revalidate: 86400 }
+//         );
 
-        if (!res.ok) return null;
-        return res.json();
-    } catch (err) {
-        console.error("getAnimeGenres error:", err);
-        return null;
-    }
-}
+//         if (!res.ok) return null;
+//         return res.json();
+//     } catch (err) {
+//         console.error("getAnimeGenres error:", err);
+//         return null;
+//     }
+// }
 
 /**
  * ✅ Anime by Genre + Pagination
  * GET /anime/genres/:genre?page=
  */
-export async function getAnimeAnimeByGenre(
-    genre: string,
-    page: number = 1
-) {
-    if (!genre) return null;
+// export async function getAnimeAnimeByGenre(
+//     genre: string,
+//     page: number = 1
+// ) {
+//     if (!genre) return null;
 
-    try {
-        const res = await apiFetch(
-            `${BASE_URL}/anime/genres/${encodeURIComponent(genre)}?page=${page}`,
-            { revalidate: 21600 }
-        );
+//     try {
+//         const res = await apiFetch(
+//             `${BASE_URL}/anime/genres/${encodeURIComponent(genre)}?page=${page}`,
+//             { revalidate: 21600 }
+//         );
 
-        if (!res.ok) return null;
-        return res.json();
-    } catch (err) {
-        console.error("getAnimeAnimeByGenre error:", err);
-        return null;
-    }
-}
+//         if (!res.ok) return null;
+//         return res.json();
+//     } catch (err) {
+//         console.error("getAnimeAnimeByGenre error:", err);
+//         return null;
+//     }
+// }
 
 /**
  * ✅ Search Anime
@@ -161,10 +194,10 @@ export async function searchAnime(query: string, page: number = 1) {
 
     try {
         const res = await apiFetch(
-            `${BASE_URL}/anime/search?q=${encodeURIComponent(query)}&page=${page}`,
+            `${BASE_URL}/anime/search?query=${encodeURIComponent(query)}&page=${page}`,
             { noStore: true }
         );
-
+        
         if (!res.ok) return null;
         return res.json();
     } catch (err) {

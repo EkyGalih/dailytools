@@ -7,7 +7,7 @@ import { getHomePage as getKoreaDramaHome } from '@/libs/drama/drakor/drama'
 import DramaBookGrid from '@/components/drama/dramabox/DramaBoxGrid'
 import DramaCard from '@/components/drama/drakor/DramaCard'
 import { Sparkles, Minimize2, Wallet, ArrowUpRight, LayoutGrid } from 'lucide-react'
-import { getAnimeHomePage } from '@/libs/anime/anime'
+import { getAnimeLatest } from '@/libs/anime/anime'
 import AnimeCard from '@/components/anime/AnimeCard'
 import PayButton from '@/components/PayButton'
 
@@ -51,7 +51,7 @@ export default async function Home() {
     getTodayFixtures(),
     getDramaByCategory('trending'),
     getKoreaDramaHome(),
-    getAnimeHomePage()
+    getAnimeLatest()
   ])
 
   const map = new Map<number, any>()

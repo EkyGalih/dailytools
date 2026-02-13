@@ -17,15 +17,32 @@ export default function AnimeSearch({ onSearchResult, externalQuery }: Props) {
 
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault()
+
         if (!query.trim()) {
             onSearchResult(null, '')
             return
         }
 
-        setLoading(true)
-        const res = await searchAnime(query)
-        onSearchResult(res?.data?.anime_list || [], query)
-        setLoading(false)
+        try {
+            setLoading(true)
+
+            const res = await fetch(
+                `https://api.sansekai.my.id/api/anime/search?query=${encodeURIComponent(query)}`
+            )
+
+            if (!res.ok) throw new Error("Fetch gagal")
+
+            const data = await res.json()
+
+            const result = data?.data?.[0]?.result || []
+
+            onSearchResult(result, query)
+        } catch (err) {
+            console.error("Search error:", err)
+            onSearchResult([], query)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (

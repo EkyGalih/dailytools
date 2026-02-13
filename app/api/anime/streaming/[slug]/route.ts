@@ -1,37 +1,41 @@
 import { NextResponse } from "next/server";
 
-export const runtime = "nodejs";
-
 export async function GET(
-    _req: Request,
-    { params }: { params: Promise<{ slug: string }> }
+    req: Request,
+    context: { params: Promise<{ slug: string }> }
 ) {
-    const { slug } = await params; // 🔥 WAJIB await
+    try {
+        const { slug } = await context.params; // ✅ WAJIB await
 
-    if (!slug) {
-        return NextResponse.json(
-            { message: "Slug tidak ada" },
-            { status: 400 }
+        const res = await fetch(
+            `https://api.sansekai.my.id/api/anime/getvideo?chapterUrlId=${slug}&reso=720p`,
+            { cache: "no-store" }
         );
-    }
 
-    const backendUrl = `${process.env.NEXT_PUBLIC_BASE_URL_API}/anime/streaming/${slug}`;
+        if (!res.ok) {
+            return NextResponse.json(
+                { error: "Gagal mengambil video" },
+                { status: 500 }
+            );
+        }
 
-    if (!process.env.NEXT_PUBLIC_BASE_URL_API) {
+        const text = await res.text();
+
+        if (!text) {
+            return NextResponse.json(
+                { error: "Response kosong dari API" },
+                { status: 500 }
+            );
+        }
+
+        const data = JSON.parse(text);
+
+        return NextResponse.json(data);
+    } catch (error) {
+        console.error("STREAM ROUTE ERROR:", error);
         return NextResponse.json(
-            { message: "NEXT_PUBLIC_BASE_URL_API belum diset" },
+            { error: "Internal Server Error" },
             { status: 500 }
         );
     }
-
-    const res = await fetch(backendUrl, {
-        headers: {
-            "x-api-key": process.env.API_KEY!,
-        },
-        cache: "no-store",
-    });
-
-    const data = await res.json();
-
-    return NextResponse.json(data);
 }

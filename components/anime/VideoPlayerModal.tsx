@@ -1,28 +1,32 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { getAnimeEpisodeDetail } from "@/libs/anime/anime"
+import { X, Activity, RotateCw, Smartphone } from 'lucide-react'
 
-interface Props {
-    slug: string | null;
-    onClose: () => void;
-}
-
-export default function VideoPlayerModal({ slug, onClose }: Props) {
+export default function VideoPlayerModal({ slug, onClose }: { slug: string | null; onClose: () => void }) {
     const [data, setData] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [activeStream, setActiveStream] = useState<string>('')
     const [selectedResolution, setSelectedResolution] = useState<string>("")
-    const [selectedMirror, setSelectedMirror] = useState<string | null>(null)
+
+    // 0: Normal, 1: Full Screen Vertical (Rotated 90deg)
+    const [rotationMode, setRotationMode] = useState(0)
+    const videoRef = useRef<HTMLVideoElement>(null)
 
     useEffect(() => {
         if (!slug) return
         const fetchVideo = async () => {
             setLoading(true)
             const res = await getAnimeEpisodeDetail(slug)
-            if (res?.data) {
-                setData(res.data)
-                setActiveStream(res.data.streaming_iframe)
+            if (res?.data?.length > 0) {
+                const episode = res.data[0]
+                setData(episode)
+                if (episode.stream?.length > 0) {
+                    const sorted = [...episode.stream].sort((a: any, b: any) => parseInt(b.reso) - parseInt(a.reso))
+                    setActiveStream(sorted[0].link)
+                    setSelectedResolution(sorted[0].reso)
+                }
             }
             setLoading(false)
         }
@@ -34,194 +38,85 @@ export default function VideoPlayerModal({ slug, onClose }: Props) {
     if (!slug) return null
 
     return (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/95 backdrop-blur-md p-2 md:p-6 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black animate-in fade-in duration-300">
+            <div className={`relative w-full h-full flex flex-col transition-all duration-500 ${rotationMode === 1 ? 'p-0' : 'md:max-w-5xl md:h-auto'}`}>
 
-            <div className="relative w-full max-w-6xl max-h-full flex flex-col">
+                {/* TOOLBAR ATAS */}
+                <div className="absolute top-6 right-6 flex gap-3 z-[100]">
+                    {/* Toggle Rotate - Biar nonton full meski HP tegak */}
+                    <button
+                        onClick={() => setRotationMode(rotationMode === 0 ? 1 : 0)}
+                        className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 text-white flex flex-col items-center justify-center active:scale-90 transition-all hover:bg-orange-600"
+                    >
+                        {rotationMode === 1 ? <Smartphone size={18} /> : <RotateCw size={18} />}
+                        <span className="text-[6px] font-black uppercase mt-0.5">Rotate</span>
+                    </button>
 
-                {/* CLOSE BUTTON - Dibuat lebih mencolok di mobile */}
-                <button
-                    onClick={onClose}
-                    className="absolute -top-10 right-0 md:-top-12 md:-right-4 w-10 h-10 rounded-full bg-orange-600 text-white flex items-center justify-center shadow-2xl z-[100001] active:scale-90 transition-transform"
-                >
-                    ✕
-                </button>
+                    <button
+                        onClick={onClose}
+                        className="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center active:scale-90 shadow-2xl"
+                    >
+                        <X size={24} />
+                    </button>
+                </div>
 
-                {/* MAIN CONTENT BOX */}
-                <div className="flex flex-col md:flex-row bg-[#0c0c0e] rounded-2xl md:rounded-3xl overflow-hidden border border-white/5 shadow-2xl max-h-[85vh] md:max-h-[90vh]">
+                <div className={`flex flex-col bg-[#0c0c0e] shadow-2xl transition-all duration-500 ${rotationMode === 1 ? 'w-full h-full rounded-0' : 'md:rounded-3xl overflow-hidden'}`}>
 
-                    {/* LEFT SIDE: VIDEO & MIRRORS */}
-                    <div className="flex flex-col w-full md:flex-grow bg-black overflow-hidden">
-                        {/* PLAYER: Locked Aspect Ratio */}
-                        <div className="relative aspect-video w-full bg-zinc-900 shrink-0">
-                            {loading ? (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                                    <div className="w-10 h-10 border-4 border-orange-600 border-t-transparent rounded-full animate-spin" />
-                                </div>
-                            ) : activeStream ? (
-                                <iframe
-                                    src={activeStream}
-                                    className="w-full h-full"
-                                    allowFullScreen
-                                    scrolling="no"
-                                />
-                            ):(
-                                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                                    <p className="text-white text-center">Tidak ada stream tersedia</p>
-                                </div>
-                            )}
-                        </div>
+                    {/* VIDEO CONTAINER */}
+                    <div className={`relative flex items-center justify-center bg-black overflow-hidden transition-all duration-500 ${rotationMode === 1
+                            ? 'w-full h-full' // Full screen mode
+                            : 'aspect-video w-full' // Normal mode
+                        }`}>
 
-                        {/* SERVER + RESOLUTION (3 COLUMN UI) */}
-                        <div className="p-4 bg-zinc-950/80 border-b border-white/5 shrink-0">
-                            <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-3">
-                                Server / Resolusi
-                            </p>
-
-                            {data?.mirrors?.length > 0 ? (
-                                (() => {
-                                    /* ===============================
-                                       ✅ GROUP MIRRORS BY RESOLUTION
-                                    =============================== */
-                                    const grouped: Record<string, any[]> = {}
-
-                                    data.mirrors.forEach((m: any) => {
-                                        const res = m.resolution || "Other"
-                                        if (!grouped[res]) grouped[res] = []
-                                        grouped[res].push(m)
-                                    })
-
-                                    // ✅ Sort resolution numeric
-                                    const resolutions = Object.keys(grouped).sort(
-                                        (a, b) => parseInt(a) - parseInt(b)
-                                    )
-
-                                    return (
-                                        <div className="grid grid-cols-3 gap-2 items-center">
-
-                                            {/* ===============================
-              ✅ COLUMN 1: UTAMA BUTTON
-          =============================== */}
-                                            <button
-                                                onClick={() => {
-                                                    setActiveStream(data.streaming_iframe)
-                                                    setSelectedResolution("")
-                                                    setSelectedMirror(null)
-                                                }}
-                                                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-all
-              ${activeStream === data.streaming_iframe
-                                                        ? "bg-orange-600 text-white shadow-lg shadow-orange-600/20"
-                                                        : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
-                                                    }`}
-                                            >
-                                                Utama
-                                            </button>
-
-                                            {/* ===============================
-                                                ✅ COLUMN 2: RESOLUTION DROPDOWN
-                                            =============================== */}
-                                            <select
-                                                className="px-3 py-2 rounded-xl bg-zinc-800 text-white text-[10px] font-bold uppercase"
-                                                value={selectedResolution}
-                                                onChange={(e) => {
-                                                    setSelectedResolution(e.target.value)
-                                                    setSelectedMirror(null)
-                                                }}
-                                            >
-                                                <option value="">Resolusi</option>
-
-                                                {resolutions.map((res) => (
-                                                    <option key={res} value={res}>
-                                                        {res}
-                                                    </option>
-                                                ))}
-                                            </select>
-
-                                            {/* ===============================
-                                                ✅ COLUMN 3: SERVER DROPDOWN
-                                            =============================== */}
-                                            <select
-                                                className="px-3 py-2 rounded-xl bg-zinc-900 text-white text-[10px] font-bold uppercase"
-                                                value={selectedMirror ?? ""}
-                                                disabled={!selectedResolution}
-                                                onChange={(e) => {
-                                                    const mirrorData = e.target.value
-                                                    if (!mirrorData) return
-
-                                                    const mirrorUrl = `https://desustream.info/dstream/ondesu3/v5/index.php?data=${mirrorData}`
-
-                                                    setSelectedMirror(mirrorData)
-                                                    setActiveStream(mirrorUrl)
-                                                }}
-                                            >
-                                                <option value="">
-                                                    {selectedResolution ? "Server" : "Pilih Resolusi"}
-                                                </option>
-
-                                                {selectedResolution &&
-                                                    grouped[selectedResolution]?.map((m: any, i: number) => (
-                                                        <option key={i} value={m.data}>
-                                                            {m.provider}
-                                                        </option>
-                                                    ))}
-                                            </select>
-                                        </div>
-                                    )
-                                })()
-                            ) : (
-                                <p className="text-xs text-zinc-500 italic">
-                                    Mirror tidak tersedia.
-                                </p>
-                            )}
-                        </div>
-
-                        {/* MOBILE ONLY: DOWNLOAD LIST (Hanya muncul di mobile di bawah video) */}
-                        <div className="flex md:hidden flex-col overflow-y-auto p-4 bg-zinc-900/30">
-                            <DownloadSection data={data} />
-                        </div>
+                        {loading ? (
+                            <div className="w-10 h-10 border-4 border-orange-600 border-t-transparent rounded-full animate-spin" />
+                        ) : activeStream ? (
+                            <video
+                                ref={videoRef}
+                                key={activeStream}
+                                src={activeStream}
+                                controls
+                                autoPlay
+                                playsInline
+                                className={`transition-all duration-500 ease-in-out ${rotationMode === 1
+                                        ? "fixed w-[100vh] h-[100vw] rotate-90 object-contain z-[50]"
+                                        : "w-full h-full object-contain"
+                                    }`}
+                            />
+                        ) : (
+                            <p className="text-zinc-500 text-xs font-black uppercase">No Stream</p>
+                        )}
                     </div>
 
-                    {/* RIGHT SIDE: DOWNLOAD LIST (Desktop Only) */}
-                    <div className="hidden md:flex w-80 bg-[#0c0c0e] border-l border-white/5 flex-col overflow-hidden">
-                        <div className="p-5 border-b border-white/5 shrink-0">
-                            <h3 className="text-sm font-black text-white uppercase tracking-tight">Download Link</h3>
+                    {/* CONTROL RESOLUSI (Hanya muncul jika mode normal) */}
+                    {rotationMode === 0 && (
+                        <div className="p-6 bg-zinc-950/80 backdrop-blur-md border-t border-white/5">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Activity size={14} className="text-orange-500" />
+                                <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Select Quality</p>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2">
+                                {data?.stream?.map((s: any) => (
+                                    <button
+                                        key={s.id}
+                                        onClick={() => {
+                                            setSelectedResolution(s.reso);
+                                            setActiveStream(s.link);
+                                        }}
+                                        className={`px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all active:scale-95 ${selectedResolution === s.reso
+                                                ? "bg-orange-600 border-orange-500 text-white shadow-lg"
+                                                : "bg-zinc-900 border-white/5 text-zinc-500"
+                                            }`}
+                                    >
+                                        {s.reso}p
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                        <div className="flex-grow overflow-y-auto p-5 space-y-6 custom-scrollbar">
-                            <DownloadSection data={data} />
-                        </div>
-                    </div>
+                    )}
                 </div>
             </div>
-        </div>
-    )
-}
-
-// Sub-komponen agar kode bersih dan bisa dipakai di dua tempat (mobile & desktop)
-function DownloadSection({ data }: { data: any }) {
-    if (!data?.downloads) return null;
-
-    return (
-        <div className="space-y-6">
-            {data.downloads.map((dl: any, idx: number) => (
-                <div key={idx} className="space-y-3">
-                    <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                        <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest">{dl.quality}</span>
-                        <span className="text-[9px] font-bold text-zinc-500 uppercase">{dl.size}</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                        {dl.links.map((link: any, lIdx: number) => (
-                            <a
-                                key={lIdx}
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-2 py-2.5 bg-zinc-800/50 hover:bg-orange-600 border border-white/5 rounded-xl text-[10px] font-bold text-center text-zinc-400 hover:text-white transition-all truncate"
-                            >
-                                {link.provider}
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            ))}
         </div>
     )
 }

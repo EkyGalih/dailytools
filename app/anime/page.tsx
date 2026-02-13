@@ -1,4 +1,4 @@
-import { getAnimeGenres, getAnimeHomePage } from "@/libs/anime/anime";
+import { getAnimeLatest, getAnimeMovie, getAnimeRecomended,  } from "@/libs/anime/anime";
 import HomePageClient from "./HomePage";
 import { Metadata } from "next";
 import ElegantMaintenancePage from "@/components/common/MaintenancePage";
@@ -41,11 +41,14 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-    const data = await getAnimeHomePage();
-    const genres = await getAnimeGenres();
+    const [initialLatest, initialRecomended, initialMovie] = await Promise.all([
+        getAnimeLatest(),
+        getAnimeRecomended(1),
+        getAnimeMovie(),
+    ])
 
     // if (!data) return <div className="text-white text-center py-20">Gagal memuat data...</div>;
 
     // return <ElegantMaintenancePage />
-    return <HomePageClient initialData={data} genres={genres} />;
+    return <HomePageClient initialLatest={initialLatest} initialRecomended={initialRecomended} initialMovie={initialMovie} />;
 }

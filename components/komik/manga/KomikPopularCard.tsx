@@ -3,13 +3,17 @@ import Image from "next/image"
 import { Eye, Star, TrendingUp } from "lucide-react"
 
 export default function KomikPopularCard({ manga }: { manga: any }) {
-    const format = manga.taxonomy?.Format?.[0]?.name ?? "Komik"
-    
-    const themeStyles = {
+    const formatRaw = manga.taxonomy?.Format?.[0]?.slug ?? "manga"
+
+    const format = formatRaw.toLowerCase() as "manga" | "manhwa" | "manhua"
+
+    const themeStyles: Record<"manga" | "manhwa" | "manhua", string> = {
         manga: "border-red-500/30 group-hover:border-red-500/60 shadow-red-500/5",
         manhwa: "border-cyan-500/30 group-hover:border-cyan-500/60 shadow-cyan-500/5",
         manhua: "border-emerald-500/30 group-hover:border-emerald-500/60 shadow-emerald-500/5",
-    }[format.toLowerCase()] || "border-white/5 group-hover:border-orange-500/50";
+    }
+
+    const style = themeStyles[format] ?? themeStyles.manga
 
     const accentBg = {
         manga: "bg-red-600",
@@ -20,7 +24,7 @@ export default function KomikPopularCard({ manga }: { manga: any }) {
     return (
         <Link
             href={`/komik/${manga.manga_id}`}
-            className={`group relative flex flex-col w-full bg-[#0c0c0e] rounded-[1.8rem] md:rounded-[2.5rem] overflow-hidden border transition-all duration-500 shadow-2xl active:scale-[0.97] ${themeStyles}`}
+            className={`group border ${style} relative flex flex-col w-full bg-[#0c0c0e] rounded-[1.8rem] md:rounded-[2.5rem] overflow-hidden border transition-all duration-500 shadow-2xl active:scale-[0.97] ${themeStyles}`}
         >
             {/* 1. IMAGE AREA - Dibuat m-1 agar gambar lebih lebar di mobile */}
             <div className="relative aspect-[3/4] overflow-hidden m-1 md:m-2 rounded-t-[1.4rem] md:rounded-t-[2.2rem] rounded-b-none bg-zinc-900">

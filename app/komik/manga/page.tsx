@@ -1,6 +1,6 @@
 import ElegantMaintenancePage from "@/components/common/MaintenancePage"
 import MangaClientPage from "@/components/komik/manga/MangaClientPage"
-import { getKomikGenres, getKomikRecomended, getKomikUpdated } from "@/libs/komik/komik"
+import { getKomikPopular, getKomikRecomended, getKomikUpdated, searchKomik } from "@/libs/komik/komik"
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         siteName: 'Tamanto',
         images: [
             {
-                url: '/og-manga.jpg', // Opsional: Gunakan gambar grid karakter manga/manhwa
+                url: '/og-manga.jpg',
                 width: 1200,
                 height: 630,
                 alt: 'Tamanto Manga Explorer Hub',
@@ -38,24 +38,43 @@ export const metadata: Metadata = {
     },
 }
 
-export default async function MangaPage() {
-    const [resPopular, resLatest, resLatestMirror, genres] = await Promise.all([
+export default async function MangaPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ q?: string }>
+}) {
+    const resolvedSearchParams = await searchParams
+    const query = resolvedSearchParams?.q || ""
+
+    const [
+        resPopularManga,
+        resPopularManhwa,
+        resPopularManhua,
+        resLatest,
+        resLatestMirror,
+        resPopularKomik,
+        resSearch
+    ] = await Promise.all([
         getKomikRecomended("manga"),
+        getKomikRecomended("manhwa"),
+        getKomikRecomended("manhua"),
         getKomikUpdated("project"),
         getKomikUpdated("mirror"),
-        getKomikGenres(),
+        getKomikPopular(1),
+        query ? searchKomik(query) : []
     ])
-    console.log("Genres Manga:", genres);
-    console.log("Popular Manga:", resPopular);
-    console.log("Latest Manga:", resLatest);
-    // return <ElegantMaintenancePage />
 
     return (
         <MangaClientPage
-            initialPopular={resPopular || []}
+            initialSearchQuery={query}
+            initialSearchResults={resSearch || []}
+            initialPopularManga={resPopularManga || []}
+            initialPopulaManhwa={resPopularManhwa || []}
+            initialPopulaManhua={resPopularManhua || []}
             initialLatest={resLatest || []}
             initialLatestMirror={resLatestMirror || []}
-            genreData={genres || []}
+            initialPopularKomik={resPopularKomik?.data || []}
+            initialPopularMeta={resPopularKomik?.meta || null}
         />
     )
 }

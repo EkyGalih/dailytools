@@ -1,108 +1,113 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { searchKomik } from "@/libs/komik/komik"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState, useRef } from "react"
+import { Search, Loader2, Command, X } from "lucide-react"
 
-interface Props {
-    onSearchResult: (results: any[] | null, query: string) => void
-    externalQuery: string
-}
+export default function KomikSearchClient() {
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const inputRef = useRef<HTMLInputElement>(null)
 
-export default function KomikSearchClient({
-    onSearchResult,
-    externalQuery,
-}: Props) {
-    const [query, setQuery] = useState(externalQuery)
-    const [loading, setLoading] = useState(false)
+    const urlQuery = searchParams.get("q") || ""
+    const [query, setQuery] = useState(urlQuery)
+    const [isFocused, setIsFocused] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
-    // Sync external query
+    // Update state kalau URL berubah (misal tombol reset ditekan di parent)
     useEffect(() => {
-        setQuery(externalQuery)
-    }, [externalQuery])
+        setQuery(urlQuery)
+    }, [urlQuery])
 
-    // ✅ Search Effect (No Infinite)
-    useEffect(() => {
+    // Fungsi Utama Pencarian
+    const handleSearch = (e?: React.FormEvent) => {
+        if (e) e.preventDefault()
+
         if (!query.trim()) {
-            onSearchResult(null, "")
+            router.replace("/komik/manga")
             return
         }
 
-        let active = true
+        setIsLoading(true)
+        router.replace(`/komik/manga?q=${encodeURIComponent(query.trim())}`)
 
-        const delay = setTimeout(async () => {
-            setLoading(true)
+        // Simulasi loading selesai setelah navigasi (atau sesuaikan dengan kebutuhan)
+        setTimeout(() => setIsLoading(false), 500)
+    }
 
-            const data = await searchKomik(query)
-
-            if (active) {
-                onSearchResult(data, query)
-                setLoading(false)
+    // Shortcut Keyboard (Tekan '/' untuk fokus)
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "/" && !isFocused) {
+                e.preventDefault()
+                inputRef.current?.focus()
             }
-        }, 600)
-
-
-        return () => {
-            active = false
-            clearTimeout(delay)
         }
-    }, [query]) // ✅ ONLY QUERY
-
+        window.addEventListener("keydown", handleKeyDown)
+        return () => window.removeEventListener("keydown", handleKeyDown)
+    }, [isFocused])
 
     return (
-        <div className="max-w-2xl w-full relative group">
-            {/* EFFECT */}
-            <div className="absolute -inset-2 bg-gradient-to-r from-orange-500/20 via-transparent to-orange-500/20 opacity-0 group-focus-within:opacity-100 transition-opacity duration-700 blur-xl pointer-events-none" />
+        <form
+            onSubmit={handleSearch}
+            className="relative w-full max-w-4xl mx-auto group"
+        >
+            {/* 🌈 DYNAMIC OUTER GLOW */}
+            <div className={`absolute -inset-1 bg-gradient-to-r from-orange-600 via-amber-500 to-orange-400 rounded-[2.2rem] blur-xl opacity-0 transition-opacity duration-500 ${isFocused ? 'opacity-20' : 'group-hover:opacity-10'}`} />
 
-            <div className="relative flex items-center">
-                {/* ICON */}
-                <div className="absolute left-6 z-10">
-                    {loading ? (
-                        <div className="w-5 h-5 border-2 border-orange-500/20 border-t-orange-500 rounded-full animate-spin" />
-                    ) : (
-                        <svg
-                            viewBox="0 0 24 24"
-                            className="w-5 h-5 text-zinc-500 group-focus-within:text-orange-500 transition-colors duration-300"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                            />
-                        </svg>
-                    )}
+            <div className={`relative flex items-center bg-[#0c0c0e]/90 backdrop-blur-2xl rounded-[1.8rem] border transition-all duration-500 p-1.5 ${isFocused ? 'border-orange-500/50 shadow-2xl' : 'border-white/5'}`}>
+
+                {/* ICON SEARCH (Decorative) */}
+                <div className="pl-5 pr-2 hidden md:block">
+                    <Search className={`w-5 h-5 transition-colors ${isFocused ? 'text-orange-500' : 'text-zinc-600'}`} />
                 </div>
 
-                {/* INPUT */}
+                {/* INPUT FIELD */}
                 <input
+                    ref={inputRef}
                     value={query}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Cari judul manga (e.g. One Piece, Jujutsu)..."
-                    className="w-full pl-16 pr-24 py-5 rounded-xl bg-zinc-950 border-2 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-orange-500 outline-none transition-all duration-300 shadow-[8px_8px_0px_rgba(249,115,22,0.1)] focus:shadow-[4px_4px_0px_rgba(249,115,22,1)]"
+                    placeholder="Eksplorasi Mahakarya..."
+                    className="flex-1 px-4 md:px-2 py-4 md:py-5 bg-transparent text-white outline-none placeholder:text-zinc-700 font-bold text-sm md:text-base tracking-wide"
                 />
 
-                {/* DECOR */}
-                <div className="absolute right-4 pointer-events-none select-none">
-                    <span className="text-[10px] font-black text-zinc-700 group-focus-within:text-orange-500/50 uppercase italic tracking-tighter">
-                        探す (Search)
-                    </span>
-                </div>
+                {/* CLEAR BUTTON */}
+                {query.length > 0 && (
+                    <button
+                        type="button"
+                        onClick={() => { setQuery(""); router.replace("/komik/manga"); }}
+                        className="p-2 mr-2 rounded-xl hover:bg-white/5 text-zinc-500 transition-colors"
+                    >
+                        <X size={18} />
+                    </button>
+                )}
+
+                {/* SEARCH BUTTON (THE ACTION) */}
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-orange-600 hover:bg-orange-500 text-white rounded-[1.4rem] font-black uppercase tracking-widest text-[10px] md:text-[12px] transition-all active:scale-95 shadow-lg shadow-orange-600/20"
+                >
+                    {isLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                        <>
+                            <span className="hidden md:inline">Search</span>
+                            <Search className="w-4 h-4 md:hidden" />
+                        </>
+                    )}
+                </button>
             </div>
 
-            {/* QUICK TAGS */}
-            <div className="mt-4 flex flex-wrap gap-2 px-1">
-                {["Shonen", "Seinen", "Action", "Romance"].map((tag) => (
-                    <button
-                        key={tag}
-                        onClick={() => setQuery(tag)}
-                        className="px-3 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-500 uppercase tracking-widest hover:border-orange-500 hover:text-orange-500 transition-all"
-                    >
-                        {tag}
-                    </button>
-                ))}
-            </div>
-        </div>
+            {/* HINT SHORTCUT */}
+            {!isFocused && !query && (
+                <div className="absolute right-36 top-1/2 -translate-y-1/2 hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/5 bg-white/[0.03] pointer-events-none">
+                    <Command size={10} className="text-zinc-600" />
+                    <span className="text-[10px] font-black text-zinc-600">/</span>
+                </div>
+            )}
+        </form>
     )
 }

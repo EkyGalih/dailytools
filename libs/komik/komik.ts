@@ -50,7 +50,7 @@ export async function getKomikRecomended(
         `${BASE}/recommended?type=${type}`,
         259200 // cache 3 hari
     )
-    console.log(json);
+
     if (!json?.data) return []
     return json.data
 }
@@ -67,59 +67,99 @@ export async function getKomikUpdated(
     return json.data
 }
 
-export async function getKomikGenres() {
-    const json = await fetchJSON<any>(
-        `${BASE}/genres`,
-        86400 // cache 1 hari
-    )
+export async function getKomikPopular(page: number = 1) {
+    try {
+        const res = await fetch(
+            `${BASE}/popular?page=${page}`,
+            {
+                next: { revalidate: 1800 } // cache 30 menit
+            }
+        )
 
-    if (!json?.data) return []
-    return json.data
+        if (!res.ok) {
+            throw new Error("Failed to fetch popular")
+        }
+
+        const json = await res.json()
+
+        if (json?.retcode !== 0) {
+            throw new Error("API returned error")
+        }
+
+        return {
+            data: Array.isArray(json.data) ? json.data : [],
+            meta: json.meta ?? null,
+        }
+
+    } catch (error) {
+        console.error("getKomikPopular error:", error)
+        return {
+            data: [],
+            meta: null,
+        }
+    }
 }
 
-export async function getKomikGenresDetail(
-    genre: string,
-    tipe: "manga" | "manhwa" | "manhua" = "manga"
-) {
-    const json = await fetchJSON<any>(
-        `${BASE}/genres/${encodeURIComponent(genre)}?tipe=${tipe}`,
-        86400 // cache 1 hari
-    )
+// export async function getKomikGenres() {
+//     const json = await fetchJSON<any>(
+//         `${BASE}/genres`,
+//         86400 // cache 1 hari
+//     )
 
-    if (!json?.datas) return []
-    return json.datas
-}
+//     if (!json?.data) return []
+//     return json.data
+// }
+
+// export async function getKomikGenresDetail(
+//     genre: string,
+//     tipe: "manga" | "manhwa" | "manhua" = "manga"
+// ) {
+//     const json = await fetchJSON<any>(
+//         `${BASE}/genres/${encodeURIComponent(genre)}?tipe=${tipe}`,
+//         86400 // cache 1 hari
+//     )
+
+//     if (!json?.datas) return []
+//     return json.datas
+// }
 
 export async function searchKomik(query: string) {
     if (!query) return []
 
-    const json = await fetchJSON<any>(
-        `/api/komik/search?q=${encodeURIComponent(query)}`,
-        600
+    const res = await fetch(
+        `${BASE}/search?query=${encodeURIComponent(query)}`,
+        {
+            next: { revalidate: 600 }
+        }
     )
 
-    if (!json?.datas) return []
+    if (!res.ok) return []
 
-    return json.datas
+    const json = await res.json()
+
+    return json?.data || []
 }
 
-export async function getKomikDetail(endpoint: string) {
-    if (!endpoint) return null
+export async function getKomikDetail(manga_id: string) {
+    if (!manga_id) return null
 
-    const json = await fetchJSON<any>(
-        `${BASE}/detail/${encodeURIComponent(endpoint)}`,
-        21600 // cache 6 jam
+    const res = await fetch(
+        `${BASE}/detail?manga_id=${encodeURIComponent(manga_id)}`,
+        {
+            next: { revalidate: 21600 },
+        }
     )
 
-    if (!json?.data?.endpoint) return null
-    return json
+    if (!res.ok) return null
+
+    return res.json()
 }
 
 export async function getKomikChapterList(endpoint: string) {
     if (!endpoint) return []
 
     const json = await fetchJSON<any>(
-        `${BASE}/chapter/${encodeURIComponent(endpoint)}`,
+        `${BASE}/chapterList?manga_id=${encodeURIComponent(endpoint)}`,
         21600 // cache 6 jam
     )
 
@@ -128,13 +168,13 @@ export async function getKomikChapterList(endpoint: string) {
 }
 
 export async function getKomikImages(chapterId: string) {
-    if (!chapterId) return []
+    if (!chapterId) return null
 
     const json = await fetchJSON<any>(
-        `${BASE}/chapter/${encodeURIComponent(chapterId)}`,
-        86400 // cache 1 hari (gambar jarang berubah)
+        `${BASE}/getimage?chapter_id=${encodeURIComponent(chapterId)}`,
+        86400
     )
 
-    if (!json?.data) return []
+    if (!json?.data) return null
     return json.data
 }

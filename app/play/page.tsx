@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, Suspense } from "react" // Tambahkan Suspense
 import { useSearchParams, useRouter } from "next/navigation"
 import Hls from "hls.js"
 import { Maximize, ChevronLeft, ChevronRight, Zap, RotateCw } from "lucide-react"
 
-export default function PlayerPage() {
+// 1. Pindahkan seluruh logika utama ke komponen ini
+function PlayerContent() {
     const videoRef = useRef<HTMLVideoElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
@@ -16,7 +17,6 @@ export default function PlayerPage() {
     const episode = searchParams.get("episode")
     const tag = searchParams.get("tag")
 
-    // State untuk menyimpan ID navigasi asli dari API (jika dikirim lewat URL)
     const prevId = searchParams.get("prev")
     const nextId = searchParams.get("next")
 
@@ -40,7 +40,6 @@ export default function PlayerPage() {
     const handleFullscreen = async () => {
         const container = containerRef.current
         if (!container) return
-
         try {
             if (container.requestFullscreen) {
                 await container.requestFullscreen()
@@ -64,6 +63,7 @@ export default function PlayerPage() {
             ref={containerRef}
             className={`min-h-screen bg-[#050507] flex flex-col items-center justify-center p-4 md:p-10 transition-all duration-500 ${isRotated ? 'rotate-mode' : ''}`}
         >
+            {/* ... SISA KODE UI ANDA SAMA SEPERTI SEBELUMNYA ... */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-600/5 blur-[120px] rounded-full" />
             </div>
@@ -95,7 +95,6 @@ export default function PlayerPage() {
             {!isRotated && (
                 <div className="relative z-10 w-full max-w-5xl mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="flex gap-3">
-                        {/* Tombol Prev: Hanya muncul kalau ada ID-nya */}
                         <button
                             disabled={!prevId}
                             onClick={() => router.push(`/play?video=URL_BARU&episode=${Number(episode) - 1}&tag=${tag}&title=${title}&prev=...&next=...`)}
@@ -104,7 +103,6 @@ export default function PlayerPage() {
                             <ChevronLeft size={16} /> Prev
                         </button>
 
-                        {/* Tombol Next */}
                         <button
                             disabled={!nextId}
                             onClick={() => router.push(`/play?video=URL_BARU&episode=${Number(episode) + 1}&tag=${tag}&title=${title}&prev=...&next=...`)}
@@ -137,5 +135,18 @@ export default function PlayerPage() {
                 }
             `}</style>
         </main>
+    )
+}
+
+// 2. Export default hanya berisi Suspense
+export default function PlayerPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-[#050507] flex items-center justify-center">
+                <p className="text-white font-black tracking-widest animate-pulse">LOADING PLAYER...</p>
+            </div>
+        }>
+            <PlayerContent />
+        </Suspense>
     )
 }

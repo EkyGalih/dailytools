@@ -7,6 +7,7 @@ import GAListener from '@/components/GAListener'
 import Script from 'next/script'
 import NextTopLoader from 'nextjs-toploader'
 import CoffeePopup from '@/components/drama/ads/CoffePopup'
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tamanto.web.id'),
@@ -103,6 +104,7 @@ export default function RootLayout({
         <main className="w-full min-h-[80vh]">
           {children}
           <CoffeePopup />
+          <Analytics />
         </main>
 
         <footer className="bg-white border-t border-zinc-100 pt-20 pb-10 mt-24">

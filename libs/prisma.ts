@@ -1,16 +1,24 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
-import { PrismaClient } from "@prisma/client/edge";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getPrismaClient = async () => {
+  const { PrismaClient } = await import("@prisma/client");
+  return new PrismaClient({ adapter });
+};
+
+import type { PrismaClient } from "@prisma/client";
+
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({ adapter });
+if (!globalForPrisma.prisma) {
+  getPrismaClient().then(client => {
+    globalForPrisma.prisma = client;
+  });
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
-
+export const prisma = globalForPrisma.prisma;
 export default prisma;

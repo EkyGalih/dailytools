@@ -79,7 +79,7 @@ export default async function FreereelsPage({ searchParams }: { searchParams: Pr
                                         badge="Search"
                                     />
                                     {/* GRID HP: 2 KOLOM (Paling pas buat HP) */}
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-6 mt-6 md:mt-10">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mt-6 md:mt-10">
                                         {searchResults.map((drama: any) => (
                                             <FreereelsCard key={drama.key} theater={drama} />
                                         ))}
@@ -91,7 +91,7 @@ export default async function FreereelsPage({ searchParams }: { searchParams: Pr
                                     <section>
                                         <FreereelsSectionHeader title="Kurasi Spesial" desc="Pilihan terbaik untukmu." badge="For You" />
                                         {/* GRID HP: 2 KOLOM */}
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-6 mt-6 md:mt-10">
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mt-6 md:mt-10">
                                             {foryou.slice(0, 6).map((book: any) => (
                                                 <FreereelsCard key={book.key || book.playlet_id} theater={book} />
                                             ))}
@@ -105,7 +105,7 @@ export default async function FreereelsPage({ searchParams }: { searchParams: Pr
                                             desc="Kisah fantasi seru minggu ini."
                                             badge="Hot Anime"
                                         />
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-6 mt-6 md:mt-10">
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-6 mt-6 md:mt-10">
                                             {latest.slice(0, 10).map((book: any) => (
                                                 <FreereelsAnimeCard key={book.key} theater={book} />
                                             ))}

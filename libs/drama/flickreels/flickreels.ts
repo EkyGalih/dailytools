@@ -75,7 +75,7 @@ export async function getFlickreelsHomepage() {
     const url = `${BASE}/hotrank`
 
     const json = await fetchJSON<any>(url, 1800)
-    console.log('json', json)
+ 
     if (!json || json.status_code !== 1) return null
 
     if (Array.isArray(json?.data)) {

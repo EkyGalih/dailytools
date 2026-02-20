@@ -42,12 +42,12 @@ export const DRAMA_CHANNELS: Array<{
             description: 'Drama China viral dan episode lengkap dari FlickReels.',
             icon: 'https://cdn.aptoide.com/imgs/7/3/6/7366b6348805d4ed9e82005732d1213f_icon.png',
         },
-        // {
-        //     slug: 'freereels',
-        //     name: 'FreeReels',
-        //     description: 'Drama China gratis dan trending dari FreeReels.',
-        //     icon: 'https://play-lh.googleusercontent.com/4UD1HiZkmoTR3nzr5Z8qPvKzi7K1JptSmHPZtJ7MN7hi5WE8fNxHumvhRFHZS0r1SQ=w600-h300-pc0xffffff-pd',
-        // },
+        {
+            slug: 'freereels',
+            name: 'FreeReels',
+            description: 'Drama China gratis dan trending dari FreeReels.',
+            icon: 'https://play-lh.googleusercontent.com/4UD1HiZkmoTR3nzr5Z8qPvKzi7K1JptSmHPZtJ7MN7hi5WE8fNxHumvhRFHZS0r1SQ=w600-h300-pc0xffffff-pd',
+        },
     ]
 
 export function getChannel(slug?: string) {

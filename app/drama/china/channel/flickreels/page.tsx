@@ -74,7 +74,7 @@ export default async function FlickreelsPage({ searchParams }: { searchParams: P
                                         badge="Search"
                                     />
                                     {searchResults.length > 0 ? (
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 mt-10">
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
                                             {searchResults.map((drama: any) => (
                                                 <FlickreelsCard key={drama.playlet_id} theater={drama} />
                                             ))}
@@ -89,7 +89,7 @@ export default async function FlickreelsPage({ searchParams }: { searchParams: P
                                 <>
                                     <section>
                                         <FlickreelsSectionHeader title="Kurasi Spesial" desc="Rangkaian drama pilihan untukmu hari ini." badge="For You" />
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 mt-10">
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
                                             {foryou.slice(0, 6).map((book: any) => (
                                                 <FlickreelsCard key={book.playlet_id} theater={book} />
                                             ))}
@@ -98,7 +98,7 @@ export default async function FlickreelsPage({ searchParams }: { searchParams: P
 
                                     <section>
                                         <FlickreelsSectionHeader title="Rilis Terbaru" desc="Jangan lewatkan episode terbaru minggu ini." badge="New Update" />
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 mt-10">
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
                                             {latest.slice(0, 6).map((book: any) => (
                                                 <FlickreelsCard key={book.playlet_id} theater={book} />
                                             ))}

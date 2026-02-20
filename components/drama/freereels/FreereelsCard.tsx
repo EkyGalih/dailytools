@@ -78,7 +78,8 @@ export default function FreereelsCard({ theater }: { theater: any }) {
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1.5">
-                    {tags.filter(t => t).slice(0, 2).map((tag: string, i: number) => (
+                    {/* Tambahkan tipe data string pada variabel t */}
+                    {tags.filter((t: string) => t).slice(0, 2).map((tag: string, i: number) => (
                         <span
                             key={i}
                             className="text-[8px] font-black uppercase tracking-widest px-2.5 py-1 bg-rose-50 text-rose-500 rounded-lg border border-rose-100"

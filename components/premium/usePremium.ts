@@ -5,6 +5,7 @@ interface PremiumStatus {
     premium: boolean;
     packageId?: string;
     expiresAt?: string;
+    deviceCount?: number;
     loading: boolean;
 }
 
@@ -12,7 +13,7 @@ export function usePremium(): PremiumStatus {
     const [status, setStatus] = useState<PremiumStatus>({ premium: false, loading: true });
 
     useEffect(() => {
-        const token = localStorage.getItem("premium_token"); // ← sama dengan Navbar
+        const token = localStorage.getItem("premium_token");
         const deviceId = localStorage.getItem("device_id");
 
         if (!token || !deviceId) {

@@ -20,7 +20,7 @@ import {
 import PremiumModal from "@/components/premium/PremiumModal"
 
 import DramaShareIcons from "@/components/drama/dramabox/DramaShareIcon"
-import { usePremiumDracinStatus } from "../usePremiumDrachin"
+import { usePremium } from "@/components/premium/usePremium"
 
 export default function FlickreelsPlayerClient({
     drama,
@@ -43,7 +43,7 @@ export default function FlickreelsPlayerClient({
     const FREE_LIMIT = 25
     const STORAGE_KEY = `flickreels:last_episode:${drama.id || drama.slug || drama.title}`;
     const [hasResume, setHasResume] = useState(false);
-    const { premium, loading: premiumLoading } = usePremiumDracinStatus()
+    const { premium, loading: premiumLoading } = usePremium()
     const [showPremiumModal, setShowPremiumModal] = useState(false)
 
     useEffect(() => {

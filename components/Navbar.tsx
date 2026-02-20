@@ -219,7 +219,9 @@ export default function Navbar() {
     ${isPremium ? "bg-emerald-500" : "bg-indigo-500"}`}
               />
             </Link>
-            <a href="https://trakteer.id/god_suru/showcase?menu=open" target="_blank" className="ml-4 flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-[13px] font-black text-white transition hover:bg-purple-600 active:scale-95 shadow-xl shadow-purple-500/10">☕ Traktir Kopi</a>
+            {!isPremium && (
+              <a href="https://trakteer.id/god_suru/showcase?menu=open" target="_blank" className="ml-4 flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-[13px] font-black text-white transition hover:bg-purple-600 active:scale-95 shadow-xl shadow-purple-500/10">☕ Traktir Kopi</a>
+            )}
           </nav>
         </div>
 
@@ -367,11 +369,13 @@ export default function Navbar() {
   `}</style>
                 </Link>
                 {/* Footer Mobile Menu */}
-                <div className="mt-12 pt-8 border-t border-zinc-100">
-                  <a href="https://trakteer.id/god_suru/showcase?menu=open" target="_blank" className="flex w-full items-center justify-center gap-3 rounded-2xl bg-zinc-900 py-5 font-black text-white active:scale-95 transition-all">
-                    <Coffee className="w-5 h-5 text-amber-400" /> Traktir Kopi
-                  </a>
-                </div>
+                {!isPremium && (
+                  <div className="mt-12 pt-8 border-t border-zinc-100">
+                    <a href="https://trakteer.id/god_suru/showcase?menu=open" target="_blank" className="flex w-full items-center justify-center gap-3 rounded-2xl bg-zinc-900 py-5 font-black text-white active:scale-95 transition-all">
+                      <Coffee className="w-5 h-5 text-amber-400" /> Traktir Kopi
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           </div>

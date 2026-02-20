@@ -63,9 +63,9 @@ export default async function FreereelsPage({ searchParams }: { searchParams: Pr
                 <div className="bg-white rounded-[2rem] md:rounded-[40px] p-4 md:p-10 shadow-[0_40px_100px_rgba(0,0,0,0.04)] border border-zinc-100">
 
                     {/* SEARCH BAR: Margin bawah di HP diperkecil */}
-                    <div className="mb-8 md:mb-12">
+                    {/* <div className="mb-8 md:mb-12">
                         <FreereelsSearchBar query={query} />
-                    </div>
+                    </div> */}
 
                     <div className="flex flex-col lg:flex-row gap-10 md:gap-16">
 

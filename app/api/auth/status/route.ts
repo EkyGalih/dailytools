@@ -17,9 +17,6 @@ export async function GET(req: NextRequest) {
         return Response.json({ premium: false });
     }
 
-    const linked = tokenData.devices.find(d => d.deviceId === deviceId);
-    if (!linked) return Response.json({ premium: false });
-
     const alreadyLinked = tokenData.devices.find(d => d.deviceId === deviceId);
 
 

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         return Response.json({ error: "Token sudah kedaluwarsa" }, { status: 403 });
     }
 
-    const alreadyLinked = tokenData.devices.find(d => d.deviceId === deviceId);
+    const alreadyLinked = tokenData.devices.find((d: { deviceId: string; id: string; tokenId: string }) => d.deviceId === deviceId);
 
     if (!alreadyLinked && tokenData.devices.length >= 2) {
         return Response.json({ error: "Token sudah digunakan di 2 perangkat" }, { status: 403 });

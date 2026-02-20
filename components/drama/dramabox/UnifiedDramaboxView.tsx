@@ -4,10 +4,8 @@ import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Play, Lock, Smartphone, Monitor, Calendar, Info, ChevronLeft, Star, ArrowLeft } from 'lucide-react'
-import { getAffiliateProducts } from '@/libs/ads/getAffiliateProducts'
 import DramaShareIcons from '@/components/drama/dramabox/DramaShareIcon'
-import AffiliateShelf from '../ads/AffiliateShelf'
-import { usePremiumDracinStatus } from '../usePremiumDrachin'
+import { usePremium } from '@/components/premium/usePremium'
 
 export default function UnifiedDramaboxView({ detail, episodes }: { detail: any, episodes: any[] }) {
     const getProgressKey = (bookId: string | number) =>
@@ -20,7 +18,7 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
     const videoRef = useRef<HTMLVideoElement>(null)
 
     // handle premium status
-    const { premium, loading } = usePremiumDracinStatus();
+    const { premium, loading } = usePremium();
     const FREE_LIMIT = 25;
     const [showPremiumModal, setShowPremiumModal] = useState(false)
 
@@ -60,28 +58,23 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
     }
 
     const handleVideoEnded = () => {
-        const nextIndex = currentIndex + 1
+        const nextIndex = currentIndex + 1;
 
-        // 🔒 Paywall enforced even on fullscreen + auto-next
-        if (!premium && nextIndex >= FREE_LIMIT) {
-            setIsPlaying(false)
-            setShowPremiumModal(true)
-
+        if (!loading && !premium && nextIndex >= FREE_LIMIT) {
+            setIsPlaying(false);
+            setShowPremiumModal(true);
             if (document.fullscreenElement) {
-                document.exitFullscreen().catch(() => { })
+                document.exitFullscreen().catch(() => { });
             }
-            return
+            return;
         }
 
         if (nextIndex < episodes.length) {
-            if ((nextIndex + 1) % 10 === 0) {
-                setIsAdGap(true)
-            }
-
-            setCurrentIndex(nextIndex)
-            setClickCount(prev => ({ ...prev, [nextIndex]: 3 }))
+            if ((nextIndex + 1) % 10 === 0) setIsAdGap(true);
+            setCurrentIndex(nextIndex);
+            setClickCount(prev => ({ ...prev, [nextIndex]: 3 }));
         }
-    }
+    };
 
     useEffect(() => {
         if (isPlaying && detail?.bookId) {
@@ -267,9 +260,9 @@ export default function UnifiedDramaboxView({ detail, episodes }: { detail: any,
                                     <button
                                         key={ep.chapterId}
                                         onClick={() => {
-                                            if (!premium && i >= FREE_LIMIT) {
-                                                setShowPremiumModal(true)
-                                                return
+                                            if (!loading && !premium && i >= FREE_LIMIT) {
+                                                setShowPremiumModal(true);
+                                                return;
                                             }
 
                                             setIsAdGap(false);

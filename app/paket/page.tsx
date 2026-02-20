@@ -21,7 +21,7 @@ export default function PremiumPage() {
             price: "Rp 2.500",
             period: "/ hari",
             qris: "/qris/2500.png",
-            backendId: "basic",
+            backendId: "maraton_stream",
             desc: "Akses kilat tanpa batas.",
             icon: <Zap className="text-amber-400" />,
         },
@@ -31,7 +31,7 @@ export default function PremiumPage() {
             price: "Rp 5.500",
             period: "/ 3 hari",
             qris: "/qris/5500.png",
-            backendId: "pro",
+            backendId: "weekend_warrior",
             desc: "Pas untuk marathon drakor.",
             icon: <Flame className="text-rose-500" />,
             popular: true,
@@ -42,62 +42,28 @@ export default function PremiumPage() {
             price: "Rp 7.000",
             period: "/ minggu",
             qris: "/qris/7000.png",
-            backendId: "premium",
+            backendId: "pro_cultivator",
             desc: "Pengalaman premium sejati.",
             icon: <Crown className="text-amber-500" />,
         },
     ]
 
 
-    async function buy(pkg: {
-        id: string
-        backendId: string
-        price: string
-    }) {
+    async function buy(pkg: { id: string; backendId: string; price: string }) {
         setErr("")
         setLoading(pkg.id)
 
         try {
-            // ambil telegram id user
-            const telegramId = localStorage.getItem("telegram_id")
-            if (!telegramId) {
-                setErr("Silakan buka bot Telegram terlebih dahulu.")
-                return
-            }
+            // Nama bot lu, misal: TamantoBot
+            const botUsername = "tamanto_bot"
 
-            // ambil amount dari price (Rp 2.500 -> 2500)
-            const amount = Number(pkg.price.replace(/[^\d]/g, ""))
+            // Kita kirim parameter paket via start payload
+            // Format: https://t.me/username_bot?start=parameter
+            const startParam = `beli_${pkg.backendId}`
 
-            if (!amount || amount <= 0) {
-                setErr("Nominal paket tidak valid")
-                return
-            }
+            // Redirect langsung ke Telegram
+            window.location.href = `https://t.me/${botUsername}?start=${startParam}`
 
-            // call backend
-            const res = await fetch("https://api-payment-tamanto.vercel.app/orders", {
-            method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    telegramId,
-                    packageId: pkg.backendId,
-                    amount,
-                }),
-            })
-
-            const json = await res.json()
-
-            if (!res.ok) {
-                setErr(json.error || "Gagal membuat order")
-                return
-            }
-
-            sessionStorage.setItem("order_id", json.orderId)
-            sessionStorage.setItem("package_id", pkg.backendId)
-
-            // redirect
-            window.location.href = `/paket/beli/payment-method`
         } catch (e) {
             console.error(e)
             setErr("Terjadi kesalahan sistem")

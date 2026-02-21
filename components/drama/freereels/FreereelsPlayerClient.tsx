@@ -4,15 +4,16 @@ import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import {
-    Lock, Flame, Monitor, Smartphone, PlayCircle, Star,
-    CheckCircle2, LayoutGrid, ChevronRight, Activity,
-    Share2, Info, Play
+    Lock, Flame, Monitor, Smartphone, Star,
+    CheckCircle2, ChevronRight, Activity,
+    Info, Play, ListVideo, Sparkles, History
 } from "lucide-react"
 import PremiumModal from "@/components/premium/PremiumModal"
 import DramaShareIcons from "@/components/drama/dramabox/DramaShareIcon"
 import { usePremium } from "@/components/premium/usePremium"
 
 export default function FreereelsPlayerClient({ drama, episodes, initialEpIndex }: any) {
+    const [isMounted, setIsMounted] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(initialEpIndex)
     const [isPlaying, setIsPlaying] = useState(false)
     const [isVertical, setIsVertical] = useState(true)
@@ -24,247 +25,185 @@ export default function FreereelsPlayerClient({ drama, episodes, initialEpIndex 
 
     const activeEp = episodes[currentIndex]
     const safeCover = `https://wsrv.nl/?url=${encodeURIComponent(drama.cover)}&output=webp&q=80`
+    const getProgressKey = (id: string | number) => `freereels_progress_v1_${id}`
 
-    const handleEpisodeClick = (index: number) => {
-        if (premiumLoading) return;
-
-        if (!premium && index >= FREE_LIMIT) {
-            setShowPremiumModal(true)
-            return
+    // 1. Load Progress
+    useEffect(() => {
+        setIsMounted(true)
+        const saved = localStorage.getItem(getProgressKey(drama.id))
+        if (saved !== null) {
+            const idx = parseInt(saved)
+            if (!isNaN(idx) && idx >= 0 && idx < episodes.length) setCurrentIndex(idx)
         }
-        setCurrentIndex(index)
-        setIsPlaying(true)
-        if (window.innerWidth < 1024) {
-            document.getElementById("main-viewport")?.scrollIntoView({ behavior: "smooth" })
+    }, [drama.id, episodes.length])
+
+    // 2. Save Progress & Auto Play
+    useEffect(() => {
+        if (!isMounted) return
+        if (isPlaying) {
+            localStorage.setItem(getProgressKey(drama.id), String(currentIndex))
+            if (videoRef.current) {
+                videoRef.current.load()
+                videoRef.current.play().catch(() => { })
+            }
+        }
+    }, [currentIndex, isPlaying, drama.id, isMounted])
+
+    const playNextEpisode = () => {
+        const nextIndex = currentIndex + 1
+        if (nextIndex < episodes.length) {
+            if (!premium && nextIndex >= FREE_LIMIT) {
+                setIsPlaying(false)
+                setShowPremiumModal(true)
+                return
+            }
+            setCurrentIndex(nextIndex)
+            setIsPlaying(true)
         }
     }
 
+    const handleEpisodeClick = (index: number) => {
+        if (premiumLoading) return
+        if (premium || index < FREE_LIMIT) {
+            setCurrentIndex(index)
+            setIsPlaying(true)
+            if (window.innerWidth < 1024) {
+                document.getElementById("main-viewport")?.scrollIntoView({ behavior: "smooth" })
+            }
+            return
+        }
+        setShowPremiumModal(true)
+    }
+
+    if (!isMounted) return null
+
     return (
-        <div className="relative min-h-screen">
-            {/* --- DYNAMIC BACKGROUND (BLURRED) --- */}
-            <div className="absolute inset-0 h-[500px] overflow-hidden -z-10">
-                <Image src={safeCover} alt="bg" fill className="object-cover blur-[100px] opacity-20 scale-150" unoptimized />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#fafafa] to-[#fafafa]" />
-            </div>
+        <article className="bg-white rounded-[1.5rem] md:rounded-[40px] shadow-[0_40px_100px_rgba(0,0,0,0.06)] border border-zinc-100 overflow-hidden max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-[1fr_320px] gap-0">
 
-            <div className="flex flex-col lg:flex-row gap-10">
+                {/* LEFT: PLAYER & INFO */}
+                <div className="p-4 md:p-8 border-r border-zinc-100 flex flex-col gap-8">
 
-                {/* === LEFT: MAIN PLAYER AREA === */}
-                <div className="flex-1 space-y-8">
-
-                    {/* 1. THE PLAYER CARD */}
-                    {/* 1. THE PLAYER CARD */}
-                    <div id="main-viewport" className="relative group rounded-[2.5rem] overflow-hidden bg-zinc-950 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] border border-white/10">
+                    <div id="main-viewport" className="w-full space-y-4">
                         {!isPlaying ? (
-                            <div className="relative w-full aspect-video md:aspect-[21/9] flex items-center justify-center overflow-hidden">
-                                {/* Background Blur Halus (Hanya untuk nuansa warna) */}
-                                <Image
-                                    src={safeCover}
-                                    alt="bg-blur"
-                                    fill
-                                    className="object-cover opacity-20 blur-3xl scale-125"
-                                    unoptimized
-                                />
-
-                                {/* Gradient Overlay biar teks kebaca */}
+                            <div className="relative aspect-video md:aspect-[21/9] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden bg-zinc-950 shadow-2xl">
+                                <Image src={safeCover} alt="bg" fill className="object-cover opacity-30 blur-xl" />
                                 <div className="absolute inset-0 bg-black/40" />
-
-                                <div className="relative z-10 w-full max-w-4xl px-8 flex flex-col md:flex-row items-center justify-center gap-10">
-                                    {/* POSTER UTAMA (Kecil & Proporsional) */}
-                                    <div className="relative w-32 md:w-40 aspect-[3/4.5] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/20 transform -rotate-2 group-hover:rotate-0 transition-transform duration-500">
-                                        <Image
-                                            src={safeCover}
-                                            alt={drama.title}
-                                            fill
-                                            className="object-cover"
-                                            unoptimized
-                                            referrerPolicy="no-referrer"
-                                        />
+                                <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 text-center">
+                                    <div className="relative w-20 md:w-28 aspect-[3/4.5] rounded-2xl overflow-hidden shadow-2xl mb-4 border border-white/20">
+                                        <Image src={safeCover} alt="poster" fill className="object-cover" unoptimized />
                                     </div>
-
-                                    {/* INFO SINGKAT & TOMBOL PLAY */}
-                                    <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-4">
-                                        <div className="space-y-1">
-                                            <h1 className="text-2xl md:text-4xl font-black text-white italic uppercase tracking-tighter leading-tight line-clamp-2">
-                                                {drama.title}
-                                            </h1>
-                                            <div className="flex items-center justify-center md:justify-start gap-3">
-                                                <p className="text-rose-500 text-[10px] font-black uppercase tracking-[0.2em] italic">
-                                                    Episode {currentIndex + 1}
-                                                </p>
-                                                <span className="w-1 h-1 bg-zinc-600 rounded-full" />
-                                                <p className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest">
-                                                    {drama.chapterCount} Total Chapters
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <button
-                                            onClick={() => setIsPlaying(true)}
-                                            className="group/btn relative inline-flex items-center gap-3 bg-white text-black px-8 py-3 rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-rose-600 hover:text-white transition-all active:scale-95 shadow-2xl"
-                                        >
-                                            <PlayCircle size={20} className="group-hover/btn:scale-110 transition-transform" />
-                                            Mulai Menonton
-                                        </button>
-                                    </div>
+                                    <button onClick={() => setIsPlaying(true)} className="flex items-center gap-3 px-8 py-3 bg-rose-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-700 transition-all shadow-xl">
+                                        <Play size={16} className="fill-current" /> Lanjutkan Eps {currentIndex + 1}
+                                    </button>
                                 </div>
                             </div>
                         ) : (
-                            <div className={`mx-auto transition-all duration-700 ${isVertical ? "max-w-[420px] aspect-[9/16]" : "w-full aspect-video"}`}>
-                                <video
-                                    ref={videoRef}
-                                    src={activeEp.videoUrl}
-                                    controls
-                                    autoPlay
-                                    className="w-full h-full object-contain"
-                                />
+                            /* SQUASHED RATIO FIX: Menggunakan container kaku agar tidak ada 'sayap' */
+                            <div className="flex flex-col items-center w-full">
+                                <div className={`relative bg-black rounded-[1.2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-500 w-full ${isVertical ? 'max-w-[340px] aspect-[9/16]' : 'aspect-video'}`}>
+                                    <video
+                                        key={activeEp.id}
+                                        ref={videoRef}
+                                        src={activeEp.videoUrl}
+                                        controls
+                                        autoPlay
+                                        onEnded={playNextEpisode}
+                                        className="w-full h-full object-contain bg-black"
+                                    />
+                                </div>
                             </div>
                         )}
 
-                        {/* Floating Controls tetap sama */}
-                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 p-1.5 bg-black/40 backdrop-blur-2xl rounded-2xl border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => setIsVertical(true)} className={`p-3 rounded-xl transition-all ${isVertical ? 'bg-white text-black shadow-xl' : 'text-white hover:bg-white/10'}`}>
-                                <Smartphone size={18} />
+                        {/* Switcher Below Video */}
+                        <div className="flex items-center justify-center gap-2 p-1 bg-zinc-50 rounded-2xl border border-zinc-100 w-fit mx-auto">
+                            <button onClick={() => setIsVertical(true)} className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${isVertical ? 'bg-zinc-900 text-white' : 'text-zinc-400 hover:bg-white'}`}>
+                                <Smartphone size={14} />
+                                <span className="text-[9px] font-black uppercase">Mobile</span>
                             </button>
-                            <button onClick={() => setIsVertical(false)} className={`p-3 rounded-xl transition-all ${!isVertical ? 'bg-white text-black shadow-xl' : 'text-white hover:bg-white/10'}`}>
-                                <Monitor size={18} />
+                            <button onClick={() => setIsVertical(false)} className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${!isVertical ? 'bg-zinc-900 text-white' : 'text-zinc-400 hover:bg-white'}`}>
+                                <Monitor size={14} />
+                                <span className="text-[9px] font-black uppercase">Wide</span>
                             </button>
                         </div>
                     </div>
 
-                    {/* 2. SYNOPSIS & INFO CARD */}
-                    <div className="bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-zinc-100 relative overflow-hidden">
-                        <div className="relative z-10 space-y-8">
-                            <div className="flex flex-wrap items-center gap-4">
-                                <div className="flex items-center gap-1.5 px-3 py-1 bg-zinc-900 text-white text-[10px] font-black rounded-lg uppercase tracking-tighter">
-                                    <Star size={10} fill="#fbbf24" className="text-amber-400" /> 4.9 Rating
-                                </div>
-                                {drama.tags?.map((tag: string) => (
-                                    <span key={tag} className="text-[10px] font-bold text-zinc-400 border border-zinc-200 px-3 py-1 rounded-lg uppercase tracking-widest">{tag}</span>
+                    {/* Synopsis area (Full Width) */}
+                    <div className="space-y-6">
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-rose-600">
+                                <History size={14} />
+                                <span className="text-[10px] font-black uppercase tracking-widest">History: Chapter {currentIndex + 1}</span>
+                            </div>
+                            <h2 className="text-3xl md:text-5xl font-black text-zinc-900 italic uppercase tracking-tighter leading-none">{drama.title}</h2>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                                <div className="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-lg uppercase italic border border-rose-100">HOT {drama.hotScore}</div>
+                                <div className="flex items-center gap-1 text-yellow-500"><Star size={14} fill="currentColor" /><span className="text-xs font-black text-zinc-900">4.9 Rating</span></div>
+                            </div>
+                            <p className="text-zinc-600 leading-relaxed font-medium text-sm md:text-lg italic max-w-4xl">"{drama.description}"</p>
+                            <div className="flex flex-wrap gap-2 pt-2">
+                                {drama.tags?.map((t: string) => (
+                                    <span key={t} className="px-3 py-1.5 bg-zinc-50 border border-zinc-100 text-zinc-500 text-[10px] font-black uppercase rounded-xl">#{t}</span>
                                 ))}
-                            </div>
-
-                            <div className="space-y-4">
-                                <h2 className="flex items-center gap-3 text-sm font-black uppercase tracking-widest text-zinc-900">
-                                    <Info size={16} className="text-rose-600" /> Storyline
-                                </h2>
-                                <p className="text-zinc-500 text-base md:text-lg leading-relaxed font-medium">
-                                    {drama.description}
-                                </p>
-                            </div>
-
-                            <div className="pt-8 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="flex -space-x-3">
-                                        {[1, 2, 3].map(i => (
-                                            <div key={i} className="w-10 h-10 rounded-full border-4 border-white bg-zinc-200 overflow-hidden relative">
-                                                <Image src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="user" fill />
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <p className="text-xs text-zinc-400 font-bold tracking-tight">
-                                        <span className="text-zinc-900 font-black">{drama.hotScore}</span> orang sudah menonton
-                                    </p>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Share</p>
-                                    <div className="h-10 w-[1px] bg-zinc-100" />
-                                    <DramaShareIcons title={drama.title} url={window.location.href} />
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* === RIGHT: SMART SIDEBAR === */}
-                <aside className="w-full lg:w-[380px] shrink-0">
-                    <div className="bg-white rounded-[2.5rem] border border-zinc-100 shadow-2xl shadow-zinc-200/50 overflow-hidden sticky top-8">
-                        <div className="p-8 border-b border-zinc-50 bg-gradient-to-br from-zinc-50 to-white flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-rose-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-rose-600/30">
-                                    <LayoutGrid size={20} />
-                                </div>
-                                <div>
-                                    <h3 className="font-black uppercase italic text-sm tracking-tighter text-zinc-900 leading-none">Episodes</h3>
-                                    <p className="text-[9px] font-bold text-zinc-400 uppercase mt-1">Playlist Full HD</p>
-                                </div>
-                            </div>
-                            <div className="px-3 py-1 bg-zinc-100 rounded-full text-[10px] font-black text-zinc-500">
-                                {episodes.length} Total
-                            </div>
+                {/* RIGHT: COMPACT SIDEBAR */}
+                <aside className="bg-zinc-50/30 flex flex-col h-full lg:max-h-[850px]">
+                    <div className="p-6 border-b border-zinc-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10 flex items-center justify-between">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-900 flex items-center gap-2 leading-none"><ListVideo className="w-4 h-4 text-rose-600" /> Episodes</h3>
+                        <span className="text-[9px] font-black text-zinc-400 bg-zinc-50 px-2 py-1 rounded-lg border border-zinc-100 uppercase">{episodes.length} Total</span>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-white">
+                        <div className="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-3 gap-1.5">
+                            {episodes.map((ep: any, i: number) => {
+                                const isActive = i === currentIndex
+                                const isLocked = !premium && i >= FREE_LIMIT
+                                return (
+                                    <button
+                                        key={ep.id}
+                                        onClick={() => handleEpisodeClick(i)}
+                                        className={`relative flex flex-col items-center justify-center aspect-square rounded-xl border transition-all duration-300 active:scale-90 ${isActive ? 'bg-rose-600 border-rose-600 text-white shadow-lg' : 'bg-white border-zinc-100 text-zinc-500 hover:border-rose-200'}`}
+                                    >
+                                        <span className="text-[14px] font-black italic tracking-tighter">{i + 1}</span>
+                                        {isLocked && !isActive && <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-amber-400 rounded-full flex items-center justify-center border-2 border-white"><Lock size={6} className="text-white" strokeWidth={3} /></div>}
+                                    </button>
+                                )
+                            })}
                         </div>
+                    </div>
 
-                        <div className="p-6 max-h-[65vh] overflow-y-auto custom-scrollbar">
-                            <div className="grid grid-cols-4 gap-3">
-                                {episodes.map((ep: any, i: number) => {
-                                    const isActive = i === currentIndex
-                                    const isLocked = !premium && i >= FREE_LIMIT
-                                    return (
-                                        <button
-                                            key={ep.id}
-                                            onClick={() => handleEpisodeClick(i)}
-                                            className={`aspect-square rounded-2xl font-black text-sm relative flex items-center justify-center border-2 transition-all duration-300 ${isActive
-                                                ? "bg-rose-600 border-rose-600 text-white shadow-xl shadow-rose-600/20 scale-105 z-10"
-                                                : "bg-white border-zinc-100 text-zinc-400 hover:border-rose-200 hover:text-rose-600 active:scale-90"
-                                                }`}
-                                        >
-                                            {isActive ? (
-                                                <Activity size={16} className="animate-pulse" />
-                                            ) : isLocked ? (
-                                                <Lock size={14} className="opacity-30" />
-                                            ) : (
-                                                i + 1
-                                            )}
-
-                                            {isLocked && !isActive && (
-                                                <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-amber-400 rounded-full" />
-                                            )}
-                                        </button>
-                                    )
-                                })}
+                    {/* Premium Sidebar Footer */}
+                    {!premium && (
+                        <div className="p-6 bg-zinc-950 text-white relative overflow-hidden">
+                            <div className="relative z-10 space-y-3">
+                                <div className="flex items-center gap-2"><Sparkles size={12} className="text-rose-500 fill-rose-500" /><p className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Join VIP</p></div>
+                                <h4 className="text-[10px] font-black uppercase italic tracking-tighter leading-tight text-white">Unlock all episodes today.</h4>
+                                <Link href="/pricing" className="flex items-center justify-center w-full bg-white text-zinc-900 py-2.5 rounded-xl font-black text-[9px] uppercase transition-all hover:bg-rose-600 hover:text-white">Upgrade Now</Link>
                             </div>
+                            <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-rose-600/10 blur-3xl rounded-full" />
                         </div>
+                    )}
 
-                        {/* --- SIDEBAR FOOTER: DYNAMIC BASED ON STATUS --- */}
-                        {!premium ? (
-                            // TAMPILAN JUALAN (Kalo belum Premium)
-                            <div className="p-8 bg-zinc-950 text-white relative overflow-hidden transition-all duration-500">
-                                <div className="relative z-10 space-y-3">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-rose-500 italic">Tamanto Premium</p>
-                                    <h4 className="text-xl font-black leading-tight uppercase italic tracking-tighter">Buka Semua Episode HD Tanpa Batas!</h4>
-                                    <Link href="/pricing" className="inline-flex items-center gap-2 text-[10px] font-black uppercase bg-white text-black px-5 py-2.5 rounded-xl hover:bg-rose-600 hover:text-white transition-all shadow-lg">
-                                        Upgrade Now <ChevronRight size={14} />
-                                    </Link>
-                                </div>
-                                {/* Decorative Blur */}
-                                <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-rose-600/20 blur-3xl rounded-full" />
-                            </div>
-                        ) : (
-                            // TAMPILAN STATUS (Kalo udah Premium)
-                            <div className="p-8 bg-emerald-950 text-white relative overflow-hidden transition-all duration-500 border-t border-emerald-500/20">
-                                <div className="relative z-10 space-y-2">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400 italic">Premium Active</p>
-                                    </div>
-                                    <h4 className="text-lg font-black leading-tight uppercase italic tracking-tighter">Selamat Menikmati Akses VIP Tanpa Batas!</h4>
-                                    <p className="text-[9px] text-emerald-100/60 font-medium italic">Token lu berhasil di-lock ke device ini.</p>
-                                </div>
-                                {/* Decorative Blur Hijau */}
-                                <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-emerald-500/20 blur-3xl rounded-full" />
-                            </div>
-                        )}
+                    <div className="p-6 bg-white border-t border-zinc-100 space-y-4">
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 text-center">Share Series</h3>
+                        <div className="flex justify-center"><DramaShareIcons title={drama.title} url={typeof window !== 'undefined' ? window.location.href : ''} /></div>
                     </div>
                 </aside>
             </div>
 
-            <style jsx>{`
-                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: #f43f5e; border-radius: 20px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+            <style jsx global>{`
+                .custom-scrollbar::-webkit-scrollbar { width: 3px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 10px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #f43f5e; }
             `}</style>
 
             {showPremiumModal && <PremiumModal onClose={() => setShowPremiumModal(false)} />}
-        </div>
+        </article>
     )
 }

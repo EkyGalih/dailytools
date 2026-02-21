@@ -97,7 +97,7 @@ export async function searchFreereels(query: string) {
             `${BASE}/search?query=${encodeURIComponent(query)}`,
             { next: { revalidate: 3600 } }
         );
-
+console.log(response)
         if (!response.ok) return [];
 
         const result = await response.json();

@@ -196,7 +196,7 @@ export default function NetshortPlayerClient({ drama, episodes, initialEpIndex }
 
                     <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-white">
                         <div className="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-3 gap-1.5">
-                            {episodes.map((ep, i) => {
+                           {episodes.map((ep: any, i: number) => {
                                 const isActive = i === currentIndex
                                 const isLocked = premium ? false : (i >= FREE_LIMIT)
                                 return (

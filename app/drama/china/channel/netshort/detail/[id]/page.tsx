@@ -1,11 +1,29 @@
 import { Metadata } from "next"
 import DramaHero from "@/components/drama/dramabox/DramaHero"
 import SchemaMarkup from "@/components/SchemaMarkup"
-import { getFreereelsDetail } from "@/libs/drama/Freereels/freereels" // Pastikan import bener
-import FreereelsPlayerClient from "@/components/drama/freereels/FreereelsPlayerClient"
 import { getNetshortDetail, getNetshortList } from "@/libs/drama/netshort/netshort"
 import NetshortPlayerClient from "@/components/drama/netshort/NetshortPlayerClient"
 import NetshortRelatedDramas from "@/components/drama/netshort/NetshortRelatedDramas"
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params
+    const res = await getNetshortDetail(id)
+    if (!res) return { title: "Drama Not Found" }
+
+    const { drama } = res
+    const site = 'https://tamanto.web.id'
+
+    return {
+        title: `Nonton ${drama.title} Sub Indo HD`,
+        description: drama.description.slice(0, 160),
+        openGraph: {
+            title: drama.title,
+            description: drama.description,
+            images: [{ url: drama.cover }],
+            type: 'video.tv_show',
+        }
+    }
+}
 
 export default async function NetshortsDetailPage({
     params,
@@ -18,13 +36,8 @@ export default async function NetshortsDetailPage({
     const sp = await searchParams
     const epQuery = sp?.ep
 
-    // Fetch data secara bersamaan
-    const [res, relatedRes] = await Promise.all([
-        getNetshortDetail(id),
-        getNetshortList({ page: 1, limit: 10 }) // Ambil list drama buat rekomendasi
-    ])
-
-    console.log(relatedRes)
+    // 1. Ambil detail drama utama dulu
+    const res = await getNetshortDetail(id)
 
     if (!res) {
         return (
@@ -33,6 +46,13 @@ export default async function NetshortsDetailPage({
             </div>
         )
     }
+
+    // 2. Ambil keyword dari Tag pertama atau potongan judul untuk mencari drama serupa
+    // Misal: Drama "Cinta Pewaris", kita ambil kata "Pewaris" agar hasil search nyambung
+    const relatedKeyword = res.drama.tags[0] || res.drama.title.split(' ')[0] || "drama"
+
+    // 3. Cari drama serupa berdasarkan keyword tadi
+    const relatedRes = await getNetshortList(relatedKeyword)
 
     const activeEpisodeIndex = epQuery
         ? res.episodes.findIndex((e: any) => e.index === parseInt(epQuery))
@@ -44,15 +64,14 @@ export default async function NetshortsDetailPage({
             <SchemaMarkup data={res.drama} type="TVSeries" />
             <DramaHero activeChannel="netshort" />
 
-            {/* Ubah space-y-16 jadi space-y-8 atau space-y-10 */}
-            <main className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 -mt-8 md:-mt-12 relative z-30 space-y-8">
+            <main className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 -mt-6 md:-mt-12 relative z-30 space-y-6">
                 <NetshortPlayerClient
                     drama={res.drama}
                     episodes={res.episodes}
                     initialEpIndex={safeIndex}
                 />
 
-                {/* TAMPILKAN DRAMA SERUPA DI SINI */}
+                {/* Sekarang datanya dinamis sesuai tema drama yang ditonton */}
                 <NetshortRelatedDramas
                     currentId={id}
                     dramas={relatedRes || []}

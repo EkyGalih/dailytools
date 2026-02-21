@@ -71,7 +71,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         ></script>
         <meta name="monetag" content="13de0a9b9b0974ee549d25adad2492fb"></meta>
-
+        <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
         {/* ✅ MONETAG AD ZONE 1 */}
         <Script
           id="monetag-vignette"

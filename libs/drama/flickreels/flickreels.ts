@@ -122,7 +122,7 @@ export async function searchFlickreels(query: string) {
 
 export async function getFlickreelsDetail(id: string) {
     const res = await fetch(`${BASE}/detailAndAllEpisode?id=${id}`, {
-        next: { revalidate: 3600 }
+        next: { revalidate: 60 }
     });
     return res.json();
 }

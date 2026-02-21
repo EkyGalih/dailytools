@@ -18,17 +18,15 @@ import { usePremium } from "@/components/premium/usePremium"
 
 // --- FIX UTAMA: Ambil properti .default secara manual ---
 const Plyr = dynamic(
-    async () => {
-        const mod = await import("plyr-react")
-        return mod.Plyr || mod.default
-    },
+    () =>
+        import("plyr-react").then((mod) => mod.Plyr),
     {
         ssr: false,
         loading: () => (
             <div className="aspect-[9/16] max-w-[340px] mx-auto bg-zinc-900 animate-pulse rounded-[2.5rem] flex items-center justify-center">
                 <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
             </div>
-        )
+        ),
     }
 )
 

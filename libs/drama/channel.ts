@@ -24,12 +24,12 @@ export const DRAMA_CHANNELS: Array<{
             description: 'Drama China pendek populer dari ReelShort.',
             icon: 'https://cdn.aptoide.com/imgs/7/7/8/778d6297e5e50c6d57fd830979071692_icon.png',
         },
-        // {
-        //     slug: 'netshort',
-        //     name: 'NetShort',
-        //     description: 'Koleksi drama China short episode dari NetShort.',
-        //     icon: 'https://p16-images-comn-sg.tokopedia-static.net/tos-alisg-i-zr7vqa5nfb-sg/img/elTgOa/2025/3/24/24905721-97bb-4201-a2bc-f985f41b4cdf.png~tplv-zr7vqa5nfb-image.image',
-        // },
+        {
+            slug: 'netshort',
+            name: 'NetShort',
+            description: 'Koleksi drama China short episode dari NetShort.',
+            icon: 'https://p16-images-comn-sg.tokopedia-static.net/tos-alisg-i-zr7vqa5nfb-sg/img/elTgOa/2025/3/24/24905721-97bb-4201-a2bc-f985f41b4cdf.png~tplv-zr7vqa5nfb-image.image',
+        },
         {
             slug: 'melolo',
             name: 'Melolo',
